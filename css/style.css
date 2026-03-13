@@ -316,6 +316,10 @@ a:hover { color: var(--black); }
   margin-bottom: 0;
 }
 
+.schedule-tools {
+  font-size: 0.9em;
+}
+
 .ascii-diagram {
   overflow-x: auto;
 }

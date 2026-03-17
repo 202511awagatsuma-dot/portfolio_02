@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>デザインガイドライン -  プロジェクトアーカイブ</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <title>デザインガイドライン - プロジェクトアーカイブ</title>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
   <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
   <button class="hamburger" aria-label="メニュー">
     <span></span><span></span><span></span>
   </button>
 
   <div class="page-wrapper">
-  <aside class="sidebar" data-nav-level="docs"></aside>
+    <aside class="sidebar" data-nav-level="docs"></aside>
 
     <main class="main-content">
       <header class="doc-header">
         <div class="doc-category">DOCUMENT 06</div>
         <h1 class="doc-title">デザインガイドライン</h1>
         <div class="doc-meta">
-          <span><span class="material-symbols-outlined icon-sm">calendar_today</span> 作成日：2026-XX-XX</span>
-          <span><span class="material-symbols-outlined icon-sm">person</span> 作成者：（氏名を入力）</span>
+          <span><span class="material-symbols-outlined icon-sm">calendar_today</span> 作成日：2026-03-17</span>
+          <span><span class="material-symbols-outlined icon-sm">person</span> 作成者：山田 太郎</span>
           <span><span class="material-symbols-outlined icon-sm">push_pin</span> Ver 1.0</span>
         </div>
       </header>
 
       <div class="doc-body">
-
         <div class="external-link-box">
           <div class="external-link-box-title">
             <span class="material-symbols-outlined">link</span>
@@ -38,7 +40,8 @@
           </div>
           <div class="external-link-input">
             <input type="text" placeholder="https://docs.google.com/spreadsheets/d/xxxxx" id="external-link-06">
-            <a href="#" class="link-btn" onclick="window.open(document.getElementById('external-link-06').value || 'https://docs.google.com', '_blank'); return false;">
+            <a href="#" class="link-btn"
+              onclick="window.open(document.getElementById('external-link-06').value || 'https://docs.google.com', '_blank'); return false;">
               <span class="material-symbols-outlined">open_in_new</span>
               開く
             </a>
@@ -59,103 +62,170 @@
         <section class="section" id="sec1">
           <h2 class="section-title"><span class="section-icon">1</span> デザインコンセプト</h2>
 
-        <div class="fill-block">
-          <div class="fill-label">デザインキーワード <span class="required">必須</span></div>
-          <div class="fill-hint">デザインの方向性を表すキーワード3つとその説明</div>
-          <div class="fill-content">
-            <p>（デザインキーワード3つとその説明を記載）</p>
+          <div class="fill-block">
+            <div class="fill-label">デザインキーワード <span class="required">必須</span></div>
+            <div class="fill-hint">デザインの方向性を示すキーワードと、その説明</div>
+            <div class="fill-content">
+              <p>Stikaの広告LPは、やさしく整った印象の中で、安心して使えそうな実用性と、日々の積み重ねによる前向きな変化が伝わるデザインを目指す。</p>
+              <p><br>
+                <strong>〈キーワード01：やさしい整い〉</strong><br>薄いオレンジ系の明るい背景と、広めの余白、やわらかい角丸やカードで、安心感のある落ち着いた印象をつくる。情報を詰め込みすぎず、自然に読み進められる見せ方にする。
+              </p><br>
+              <p>
+                <strong>〈キーワード02：実用的な安心感〉</strong><br>ブルー系の文字や見出しで情報を整理し、信頼感と読みやすさを出す。UI画面や機能紹介をわかりやすく見せることで、雰囲気だけでなく、実際に役立つサービスであることが伝わるようにする。
+              </p><br>
+              <p>
+                <strong>〈キーワード03：静かな前向きさ〉</strong><br>強い高揚感ではなく、日々の積み重ねによる成長が伝わる印象を目指す。CTAや強調部分にはオレンジをポイント使いし、記録や振り返りのUIを見せながら、無理なく続けられる前向きさを表現する。
+              </p>
+            </div>
           </div>
-        </div>
-
         </section>
 
         <section class="section" id="sec2">
           <h2 class="section-title"><span class="section-icon">2</span> カラーパレット</h2>
-
           <div class="fill-block">
             <div class="fill-label">カラーパレット <span class="required">必須</span></div>
-            <div class="fill-hint">各色のHEXコード・使用場面を記載し、実際の色見本も表示してください</div>
-
-        <table class="doc-table">
-          <thead><tr><th>色の種類</th><th>カラーコード</th><th>色見本</th><th>使用場面</th></tr></thead>
-          <tbody>
-          <tr class="template-row"><td>メインカラー</td><td>#（コードを入力）</td><td>（CSSで色見本を表示）</td><td>ヘッダー、ボタン、見出し</td></tr>
-          <tr class="template-row"><td>サブカラー</td><td>#（コードを入力）</td><td>（CSSで色見本を表示）</td><td>背景、カード、セクション区切り</td></tr>
-          <tr class="template-row"><td>アクセントカラー</td><td>#（コードを入力）</td><td>（CSSで色見本を表示）</td><td>CTA、リンク、強調</td></tr>
-          <tr class="template-row"><td>背景色</td><td>#（コードを入力）</td><td>（CSSで色見本を表示）</td><td>ページ背景</td></tr>
-          <tr class="template-row"><td>テキスト色</td><td>#（コードを入力）</td><td>（CSSで色見本を表示）</td><td>本文テキスト</td></tr>
-          <tr class="template-row"><td>テキスト色（薄）</td><td>#（コードを入力）</td><td>（CSSで色見本を表示）</td><td>補助テキスト、注釈</td></tr>
-          </tbody>
-        </table>
-
+            <div class="fill-hint">主要カラーと利用用途を定義する</div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>色の種類</th>
+                  <th>カラーコード</th>
+                  <th>用途</th>
+                  <th>使用場面</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>メインカラー</td>
+                  <td>#F8E8D8</td>
+                  <td>背景のベース</td>
+                  <td>ページ背景、セクション背景</td>
+                </tr>
+                <tr>
+                  <td>サブカラー</td>
+                  <td>#2E5F87</td>
+                  <td>本文・見出し文字</td>
+                  <td>見出し、本文、説明テキスト</td>
+                </tr>
+                <tr>
+                  <td>アクセントカラー</td>
+                  <td>#F08A34</td>
+                  <td>CTAや強調</td>
+                  <td>ボタン、リンク、強調要素</td>
+                </tr>
+                <tr>
+                  <td>補助色</td>
+                  <td>#FFFFFF</td>
+                  <td>可読性の確保</td>
+                  <td>カード背景、UIパネル</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </section>
 
         <section class="section" id="sec3">
           <h2 class="section-title"><span class="section-icon">3</span> タイポグラフィ</h2>
-
           <div class="fill-block">
-            <div class="fill-label">フォント設定 <span class="required">必須</span></div>
-        <table class="doc-table">
-          <thead><tr><th>要素</th><th>フォント名</th><th>サイズ</th><th>太さ</th><th>行間</th><th>用途</th></tr></thead>
-          <tbody>
-          <tr class="template-row"><td>h1（大見出し）</td><td>（フォント名）</td><td>（px）</td><td>（bold等）</td><td>（倍率）</td><td>ページタイトル</td></tr>
-          <tr class="template-row"><td>h2（中見出し）</td><td>（フォント名）</td><td>（px）</td><td>（bold等）</td><td>（倍率）</td><td>セクション見出し</td></tr>
-          <tr class="template-row"><td>h3（小見出し）</td><td>（フォント名）</td><td>（px）</td><td>（bold等）</td><td>（倍率）</td><td>サブセクション</td></tr>
-          <tr class="template-row"><td>本文</td><td>（フォント名）</td><td>（px）</td><td>（regular等）</td><td>（倍率）</td><td>通常テキスト</td></tr>
-          <tr class="template-row"><td>キャプション</td><td>（フォント名）</td><td>（px）</td><td>（regular等）</td><td>（倍率）</td><td>画像の説明等</td></tr>
-          <tr class="template-row"><td>ボタン</td><td>（フォント名）</td><td>（px）</td><td>（bold等）</td><td>—</td><td>ボタンテキスト</td></tr>
-          </tbody>
-        </table>
-
+            <div class="fill-label">フォント設計 <span class="required">必須</span></div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>要素</th>
+                  <th>フォント</th>
+                  <th>サイズ</th>
+                  <th>太さ</th>
+                  <th>行間</th>
+                  <th>用途</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>h1（大見出し）</td>
+                  <td>Zen Kaku Gothic New</td>
+                  <td>40px</td>
+                  <td>Bold</td>
+                  <td>1.35</td>
+                  <td>ファーストビューのメインコピー</td>
+                </tr>
+                <tr>
+                  <td>h2（中見出し）</td>
+                  <td>Zen Kaku Gothic New</td>
+                  <td>30px</td>
+                  <td>Bold</td>
+                  <td>1.45</td>
+                  <td>各セクションの見出し</td>
+                </tr>
+                <tr>
+                  <td>h3（小見出し）</td>
+                  <td>Zen Kaku Gothic New</td>
+                  <td>22px</td>
+                  <td>Medium</td>
+                  <td>1.5</td>
+                  <td>機能紹介カードの見出し / 小見出し</td>
+                </tr>
+                <tr>
+                  <td>本文</td>
+                  <td>Noto Sans JP</td>
+                  <td>16px</td>
+                  <td>Regular</td>
+                  <td>1.9</td>
+                  <td>説明文 / 導入文 / セクション本文</td>
+                </tr>
+                <tr>
+                  <td>強調文</td>
+                  <td>Noto Sans JP</td>
+                  <td>16px</td>
+                  <td>Medium</td>
+                  <td>1.8</td>
+                  <td>要点の強調 / ベネフィット補足</td>
+                </tr>
+                <tr>
+                  <td>キャプション</td>
+                  <td>Noto Sans JP</td>
+                  <td>13px</td>
+                  <td>Regular</td>
+                  <td>1.7</td>
+                  <td>注釈 / 補足説明 / フォーム補助テキスト</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </section>
 
         <section class="section" id="sec4">
           <h2 class="section-title"><span class="section-icon">4</span> UIコンポーネント</h2>
-
-
-        <div class="fill-block">
-          <div class="fill-label">ボタン <span class="required">必須</span></div>
-          <div class="fill-hint">プライマリ・セカンダリ・デンジャーの3種類のボタンスタイル（実物のHTMLサンプル付き）</div>
-          <div class="fill-content">
-            <p>（ここにボタンの実物サンプルとCSSコードを記載）</p>
+          <div class="fill-block">
+            <div class="fill-label">ボタン <span class="required">必須</span></div>
+            <div class="fill-hint">プライマリ・セカンダリ・テキストリンクの3種類を定義</div>
+            <div class="fill-content">
+              <p>角丸を持たせた落ち着いた形状を基本とし、CTAはアクセントカラーで視認性を高める。ホバー時は彩度を少し上げて操作対象を明確にする。</p>
+            </div>
           </div>
-        </div>
-        <div class="fill-block">
-          <div class="fill-label">フォーム要素 <span class="required">必須</span></div>
-          <div class="fill-hint">テキスト入力・セレクト・テキストエリア・チェックボックス・ラジオボタン（実物のHTMLサンプル付き）</div>
-          <div class="fill-content">
-            <p>（ここにフォーム要素の実物サンプルとCSSコードを記載）</p>
+          <div class="fill-block">
+            <div class="fill-label">フォーム要素 <span class="required">必須</span></div>
+            <div class="fill-hint">入力欄、セレクト、チェックボックスの見た目と状態遷移を定義</div>
+            <div class="fill-content">
+              <p>背景は白、枠線は淡いグレーを基本とし、フォーカス時にはブルー系のアウトラインで入力中状態を明確にする。</p>
+            </div>
           </div>
-        </div>
-        <div class="fill-block">
-          <div class="fill-label">カード・テーブル・その他 <span class="required">必須</span></div>
-          <div class="fill-hint">カードコンポーネント・テーブルスタイル・アラート等（実物のHTMLサンプル付き）</div>
-          <div class="fill-content">
-            <p>（ここにコンポーネントの実物サンプルとCSSコードを記載）</p>
-          </div>
-        </div>
-
         </section>
 
         <section class="section" id="sec5">
           <h2 class="section-title"><span class="section-icon">5</span> レイアウトルール</h2>
-
-        <div class="fill-block">
-          <div class="fill-label">レイアウト基本ルール <span class="required">必須</span></div>
-          <div class="fill-hint">グリッド・余白・角丸・シャドウ等の数値ルール</div>
-          <div class="fill-content">
-            <p>（レイアウトルールを記載）</p>
+          <div class="fill-block">
+            <div class="fill-label">レイアウト設計ルール <span class="required">必須</span></div>
+            <div class="fill-hint">グリッド、余白、最大幅などの基本ルール</div>
+            <div class="fill-content">
+              <p>コンテンツ幅は可読性を優先して固定上限を設ける。カード間・セクション間の余白を広めに取り、情報密度を適切にコントロールする。</p>
+            </div>
           </div>
-        </div>
-
         </section>
-
       </div>
     </main>
   </div>
 
   <script src="../js/main.js"></script>
 </body>
+
 </html>

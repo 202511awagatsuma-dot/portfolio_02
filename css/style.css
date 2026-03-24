@@ -316,6 +316,31 @@ a:hover { color: var(--black); }
   margin-bottom: 0;
 }
 
+.placement-intent-list {
+  margin: 4px 0 0 12px;
+  padding-left: 18px;
+}
+
+.placement-intent-list li {
+  margin-bottom: 12px;
+  color: var(--text);
+  line-height: 1.9;
+}
+
+.placement-intent-list li:last-child {
+  margin-bottom: 0;
+}
+
+.placement-intent-list .intent-title {
+  display: block;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.placement-intent-list .intent-body {
+  display: block;
+}
+
 .schedule-tools {
   font-size: 0.9em;
 }

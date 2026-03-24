@@ -316,6 +316,21 @@ a:hover { color: var(--black); }
   margin-bottom: 0;
 }
 
+.layout-rule-list {
+  margin: 8px 0 0 14px;
+  padding-left: 20px;
+}
+
+.layout-rule-list li {
+  margin-bottom: 10px;
+  color: var(--text);
+  line-height: 1.85;
+}
+
+.layout-rule-list li:last-child {
+  margin-bottom: 0;
+}
+
 .placement-intent-list {
   margin: 4px 0 0 12px;
   padding-left: 18px;

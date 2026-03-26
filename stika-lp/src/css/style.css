@@ -42,6 +42,10 @@ a {
   text-decoration: none;
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 .container {
   width: min(1120px, calc(100% - 56px));
   margin: 0 auto;
@@ -215,7 +219,7 @@ a {
 }
 
 .hero-copy h1 {
-  margin: 0 0 24px;
+  margin: 0 0 60px;
   color: var(--text-main);
   max-width: 13.5em;
   line-height: 1.5;
@@ -225,7 +229,7 @@ a {
 
 .hero-copy p {
   margin: 0 0 34px;
-  max-width: 33ch;
+  max-width: 408px;
   line-height: 1.9;
   color: #54799b;
 }
@@ -920,7 +924,7 @@ input:focus {
   }
 
   .hero-copy p {
-    max-width: 36ch;
+    max-width: 408px;
   }
 
   .hero-visual {

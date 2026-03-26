@@ -625,7 +625,7 @@ a {
 }
 
 .plan-cards {
-  margin-top: 34px;
+  margin-top: 14px;
   display: grid;
   grid-template-columns: repeat(2, minmax(250px, 380px));
   justify-content: center;
@@ -634,6 +634,15 @@ a {
 
 #plans .section-heading h2 + p {
   margin-top: 40px;
+}
+
+.plan-headings {
+  margin-top: 80px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(250px, 380px));
+  justify-content: center;
+  gap: 30px;
+  text-align: center;
 }
 
 .plan-card {
@@ -646,12 +655,13 @@ a {
 }
 
 .plan-note {
-  margin: 0 0 12px;
+  margin: 0;
   font-weight: 700;
+  font-size: 22px;
 }
 
 .discount {
-  margin: 0;
+  margin: 8px 0 0;
   font-size: 13px;
 }
 
@@ -668,7 +678,7 @@ a {
 
 .plan-sub-cta {
   text-align: center;
-  margin-top: 26px;
+  margin-top: 50px;
 }
 
 .faq-wrap {
@@ -1284,6 +1294,11 @@ input:focus {
 
   .plan-cards {
     grid-template-columns: 1fr;
+  }
+
+  .plan-headings {
+    grid-template-columns: 1fr;
+    gap: 18px;
   }
 
   .faq-question {

@@ -402,6 +402,11 @@ a {
   font-size: 28px;
 }
 
+.value-section-copy {
+  margin: 48px 0 0;
+  color: var(--text-main);
+}
+
 .section-accent h2,
 .section-accent h3,
 .section-accent p {

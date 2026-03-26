@@ -683,12 +683,13 @@ a {
 
 .faq-wrap {
   max-width: 980px;
+  font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
 }
 
 .faq-list {
-  margin-top: 30px;
+  margin-top: 70px;
   display: grid;
-  gap: 18px;
+  gap: 60px;
 }
 
 .faq-item {
@@ -696,7 +697,8 @@ a {
 }
 
 .faq-question {
-  width: 100%;
+  width: min(820px, 100%);
+  margin-inline: auto;
   border: 0;
   border-radius: 14px;
   background: transparent;
@@ -705,8 +707,10 @@ a {
   display: flex;
   align-items: center;
   gap: 14px;
-  font-size: 30px;
-  font-weight: 700;
+  font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  font-size: 22px;
+  line-height: 33px;
+  font-weight: 500;
   cursor: pointer;
 }
 
@@ -716,7 +720,10 @@ a {
   border-radius: 50%;
   background: var(--text-main);
   color: #fff;
-  font-size: 23px;
+  font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  font-size: 22px;
+  line-height: 33px;
+  font-weight: 500;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -724,6 +731,8 @@ a {
 }
 
 .faq-answer {
+  width: min(820px, 100%);
+  margin-inline: auto;
   margin-top: 12px;
   background: #fff;
   border-radius: 14px;
@@ -1303,12 +1312,14 @@ input:focus {
 
   .faq-question {
     font-size: 22px;
+    line-height: 33px;
   }
 
   .q-badge {
     width: 42px;
     height: 42px;
-    font-size: 18px;
+    font-size: 22px;
+    line-height: 33px;
   }
 
   .split-fields {

@@ -216,6 +216,8 @@ a {
 
 .hero-copy {
   max-width: 500px;
+  position: relative;
+  z-index: 2;
 }
 
 .hero-copy h1 {
@@ -240,37 +242,44 @@ a {
 
 .hero-visual {
   position: relative;
-  min-height: 570px;
+  min-height: 580px;
+  z-index: 1;
 }
 
 .phone-main {
-  width: min(385px, 56%);
-  margin-left: auto;
+  width: 254px;
+  height: 550px;
+  margin: 0 112px 0 auto;
   filter: drop-shadow(0 18px 24px rgba(20, 31, 46, 0.2));
 }
 
 .phone-sub {
   position: absolute;
-  width: 212px;
   border-radius: 12px;
   box-shadow: var(--shadow);
 }
 
 .phone-sub-1 {
+  width: 175px;
+  height: 175px;
   right: 0;
-  top: 204px;
+  top: 238px;
 }
 
 .phone-sub-2 {
-  right: 72px;
-  top: 314px;
+  width: 150px;
+  height: 190px;
+  right: 8px;
+  top: 352px;
 }
 
 .pose-visual {
   position: absolute;
-  left: 24px;
-  bottom: 5px;
-  width: 320px;
+  left: -14px;
+  bottom: 18px;
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
 }
 
 .about-grid {
@@ -902,6 +911,38 @@ input:focus {
   height: 84px;
 }
 
+@media (min-width: 1201px) {
+  .hero-inner {
+    grid-template-columns: 560px minmax(0, 1fr);
+  }
+
+  .hero-copy h1 {
+    max-width: none;
+    white-space: nowrap;
+  }
+
+  .phone-main {
+    position: absolute;
+    left: 145px;
+    top: 0;
+    margin: 0;
+  }
+
+  .phone-sub-1 {
+    left: 427px;
+    right: auto;
+  }
+
+  .phone-sub-2 {
+    left: 328px;
+    right: auto;
+  }
+
+  .pose-visual {
+    left: -93px;
+  }
+}
+
 @media (max-width: 1200px) {
   .header-nav {
     display: none;
@@ -998,23 +1039,29 @@ input:focus {
 
   .phone-main {
     width: 63%;
+    height: auto;
+    margin-right: 0;
   }
 
   .phone-sub {
     width: 142px;
+    height: auto;
   }
 
   .phone-sub-1 {
+    width: 142px;
     top: 150px;
   }
 
   .phone-sub-2 {
+    width: 142px;
     top: 214px;
     right: 46px;
   }
 
   .pose-visual {
     width: 174px;
+    height: auto;
     left: 0;
   }
 

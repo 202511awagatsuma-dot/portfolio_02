@@ -1,4 +1,6 @@
-﻿:root {
+﻿@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap");
+
+:root {
   --bg-main: #f0f1f3;
   --bg-beige: #efe1d2;
   --bg-soft: #f4f1ef;
@@ -29,6 +31,23 @@ body {
   color: var(--text-main);
   font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
   line-height: 1.7;
+}
+
+.lp-page {
+  font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+}
+
+.lp-page h2 {
+  font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  font-size: 30px;
+  line-height: 43px;
+  font-weight: 700;
+}
+
+.lp-page p:not([class]) {
+  font-size: 16px;
+  line-height: 30px;
+  font-weight: 400;
 }
 
 img {
@@ -80,15 +99,18 @@ a {
 }
 
 .section-heading h2 {
-  font-size: clamp(28px, 3.2vw, 48px);
-  line-height: 1.35;
-  margin: 0 0 16px;
+  margin: 0;
   color: var(--text-main);
 }
 
 .section-heading p {
   margin: 0;
   color: #50789d;
+}
+
+.section-heading h2 + p,
+.section-heading h2 + .about-copy {
+  margin-top: 60px;
 }
 
 .section-heading.center {
@@ -284,31 +306,44 @@ a {
 
 .about-grid {
   display: grid;
-  gap: 36px;
-  grid-template-columns: 1.1fr 1fr;
+  column-gap: 140px;
+  row-gap: 36px;
+  grid-template-columns: 332px minmax(0, 520px);
+  justify-content: center;
   align-items: center;
+}
+
+.about-copy p + p {
+  margin-top: 12px;
 }
 
 .about-diagram {
   position: relative;
-  width: min(450px, 100%);
-  height: 390px;
+  width: min(520px, 100%);
+  height: 430px;
   margin-inline: auto;
+  align-self: end;
 }
 
-.about-center {
+.about-dotted-line {
   position: absolute;
   inset: 50% auto auto 50%;
-  transform: translate(-50%, -50%);
-  width: 190px;
-  height: 190px;
+  transform: translate(-50%, calc(-50% + 18px));
+  width: 265px;
+  height: 265px;
   border-radius: 50%;
-  border: 2px dashed #9cb1c4;
-  display: grid;
-  place-items: center;
-  font-size: 48px;
-  color: #4f5a63;
-  font-family: "Times New Roman", serif;
+  border: 3px dashed #2c5f8a;
+  z-index: 0;
+}
+
+.about-center-logo {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, calc(-50% + 18px));
+  width: 120px;
+  height: 54px;
+  object-fit: contain;
+  z-index: 1;
 }
 
 .about-circle {
@@ -316,29 +351,36 @@ a {
   width: 170px;
   height: 170px;
   border-radius: 50%;
-  background: #fff;
-  border: 4px solid #f2d0b0;
+  background-color: #ffffff;
+  background-image: radial-gradient(
+    circle closest-side at center,
+    #ffffff 64%,
+    #ffd3ad 100%
+  );
   display: grid;
   place-items: center;
   text-align: center;
-  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.35;
+  font-weight: 500;
   color: var(--text-main);
-  box-shadow: 0 0 18px rgba(236, 139, 51, 0.35);
+  box-shadow: 0 0 20px 0 #f08a34;
+  z-index: 2;
 }
 
 .about-circle.top {
-  top: 0;
+  top: 6px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .about-circle.left {
-  bottom: 4px;
+  bottom: 6px;
   left: 6px;
 }
 
 .about-circle.right {
-  bottom: 4px;
+  bottom: 6px;
   right: 6px;
 }
 
@@ -366,8 +408,9 @@ a {
   margin: 0 0 22px;
 }
 
-.section-accent h2 {
-  font-size: 40px;
+.section-accent h2 + h3,
+.section-accent h2 + p {
+  margin-top: 60px;
 }
 
 .section-accent h3 {
@@ -452,6 +495,14 @@ a {
   grid-template-columns: 1fr 420px;
   gap: 28px;
   align-items: center;
+}
+
+.problem-copy h2 {
+  margin: 0;
+}
+
+.problem-copy h2 + p {
+  margin-top: 60px;
 }
 
 .problem-copy ul {
@@ -954,6 +1005,11 @@ input:focus {
     grid-template-columns: 1fr;
   }
 
+  .about-grid {
+    gap: 36px;
+    justify-content: stretch;
+  }
+
   .hero {
     min-height: auto;
     padding: 118px 0 78px;
@@ -1065,6 +1121,27 @@ input:focus {
     left: 0;
   }
 
+  .about-diagram {
+    width: min(420px, 100%);
+    height: 390px;
+  }
+
+  .about-dotted-line {
+    width: 258px;
+    height: 258px;
+    border-width: 2px;
+  }
+
+  .about-center-logo {
+    width: 120px;
+    height: 54px;
+  }
+
+  .about-circle {
+    width: 170px;
+    height: 170px;
+  }
+
   .timeline-wrap {
     grid-template-columns: 1fr;
   }
@@ -1145,3 +1222,4 @@ input:focus {
     width: 100%;
   }
 }
+

@@ -632,6 +632,10 @@ a {
   gap: 30px;
 }
 
+#plans .section-heading h2 + p {
+  margin-top: 40px;
+}
+
 .plan-card {
   background: #fff;
   border-radius: var(--radius);

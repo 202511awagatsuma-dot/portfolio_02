@@ -193,10 +193,14 @@ a {
   padding: 138px 0 112px;
   background-color: #eef1f4;
   background:
-    radial-gradient(58% 62% at 10% -8%, rgba(122, 97, 180, 0.56) 0%, rgba(122, 97, 180, 0.18) 38%, rgba(122, 97, 180, 0) 72%),
-    radial-gradient(72% 86% at 42% -18%, rgba(247, 205, 161, 0.52) 0%, rgba(247, 205, 161, 0.12) 46%, rgba(247, 205, 161, 0) 72%),
-    radial-gradient(46% 52% at 88% 10%, rgba(244, 223, 197, 0.34) 0%, rgba(244, 223, 197, 0) 72%),
-    linear-gradient(180deg, #efe5df 0%, #f1ece6 46%, #eef1f4 100%);
+    radial-gradient(
+      150% 128% at 50% 100%,
+      rgba(254, 248, 246, 0.1) 0%,
+      rgba(254, 248, 246, 0.1) 30%,
+      #ffd3ad 73%,
+      #3123ae 100%
+    ),
+    linear-gradient(180deg, #efe5db 0%, #f2ebe4 44%, #eef1f4 100%);
 }
 
 .hero-inner {

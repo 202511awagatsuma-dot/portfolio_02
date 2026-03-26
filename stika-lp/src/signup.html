@@ -1,0 +1,58 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新規登録 | Stika</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-page">
+  <main class="auth-layout">
+    <header class="auth-logo-wrap">
+      <a href="index.html" class="site-logo">
+        <img src="img/logo.png" alt="Stika">
+      </a>
+    </header>
+
+    <section class="auth-panel signup-panel">
+      <h1>新規登録</h1>
+      <form id="signupForm" class="signup-form" action="signup-complete.html" method="get">
+        <label>お名前
+          <input type="text" name="name" placeholder="山田 花子" required>
+        </label>
+        <label>メールアドレス
+          <input type="email" name="email" placeholder="example@mmmm.nn" required>
+        </label>
+        <label>パスワード
+          <div class="password-wrap">
+            <input type="password" name="password" placeholder="********" required>
+            <button type="button" class="toggle-password" aria-label="パスワード表示切り替え">表示</button>
+          </div>
+        </label>
+
+        <div class="or-divider"><span>または</span></div>
+
+        <button type="button" class="social-btn">
+          <img src="img/icon010.png" alt="">Googleで続行
+        </button>
+        <button type="button" class="social-btn">
+          <img src="img/icon009.png" alt="">Appleで続行
+        </button>
+        <button type="button" class="social-btn">
+          <img src="img/icon011.png" alt="">Lineで続行
+        </button>
+
+        <button class="btn btn-primary auth-submit" type="submit">登録する</button>
+      </form>
+    </section>
+
+    <aside class="auth-panel login-panel">
+      <h2>ログイン</h2>
+      <p>アカウントをお持ちの方はこちら</p>
+      <a href="#" class="btn btn-primary auth-login-btn">ログイン</a>
+      <a href="#" class="forgot-link">パスワードを忘れた方へ</a>
+    </aside>
+  </main>
+  <script src="js/script.js"></script>
+</body>
+</html>

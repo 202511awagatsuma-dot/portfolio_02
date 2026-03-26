@@ -234,6 +234,10 @@ a {
   color: #54799b;
 }
 
+.hero-copy .btn-primary {
+  box-shadow: none;
+}
+
 .hero-visual {
   position: relative;
   min-height: 570px;

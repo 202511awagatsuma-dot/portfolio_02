@@ -98,6 +98,116 @@ a {
   align-items: center;
 }
 
+.feature-showcase {
+  display: block;
+  padding-bottom: 0;
+  overflow-x: hidden;
+  background: var(--bg-accent);
+}
+
+.feature-showcase .feature-header {
+  color: #fff;
+}
+
+.feature-carousel {
+  --feature-scroll-distance: 0px;
+  position: relative;
+  height: calc((100vh - 104px) + var(--feature-scroll-distance));
+  margin-top: 50px;
+}
+
+.feature-carousel-sticky {
+  position: sticky;
+  top: 104px;
+  height: calc(100vh - 104px);
+  display: flex;
+  align-items: flex-start;
+  background: var(--bg-accent);
+}
+
+.feature-carousel-viewport {
+  width: min(1000px, calc(100vw - 56px));
+  height: 600px;
+  margin: 0 auto;
+  border-radius: 24px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.feature-carousel-track {
+  display: flex;
+  gap: 0;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.feature-slide {
+  flex: 0 0 1000px;
+  width: 1000px;
+  height: 600px;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  padding: 0 120.5px;
+  gap: 146px;
+}
+
+.feature-slide-copy {
+  width: 375px;
+}
+
+.feature-slide-number {
+  margin: 0;
+  color: var(--bg-accent);
+  font-size: 56px;
+  line-height: 1;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+.feature-slide-copy h4 {
+  margin: 18px 0 0;
+  color: var(--bg-accent);
+  font-size: 36px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.feature-slide-lead {
+  margin: 72px 0 0;
+  color: var(--text-main);
+  font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  font-size: 18px;
+  line-height: 32px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.feature-slide-copy p:last-child {
+  margin: 30px 0 0;
+  width: 375px;
+  color: var(--text-main);
+  font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  font-size: 16px;
+  line-height: 30px;
+  font-weight: 400;
+  margin-bottom: 85px;
+}
+
+.feature-slide-mock {
+  width: 301px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.feature-slide-mock img {
+  width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 24px rgba(20, 31, 46, 0.2));
+}
+
 .section-heading h2 {
   margin: 0;
   color: var(--text-main);
@@ -1319,6 +1429,65 @@ input:focus {
     grid-template-columns: 1fr;
   }
 
+  .feature-carousel {
+    --feature-scroll-distance: 0px !important;
+    height: auto;
+  }
+
+  .feature-carousel-sticky {
+    position: static;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .feature-carousel-viewport {
+    width: calc(100vw - 56px);
+    height: auto;
+    border-radius: 0;
+    background: transparent;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .feature-carousel-track {
+    gap: 20px;
+    transform: none !important;
+  }
+
+  .feature-slide {
+    width: min(1000px, calc(100vw - 56px));
+    min-width: min(1000px, calc(100vw - 56px));
+    height: auto;
+    min-height: 600px;
+    border-radius: 24px;
+    background: #fff;
+    padding: 42px 34px;
+    gap: 34px;
+    flex-direction: column;
+    align-items: flex-start;
+    scroll-snap-align: center;
+  }
+
+  .feature-slide-copy,
+  .feature-slide-mock {
+    width: 100%;
+  }
+
+  .feature-slide-lead {
+    margin-top: 42px;
+  }
+
+  .feature-slide-mock {
+    margin-top: auto;
+  }
+
+  .feature-slide-mock img {
+    width: min(280px, 62%);
+    margin-inline: auto;
+  }
+
   .problem-copy li {
     margin-left: 0;
   }
@@ -1363,6 +1532,42 @@ input:focus {
 
   .hero {
     padding: 102px 0 62px;
+  }
+
+  .feature-carousel {
+    margin-top: 38px;
+  }
+
+  .feature-carousel-viewport,
+  .feature-slide {
+    width: calc(100vw - 32px);
+    min-width: calc(100vw - 32px);
+  }
+
+  .feature-slide {
+    min-height: 0;
+    padding: 34px 24px;
+    border-radius: 20px;
+  }
+
+  .feature-slide-number {
+    font-size: 44px;
+  }
+
+  .feature-slide-copy h4 {
+    font-size: 30px;
+  }
+
+  .feature-slide-lead {
+    margin-top: 30px;
+    font-size: 18px;
+    line-height: 32px;
+  }
+
+  .feature-slide-copy p:last-child {
+    margin-top: 20px;
+    font-size: 16px;
+    line-height: 1.8;
   }
 
   .hero-copy h1 {

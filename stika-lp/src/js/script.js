@@ -17,6 +17,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const planRadios = document.querySelectorAll(".plan-toggle input[type='radio']");
+  if (planRadios.length > 0) {
+    const syncPlanSelection = () => {
+      planRadios.forEach((radio) => {
+        const label = radio.closest(".toggle-item");
+        if (!label) return;
+        label.classList.toggle("selected", radio.checked);
+      });
+    };
+
+    planRadios.forEach((radio) => {
+      radio.addEventListener("change", syncPlanSelection);
+    });
+
+    syncPlanSelection();
+  }
+
   const togglePassword = document.querySelector(".toggle-password");
   if (togglePassword) {
     togglePassword.addEventListener("click", () => {

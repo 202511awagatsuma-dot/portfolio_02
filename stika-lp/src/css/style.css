@@ -754,42 +754,93 @@ a {
 
 .apply-form {
   width: min(760px, 100%);
-  margin: 30px auto 0;
+  margin: 70px auto 0;
   background: var(--bg-beige);
   border-radius: var(--radius);
-  padding: 30px;
+  padding: 70px 110px;
+}
+
+.apply-form .btn-wide {
+  margin-top: 60px;
+  font-size: 22px;
 }
 
 .plan-toggle {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 280px);
   gap: 18px;
-  margin-bottom: 14px;
+  margin-bottom: 0;
+  justify-content: center;
+}
+
+.plan-note {
+  margin: 18px 0 0;
+  color: #464646;
+  font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 16px;
 }
 
 .toggle-item {
+  box-sizing: border-box;
   position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
   border-radius: 12px;
   border: 2px solid #efb078;
-  background: #fff7f0;
-  padding: 20px 18px;
+  background: #fff;
+  width: 280px;
+  height: 140px;
+  padding: 20px 18px 20px 45px;
   font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.toggle-item span {
+  font-size: 22px;
 }
 
 .toggle-item input {
-  accent-color: var(--bg-accent);
+  appearance: none;
+  -webkit-appearance: none;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  flex: 0 0 40px;
+  border: 3px solid #b8b8b8;
+  border-radius: 50%;
+  background: #fff;
+  position: relative;
+}
+
+.toggle-item input::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.toggle-item input:checked::after {
+  background: var(--bg-accent);
 }
 
 .toggle-item.selected {
-  background: #f4e6bc;
+  background: #F5E4BA;
 }
 
 .form-grid {
   display: grid;
   gap: 14px;
+  margin-top: 50px;
+}
+
+.field-section-title {
+  margin: 26px 0 0;
+  color: #2E5F87;
+  font-weight: 700;
 }
 
 .form-grid label {
@@ -818,17 +869,30 @@ input:focus {
 
 .split-fields {
   display: grid;
-  grid-template-columns: 1fr 1fr 1.2fr;
+  grid-template-columns: 80px 96px;
   gap: 12px;
+  justify-content: start;
 }
 
-.agree {
+.label-spacer {
+  visibility: hidden;
+}
+
+.security-field {
+  width: 120px;
+  white-space: nowrap;
+}
+
+.form-grid label.agree {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 8px;
+  margin-top: 36px;
 }
 
 .agree input {
+  flex: 0 0 auto;
   width: 22px;
   height: 22px;
 }
@@ -1322,12 +1386,20 @@ input:focus {
     line-height: 33px;
   }
 
-  .split-fields {
-    grid-template-columns: 1fr 1fr;
+  .apply-form {
+    padding: 30px 32px;
   }
 
-  .split-fields label:last-child {
-    grid-column: 1 / -1;
+  .plan-toggle {
+    grid-template-columns: 1fr;
+  }
+
+  .toggle-item {
+    width: 100%;
+  }
+
+  .split-fields {
+    grid-template-columns: 80px 96px;
   }
 
   .footer-inner {

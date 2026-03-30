@@ -297,15 +297,17 @@
                 月</span></label>
             <label class="toggle-item"><input type="radio" name="plan"><span>年額プラン<br>9,800円 / 年</span></label>
           </div>
+          <p class="plan-note">※お支払いはクレジットカード決済のみです。<br>*は入力必須項目です。</p>
           <div class="form-grid">
             <label>お名前 *<input type="text" placeholder="山田 花子" required></label>
             <label>メールアドレス *<input type="email" placeholder="example@mmm.nn" required></label>
+            <p class="field-section-title">クレジットカード番号*</p>
             <label>カード番号<input type="text" placeholder="1234 5678 9010 2345"></label>
             <div class="split-fields">
               <label>有効期限<input type="text" placeholder="MM"></label>
-              <label><input type="text" placeholder="YYYY"></label>
-              <label>セキュリティコード<input type="text" placeholder="000"></label>
+              <label><span class="label-spacer" aria-hidden="true">有効期限</span><input type="text" placeholder="YYYY" aria-label="有効期限（年）"></label>
             </div>
+            <label class="security-field">セキュリティコード<input type="text" placeholder="000"></label>
             <label class="agree"><input type="checkbox" required>利用規約・プライバシーポリシーに同意する *</label>
           </div>
           <button class="btn btn-primary btn-wide" type="submit">申し込み内容を確認する</button>

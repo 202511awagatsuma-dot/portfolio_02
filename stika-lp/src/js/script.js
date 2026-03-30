@@ -1,4 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Hero intro animation: play once per browser session on the LP top page.
+  const heroIntroSection = document.querySelector("[data-hero-intro]");
+  if (heroIntroSection) {
+    const introPlayedKey = "stikaHeroIntroPlayed";
+    const reduceMotionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const introAlreadyPlayed = sessionStorage.getItem(introPlayedKey) === "1";
+
+    if (reduceMotionMedia.matches || introAlreadyPlayed) {
+      document.body.classList.add("is-hero-loaded");
+      sessionStorage.setItem(introPlayedKey, "1");
+    } else {
+      document.body.classList.add("hero-intro-animating");
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          document.body.classList.add("is-hero-loaded");
+          sessionStorage.setItem(introPlayedKey, "1");
+        });
+      });
+    }
+  }
+
   const faqButtons = document.querySelectorAll(".faq-question");
   faqButtons.forEach((button) => {
     button.addEventListener("click", () => {

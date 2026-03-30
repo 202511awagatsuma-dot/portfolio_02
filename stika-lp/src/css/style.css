@@ -584,44 +584,83 @@ a {
 }
 
 .comparison-table {
-  margin-top: 30px;
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
+  margin: 30px auto 0;
+  width: min(100%, 1000px);
+}
+
+.comparison-copy {
+  margin: 60px auto 0;
+  width: 100%;
+  max-width: 820px;
+}
+
+.comparison-copy p {
+  margin: 0;
+}
+
+.comparison-copy p + p {
+  margin-top: 12px;
 }
 
 .comparison-table .row {
   display: grid;
-  grid-template-columns: 2fr repeat(3, 1fr);
+  grid-template-columns: 310px repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.comparison-table .row.head {
+  margin-top: 0;
 }
 
 .comparison-table .row > div {
-  padding: 16px 14px;
-  border: 2px solid #f1f3f6;
+  min-height: 72px;
+  padding: 14px 16px;
+  background: #f1f3f5;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
+  font-size: 16px;
+  color: var(--text-main);
+  white-space: nowrap;
 }
 
 .comparison-table .row > div:first-child {
   justify-content: flex-start;
-  gap: 10px;
-  font-size: 14px;
+  gap: 16px;
+  border-radius: var(--radius-pill) 0 0 var(--radius-pill);
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .comparison-table .row > div:first-child img {
-  width: 42px;
+  width: 40px;
 }
 
 .comparison-table .head > div {
-  background: #f6f9fc;
+  min-height: auto;
+  background: transparent;
+  padding: 0 12px 6px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
 }
 
-.comparison-table .row > div:nth-child(2) {
-  background: #b9a6cd;
+.comparison-table .head > div:first-child {
+  padding: 0;
+}
+
+.comparison-table .row:not(.head) > div:nth-child(2) {
+  background: #b6a8c7;
   color: #fff;
+}
+
+.comparison-table .mark {
+  display: inline-block;
+  font-size: 40px;
+  line-height: 1;
+  font-weight: 400;
 }
 
 .plan-cards {
@@ -1362,7 +1401,7 @@ input:focus {
   }
 
   .comparison-table .row {
-    min-width: 760px;
+    min-width: 1000px;
   }
 
   .plan-cards {

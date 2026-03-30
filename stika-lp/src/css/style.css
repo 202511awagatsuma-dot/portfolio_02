@@ -1134,7 +1134,7 @@ a {
     box-shadow 0.42s var(--ease-soft);
 }
 
-.comparison-table .row.is-inview > div:nth-child(2) {
+.comparison-table .row:not(.head).is-inview > div:nth-child(2) {
   background: #a896bc;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
 }
@@ -1190,19 +1190,19 @@ a {
 
 .plan-cards .plan-card:nth-child(2) {
   border-color: #de944d;
-  background: linear-gradient(180deg, rgba(245, 228, 186, 0.52) 0%, #fff 74%);
+  background: #fff;
 }
 
 .plan-cards .plan-card .btn {
+  box-shadow: none;
   transition:
     transform 0.26s var(--ease-soft),
-    box-shadow 0.26s var(--ease-soft),
     background-color 0.26s var(--ease-soft);
 }
 
 .plan-cards .plan-card .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 22px rgba(236, 139, 51, 0.3);
+  box-shadow: none;
 }
 
 .plan-note {

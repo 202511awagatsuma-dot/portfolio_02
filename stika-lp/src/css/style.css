@@ -1513,6 +1513,27 @@ input:focus {
   .header-nav {
     display: none;
   }
+  
+  .btn-header {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 1024px) {
+  .header-inner {
+    min-height: 78px;
+    gap: 18px;
+  }
+
+  .site-logo img {
+    width: 120px;
+  }
+
+  .btn-header {
+    height: 48px;
+    padding-inline: 20px;
+    font-size: 14px;
+  }
 
   .hero-inner,
   .about-grid,
@@ -1633,19 +1654,32 @@ input:focus {
   }
 
   .auth-shell {
-    width: min(1040px, calc(100% - 64px));
+    width: min(960px, calc(100% - 56px));
+    padding-top: 40px;
   }
 
   .auth-content {
-    column-gap: 94px;
+    column-gap: 72px;
   }
 
   .auth-signup {
-    width: min(390px, 100%);
+    width: min(380px, 100%);
   }
 
   .auth-login {
-    width: min(270px, 100%);
+    width: min(260px, 100%);
+    padding-left: 12px;
+  }
+
+  .auth-title,
+  .auth-subtitle {
+    font-size: 28px;
+  }
+
+  .auth-submit,
+  .auth-login-btn {
+    width: 210px;
+    height: 50px;
   }
 }
 
@@ -1885,8 +1919,8 @@ input:focus {
   }
 
   .auth-shell {
-    width: min(760px, calc(100% - 44px));
-    padding-top: 34px;
+    width: min(760px, calc(100% - 36px));
+    padding-top: 28px;
   }
 
   .auth-header {
@@ -1911,13 +1945,13 @@ input:focus {
   .auth-login {
     border-top: 1px solid #ddd8e4;
     padding-left: 0;
-    padding-top: 28px;
+    padding-top: 22px;
     text-align: center;
   }
 
   .auth-title,
   .auth-subtitle {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .form-label {
@@ -1953,15 +1987,15 @@ input:focus {
   .complete-btn {
     min-width: auto;
     width: 100%;
-    max-width: 320px;
-    height: 52px;
+    max-width: 300px;
+    height: 50px;
     margin-left: auto;
     margin-right: auto;
   }
 
   .complete-layout {
-    width: min(1160px, calc(100% - 48px));
-    padding-top: 30px;
+    width: min(1160px, calc(100% - 36px));
+    padding-top: 24px;
   }
 
   .complete-card {
@@ -1979,10 +2013,10 @@ input:focus {
   }
 
   .complete-btn {
-    max-width: 280px;
-    margin-top: 56px;
-    font-size: 16px;
-    height: 50px;
+    max-width: 260px;
+    margin-top: 48px;
+    font-size: 15px;
+    height: 48px;
   }
 
   .forgot-link {
@@ -2002,7 +2036,7 @@ input:focus {
 
   .auth-title,
   .auth-subtitle {
-    font-size: 30px;
+    font-size: 26px;
   }
 
   .auth-form {

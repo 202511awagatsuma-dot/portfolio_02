@@ -41,7 +41,14 @@ document.addEventListener("DOMContentLoaded", () => {
         .closest(".password-wrap")
         .querySelector("input[type='password'], input[type='text']");
       if (!passwordInput) return;
-      passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+      const willShow = passwordInput.type === "password";
+      passwordInput.type = willShow ? "text" : "password";
+      togglePassword.classList.toggle("is-visible", willShow);
+      togglePassword.setAttribute("aria-pressed", String(willShow));
+      togglePassword.setAttribute(
+        "aria-label",
+        willShow ? "Hide password" : "Show password"
+      );
     });
   }
 

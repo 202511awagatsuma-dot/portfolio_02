@@ -51,28 +51,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (featureCarousel && featureTrack && featureViewport) {
     const desktopMedia = window.matchMedia("(min-width: 1201px)");
+    const scrollCompression = 0.22;
+    const bottomGap = 100;
     let maxTranslate = 0;
+    let verticalDistance = 0;
     let sectionTop = 0;
+    let sectionEnd = 0;
     let ticking = false;
 
     const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
     const updateProgress = () => {
       if (!desktopMedia.matches) return;
-      const progressed = clamp(window.scrollY - sectionTop, 0, maxTranslate);
+      const scrolled = window.scrollY - sectionTop;
+      const progressed = clamp(scrolled / scrollCompression, 0, maxTranslate);
       featureTrack.style.transform = `translate3d(${-progressed}px, 0, 0)`;
+      featureCarousel.classList.toggle("is-pinned", window.scrollY >= sectionTop && window.scrollY <= sectionEnd);
+      featureCarousel.classList.toggle("is-after", window.scrollY > sectionEnd);
     };
 
     const recalc = () => {
       if (!desktopMedia.matches) {
         featureCarousel.style.setProperty("--feature-scroll-distance", "0px");
+        featureCarousel.style.setProperty("--feature-release-top", "0px");
+        featureCarousel.style.setProperty("--feature-carousel-height", "auto");
         featureTrack.style.transform = "translate3d(0, 0, 0)";
+        featureCarousel.classList.remove("is-pinned", "is-after");
         return;
       }
 
+      const boxHeight = featureViewport.clientHeight;
+      const pinTop = (window.innerHeight - boxHeight) / 2;
       maxTranslate = Math.max(featureTrack.scrollWidth - featureViewport.clientWidth, 0);
+      verticalDistance = maxTranslate * scrollCompression;
+      const releaseTop = verticalDistance + pinTop;
+      const carouselHeight = releaseTop + boxHeight + bottomGap;
       sectionTop = featureCarousel.getBoundingClientRect().top + window.scrollY;
-      featureCarousel.style.setProperty("--feature-scroll-distance", `${maxTranslate}px`);
+      sectionEnd = sectionTop + verticalDistance;
+      featureCarousel.style.setProperty("--feature-scroll-distance", `${verticalDistance}px`);
+      featureCarousel.style.setProperty("--feature-release-top", `${releaseTop}px`);
+      featureCarousel.style.setProperty("--feature-carousel-height", `${carouselHeight}px`);
       updateProgress();
     };
 

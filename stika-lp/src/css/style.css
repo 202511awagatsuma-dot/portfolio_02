@@ -1,4 +1,4 @@
-﻿@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap");
+﻿@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Mono:wght@100&display=swap");
 
 :root {
   --bg-main: #f0f1f3;
@@ -100,6 +100,7 @@ a {
 
 .feature-showcase {
   display: block;
+  min-height: 0;
   padding-bottom: 0;
   overflow-x: hidden;
   background: var(--bg-accent);
@@ -111,27 +112,43 @@ a {
 
 .feature-carousel {
   --feature-scroll-distance: 0px;
+  --feature-box-height: 600px;
+  --feature-release-top: 0px;
+  --feature-carousel-height: calc(100vh + var(--feature-scroll-distance));
   position: relative;
-  height: calc((100vh - 104px) + var(--feature-scroll-distance));
+  height: var(--feature-carousel-height);
   margin-top: 50px;
 }
 
 .feature-carousel-sticky {
-  position: sticky;
-  top: 104px;
-  height: calc(100vh - 104px);
-  display: flex;
-  align-items: flex-start;
-  background: var(--bg-accent);
+  position: relative;
+  height: 100vh;
+  display: grid;
+  place-items: center;
 }
 
 .feature-carousel-viewport {
   width: min(1000px, calc(100vw - 56px));
-  height: 600px;
+  height: var(--feature-box-height);
   margin: 0 auto;
   border-radius: 24px;
   background: #fff;
   overflow: hidden;
+  z-index: 2;
+}
+
+.feature-carousel.is-pinned .feature-carousel-viewport {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.feature-carousel.is-after .feature-carousel-viewport {
+  position: absolute;
+  left: 50%;
+  top: var(--feature-release-top);
+  transform: translateX(-50%);
 }
 
 .feature-carousel-track {
@@ -159,22 +176,24 @@ a {
 .feature-slide-number {
   margin: 0;
   color: var(--bg-accent);
-  font-size: 56px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 64px;
   line-height: 1;
-  font-weight: 300;
+  font-weight: 100;
   letter-spacing: 0.02em;
 }
 
 .feature-slide-copy h4 {
-  margin: 18px 0 0;
+  margin: 32px 0 0;
   color: var(--bg-accent);
-  font-size: 36px;
-  line-height: 1.35;
-  font-weight: 700;
+  font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  font-size: 22px;
+  line-height: 33px;
+  font-weight: 500;
 }
 
 .feature-slide-lead {
-  margin: 72px 0 0;
+  margin: 60px 0 0;
   color: var(--text-main);
   font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
   font-size: 18px;
@@ -1440,6 +1459,15 @@ input:focus {
     padding: 0;
   }
 
+  .feature-carousel.is-pinned .feature-carousel-viewport,
+  .feature-carousel.is-after .feature-carousel-viewport {
+    position: static;
+    left: auto;
+    top: auto;
+    bottom: auto;
+    transform: none;
+  }
+
   .feature-carousel-viewport {
     width: calc(100vw - 56px);
     height: auto;
@@ -1476,7 +1504,7 @@ input:focus {
   }
 
   .feature-slide-lead {
-    margin-top: 42px;
+    margin-top: 60px;
   }
 
   .feature-slide-mock {
@@ -1559,7 +1587,7 @@ input:focus {
   }
 
   .feature-slide-lead {
-    margin-top: 30px;
+    margin-top: 60px;
     font-size: 18px;
     line-height: 32px;
   }
@@ -1771,4 +1799,5 @@ input:focus {
     width: 100%;
   }
 }
+
 

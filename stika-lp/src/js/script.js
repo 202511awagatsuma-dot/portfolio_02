@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const reduceMotionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
+
   // Hero intro animation: play once per browser session on the LP top page.
   const heroIntroSection = document.querySelector("[data-hero-intro]");
   if (heroIntroSection) {
     const introPlayedKey = "stikaHeroIntroPlayed";
-    const reduceMotionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
     const introAlreadyPlayed = sessionStorage.getItem(introPlayedKey) === "1";
 
     if (reduceMotionMedia.matches || introAlreadyPlayed) {
@@ -21,12 +22,52 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const faqButtons = document.querySelectorAll(".faq-question");
+  const setupFaqIcon = (button) => {
+    if (button.querySelector(".faq-toggle-icon")) return;
+    const icon = document.createElement("span");
+    icon.className = "faq-toggle-icon";
+    icon.setAttribute("aria-hidden", "true");
+    button.appendChild(icon);
+  };
+
+  const setFaqState = (button, shouldOpen, immediate = false) => {
+    const answer = button.nextElementSibling;
+    if (!answer) return;
+    if (immediate) {
+      answer.classList.add("faq-no-motion");
+    } else {
+      answer.classList.remove("faq-no-motion");
+    }
+
+    button.setAttribute("aria-expanded", String(shouldOpen));
+    button.classList.toggle("is-open", shouldOpen);
+    answer.classList.toggle("open", shouldOpen);
+
+    if (shouldOpen) {
+      answer.style.maxHeight = `${answer.scrollHeight}px`;
+      answer.style.opacity = "1";
+      return;
+    }
+
+    answer.style.maxHeight = "0px";
+    answer.style.opacity = "0";
+  };
+
   faqButtons.forEach((button) => {
+    setupFaqIcon(button);
+    const initialOpen = button.getAttribute("aria-expanded") === "true";
+    setFaqState(button, initialOpen, true);
+
     button.addEventListener("click", () => {
-      const answer = button.nextElementSibling;
       const isOpen = button.getAttribute("aria-expanded") === "true";
-      button.setAttribute("aria-expanded", String(!isOpen));
-      answer.classList.toggle("open", !isOpen);
+      setFaqState(button, !isOpen, reduceMotionMedia.matches);
+    });
+  });
+
+  window.addEventListener("resize", () => {
+    faqButtons.forEach((button) => {
+      if (button.getAttribute("aria-expanded") !== "true") return;
+      setFaqState(button, true, true);
     });
   });
 
@@ -54,6 +95,116 @@ document.addEventListener("DOMContentLoaded", () => {
 
     syncPlanSelection();
   }
+
+  // Scroll reveal: one-time animation trigger for each section element.
+  const registerReveal = (element, variant, delaySeconds = 0) => {
+    if (!element) return;
+    element.classList.add("reveal", variant);
+    if (delaySeconds > 0) {
+      element.style.setProperty("--reveal-delay", `${delaySeconds}s`);
+    }
+  };
+
+  const registerRevealTargets = () => {
+    const aboutHeading = document.querySelector("#about .section-heading h2");
+    registerReveal(aboutHeading, "reveal-up");
+    document.querySelectorAll("#about .about-copy p").forEach((item, index) => {
+      registerReveal(item, "reveal-up", 0.08 + index * 0.06);
+    });
+
+    const aboutDottedLine = document.querySelector("#about .about-dotted-line");
+    const aboutCircleTop = document.querySelector("#about .about-circle.top");
+    const aboutCircleLeft = document.querySelector("#about .about-circle.left");
+    const aboutCircleRight = document.querySelector("#about .about-circle.right");
+    const aboutLogo = document.querySelector("#about .about-center-logo");
+    [aboutDottedLine, aboutCircleTop, aboutCircleLeft, aboutCircleRight, aboutLogo].forEach((item) => {
+      if (!item) return;
+      item.classList.add("about-seq-item");
+    });
+    if (aboutDottedLine) aboutDottedLine.style.setProperty("--reveal-delay", "0.12s");
+    if (aboutCircleTop) aboutCircleTop.style.setProperty("--reveal-delay", "0.24s");
+    if (aboutCircleLeft) aboutCircleLeft.style.setProperty("--reveal-delay", "0.34s");
+    if (aboutCircleRight) aboutCircleRight.style.setProperty("--reveal-delay", "0.44s");
+    if (aboutLogo) aboutLogo.style.setProperty("--reveal-delay", "0.58s");
+
+    const valueHeading = document.querySelector(".value-section .section-heading");
+    registerReveal(valueHeading, "reveal-up");
+    document.querySelectorAll(".value-card").forEach((card, index) => {
+      registerReveal(card, "reveal-up", 0.14 + index * 0.1);
+    });
+
+    const timelineHeading = document.querySelector(".timeline-wrap")?.previousElementSibling;
+    registerReveal(timelineHeading, "reveal-up");
+    const timelineLine = document.querySelector(".timeline-line");
+    if (timelineLine) {
+      timelineLine.classList.add("timeline-line-reveal");
+      timelineLine.style.setProperty("--reveal-delay", "0.12s");
+    }
+    document.querySelectorAll(".timeline-line img").forEach((icon, index) => {
+      registerReveal(icon, "reveal-scale", 0.26 + index * 0.1);
+    });
+    document.querySelectorAll(".timeline-item").forEach((item, index) => {
+      registerReveal(item, "reveal-up", 0.3 + index * 0.12);
+    });
+    const timelineSummary = document.querySelector(".timeline-summary");
+    registerReveal(timelineSummary, "reveal-up", 0.66);
+
+    const problemHeading = document.querySelector(".problem-copy h2");
+    const problemText = document.querySelector(".problem-copy h2 + p");
+    const problemVisual = document.querySelector(".problem-visual");
+    registerReveal(problemHeading, "reveal-up");
+    registerReveal(problemText, "reveal-up", 0.08);
+    document.querySelectorAll(".problem-copy li").forEach((item, index) => {
+      registerReveal(item, "reveal-scale", 0.16 + index * 0.12);
+    });
+    registerReveal(problemVisual, "reveal-up", 0.52);
+
+    const comparisonHeading = document.querySelector(".comparison-table")?.previousElementSibling;
+    registerReveal(comparisonHeading, "reveal-up");
+    const comparisonHead = document.querySelector(".comparison-table .row.head");
+    registerReveal(comparisonHead, "reveal-up", 0.08);
+    document.querySelectorAll(".comparison-table .row:not(.head)").forEach((row, index) => {
+      registerReveal(row, "reveal-up", 0.14 + index * 0.08);
+    });
+    registerReveal(document.querySelector(".comparison-copy"), "reveal-up", 0.56);
+
+    registerReveal(document.querySelector("#apply .section-heading"), "reveal-up");
+    registerReveal(document.querySelector("#apply .apply-form"), "reveal-up", 0.12);
+    document.querySelectorAll("#apply .plan-toggle .toggle-item").forEach((item, index) => {
+      registerReveal(item, "reveal-scale", 0.22 + index * 0.1);
+    });
+  };
+
+  const initRevealObserver = () => {
+    registerRevealTargets();
+
+    const revealTargets = document.querySelectorAll(".reveal, .about-seq-item, .timeline-line-reveal");
+    if (revealTargets.length === 0) return;
+
+    if (reduceMotionMedia.matches || typeof IntersectionObserver === "undefined") {
+      revealTargets.forEach((element) => element.classList.add("is-inview"));
+      return;
+    }
+
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-inview");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px -12% 0px",
+        threshold: 0.2,
+      }
+    );
+
+    revealTargets.forEach((element) => revealObserver.observe(element));
+  };
+
+  initRevealObserver();
 
   const togglePassword = document.querySelector(".toggle-password");
   if (togglePassword) {

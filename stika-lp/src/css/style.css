@@ -1624,7 +1624,7 @@ input:focus {
 
 .footer-logo img {
   width: 70px;
-  height: 33px;
+  height: auto;
 }
 
 .footer-links {

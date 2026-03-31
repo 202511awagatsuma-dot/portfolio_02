@@ -104,7 +104,9 @@ a {
 .feature-showcase {
   display: block;
   min-height: 0;
-  padding-bottom: 0;
+  /* Root cause: sticky carousel end relied too much on JS height only.
+     Keep guaranteed section footer space so orange background never ends early. */
+  padding-bottom: 140px;
   overflow-x: hidden;
   background: var(--bg-accent);
 }
@@ -121,6 +123,7 @@ a {
   position: relative;
   height: var(--feature-carousel-height);
   margin-top: 50px;
+  margin-bottom: 24px;
 }
 
 .feature-carousel-sticky {
@@ -1944,6 +1947,14 @@ input:focus {
 }
 
 @media (min-width: 1201px) {
+  .section.feature-showcase {
+    padding-bottom: 160px;
+  }
+
+  .feature-carousel {
+    margin-bottom: 32px;
+  }
+
   .hero-inner {
     grid-template-columns: 560px minmax(0, 1fr);
   }
@@ -2001,6 +2012,10 @@ input:focus {
 }
 
 @media (max-width: 1024px) {
+  .section.feature-showcase {
+    padding-bottom: 104px;
+  }
+
   .header-inner {
     min-height: 74px;
     gap: clamp(14px, 3vw, 28px);
@@ -2088,6 +2103,9 @@ input:focus {
   .feature-carousel {
     --feature-scroll-distance: 0px !important;
     height: auto;
+    margin-top: 46px;
+    margin-bottom: 20px;
+    padding-inline: 0;
   }
 
   .feature-carousel-sticky {
@@ -2106,50 +2124,97 @@ input:focus {
   }
 
   .feature-carousel-viewport {
-    width: calc(100vw - 56px);
+    width: min(400px, calc(100vw - 40px));
+    max-width: 100%;
+    margin-inline: auto;
     height: auto;
     border-radius: 0;
     background: transparent;
-    overflow-x: auto;
+    overflow-x: visible;
     overflow-y: visible;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: none;
+    -webkit-overflow-scrolling: auto;
   }
 
   .feature-carousel-track {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     gap: 20px;
     transform: none !important;
   }
 
   .feature-slide {
-    width: min(1000px, calc(100vw - 56px));
-    min-width: min(1000px, calc(100vw - 56px));
-    height: auto;
-    min-height: 600px;
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    height: auto !important;
+    min-height: 0 !important;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    align-content: start;
     border-radius: 24px;
     background: #fff;
-    padding: 42px 34px;
-    gap: 34px;
-    flex-direction: column;
-    align-items: flex-start;
-    scroll-snap-align: center;
+    padding: 38px 32px;
+    gap: 0;
+    scroll-snap-align: none;
   }
 
-  .feature-slide-copy,
-  .feature-slide-mock {
+  .feature-slide-copy {
+    order: 1;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    align-self: stretch;
+  }
+
+  .feature-slide-copy h4,
+  .feature-slide-lead,
+  .feature-slide-copy p:last-child {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+
+  .feature-slide-mock {
+    order: 2;
+    width: 100%;
+    justify-self: center;
+    align-self: auto;
+  }
+
+  .feature-slide-copy h4 {
+    margin-top: 18px;
+    font-size: 26px;
+    line-height: 1.45;
   }
 
   .feature-slide-lead {
-    margin-top: 60px;
+    margin-top: 18px;
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  .feature-slide-copy p:last-child {
+    width: 100%;
+    margin-top: 14px;
+    margin-bottom: 0;
+    font-size: 15px;
+    line-height: 1.8;
   }
 
   .feature-slide-mock {
-    margin-top: auto;
+    margin-top: 12px !important;
+    padding-bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .feature-slide-mock img {
-    width: min(280px, 62%);
+    width: min(260px, 62%);
     margin-inline: auto;
   }
 
@@ -2193,6 +2258,10 @@ input:focus {
 }
 
 @media (max-width: 840px) {
+  .section.feature-showcase {
+    padding-bottom: 88px;
+  }
+
   .reveal {
     transition-duration: 0.64s;
   }
@@ -2311,39 +2380,80 @@ input:focus {
   }
 
   .feature-carousel {
-    margin-top: 38px;
+    margin-top: 46px;
+    padding-inline: 0;
   }
 
-  .feature-carousel-viewport,
-  .feature-slide {
-    width: calc(100vw - 32px);
-    min-width: calc(100vw - 32px);
+  .feature-carousel-viewport {
+    width: min(400px, calc(100vw - 28px));
+    min-width: 0;
   }
 
   .feature-slide {
-    min-height: 0;
-    padding: 34px 24px;
-    border-radius: 20px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .feature-slide {
+    padding: 30px 22px;
+    border-radius: 18px;
+    gap: 0;
   }
 
   .feature-slide-number {
-    font-size: 44px;
+    font-size: 34px;
   }
 
   .feature-slide-copy h4 {
-    font-size: 30px;
+    margin-top: 16px;
+    font-size: 20px;
+    line-height: 1.5;
   }
 
   .feature-slide-lead {
-    margin-top: 60px;
-    font-size: 18px;
-    line-height: 32px;
+    margin-top: 16px;
+    font-size: 14px;
+    line-height: 1.72;
   }
 
   .feature-slide-copy p:last-child {
-    margin-top: 20px;
-    font-size: 16px;
-    line-height: 1.8;
+    margin-top: 14px;
+    margin-bottom: 0;
+    font-size: 13.5px;
+    line-height: 1.78;
+  }
+
+  .feature-slide-mock {
+    margin-top: 12px !important;
+    padding-bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .feature-slide-mock img {
+    width: min(228px, 60%);
+    max-width: 100%;
+    max-height: 280px;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .feature-showcase .feature-header h2 + h3,
+  .feature-showcase .feature-header h2 + p {
+    margin-top: 26px;
+  }
+
+  .feature-showcase .feature-header h3 {
+    font-size: 24px;
+    line-height: 1.55;
+  }
+
+  .feature-showcase .feature-header p {
+    margin-bottom: 0;
+    font-size: 15px;
+    line-height: 1.75;
   }
 
   .hero-copy h1 {
@@ -2645,6 +2755,70 @@ input:focus {
 }
 
 @media (max-width: 768px) {
+  .section.feature-showcase {
+    padding-bottom: 80px;
+  }
+
+  .feature-carousel {
+    margin-top: 46px;
+    padding-inline: 0;
+  }
+
+  .feature-carousel-viewport {
+    width: min(400px, calc(100vw - 22px));
+    min-width: 0;
+  }
+
+  .feature-slide {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .feature-slide {
+    padding: 26px 18px;
+    gap: 0;
+  }
+
+  .feature-slide-number {
+    font-size: 30px;
+  }
+
+  .feature-slide-copy h4 {
+    margin-top: 14px;
+    font-size: 18px;
+    line-height: 1.45;
+  }
+
+  .feature-slide-lead {
+    margin-top: 14px;
+    font-size: 13.5px;
+    line-height: 1.68;
+  }
+
+  .feature-slide-copy p:last-child {
+    margin-top: 12px;
+    font-size: 13px;
+    line-height: 1.72;
+  }
+
+  .feature-slide-mock {
+    margin-top: 12px !important;
+  }
+
+  .feature-slide-mock img {
+    width: min(206px, 58%);
+    max-height: 250px;
+  }
+
+  .feature-showcase .feature-header h3 {
+    font-size: 21px;
+  }
+
+  .feature-showcase .feature-header p {
+    margin-bottom: 0;
+    font-size: 14px;
+  }
+
   .hero-inner {
     grid-template-columns: 1fr;
     gap: 24px;

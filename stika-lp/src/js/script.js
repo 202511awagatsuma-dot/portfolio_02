@@ -281,11 +281,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const featureCarousel = document.querySelector("[data-feature-carousel]");
   const featureTrack = featureCarousel?.querySelector("[data-feature-track]");
   const featureViewport = featureCarousel?.querySelector(".feature-carousel-viewport");
+  const featureSection = featureCarousel?.closest(".feature-showcase");
 
   if (featureCarousel && featureTrack && featureViewport) {
-    const desktopMedia = window.matchMedia("(min-width: 1201px)");
+    const desktopMedia = window.matchMedia("(min-width: 1025px)");
     const scrollCompression = 0.22;
-    const bottomGap = 100;
+    const bottomGap = 240;
     let maxTranslate = 0;
     let verticalDistance = 0;
     let sectionTop = 0;
@@ -314,11 +315,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const boxHeight = featureViewport.clientHeight;
-      const pinTop = (window.innerHeight - boxHeight) / 2;
+      const pinTop = Math.max((window.innerHeight - boxHeight) / 2, 0);
       maxTranslate = Math.max(featureTrack.scrollWidth - featureViewport.clientWidth, 0);
       verticalDistance = maxTranslate * scrollCompression;
-      const releaseTop = verticalDistance + pinTop;
-      const carouselHeight = releaseTop + boxHeight + bottomGap;
+      const releaseTop = Math.max(verticalDistance + pinTop, 0);
+      // Root cause: carousel height was based on a fixed gap only.
+      // Also factor in section bottom padding so orange background never ends too early.
+      const sectionBottomPadding = featureSection
+        ? parseFloat(window.getComputedStyle(featureSection).paddingBottom) || 0
+        : 0;
+      const carouselMarginBottom = parseFloat(window.getComputedStyle(featureCarousel).marginBottom) || 0;
+      const safeBottomGap = Math.max(bottomGap, sectionBottomPadding + carouselMarginBottom + 48);
+      const carouselHeight = releaseTop + boxHeight + safeBottomGap;
       sectionTop = featureCarousel.getBoundingClientRect().top + window.scrollY;
       sectionEnd = sectionTop + verticalDistance;
       featureCarousel.style.setProperty("--feature-scroll-distance", `${verticalDistance}px`);

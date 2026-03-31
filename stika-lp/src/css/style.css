@@ -2360,7 +2360,7 @@ input:focus {
   }
 
   .hero-visual {
-    min-height: clamp(360px, 46vw, 420px);
+    min-height: clamp(398px, 54vw, 468px);
   }
 
   .problem-copy ul {
@@ -2387,29 +2387,35 @@ input:focus {
   }
 
   .phone-main {
-    width: clamp(180px, 24vw, 212px);
-    margin-right: clamp(26px, 4vw, 44px);
+    position: relative;
+    z-index: 3;
+    width: clamp(170px, 22.5vw, 198px);
+    margin-right: clamp(10px, 2.2vw, 20px);
   }
 
   .phone-sub {
     height: auto;
+    z-index: 2;
   }
 
   .phone-sub-1 {
-    width: clamp(120px, 16.5vw, 140px);
-    top: clamp(132px, 17vw, 160px);
-    right: 0;
+    width: clamp(102px, 13.4vw, 122px);
+    top: clamp(50px, 9vw, 70px);
+    left: clamp(14px, 2.2vw, 26px);
+    right: auto;
   }
 
   .phone-sub-2 {
-    width: clamp(112px, 14.5vw, 130px);
-    top: clamp(204px, 25.5vw, 240px);
-    right: clamp(12px, 2.8vw, 26px);
+    width: clamp(96px, 12.4vw, 114px);
+    top: clamp(140px, 19.5vw, 176px);
+    left: clamp(30px, 4vw, 48px);
+    right: auto;
   }
 
   .pose-visual {
-    width: clamp(136px, 18vw, 162px);
-    left: clamp(-6px, -0.8vw, 0px);
+    z-index: 1;
+    width: clamp(122px, 15.4vw, 142px);
+    left: clamp(-2px, -0.8vw, 10px);
   }
 
   .about-diagram {
@@ -2650,25 +2656,31 @@ input:focus {
   }
 
   .hero-visual {
-    min-height: clamp(360px, 86vw, 460px);
+    min-height: clamp(392px, 88vw, 458px);
   }
 
   .phone-main {
-    width: min(58%, 248px);
-    margin-right: 0;
+    width: min(54%, 226px);
+    margin-right: clamp(6px, 2vw, 14px);
   }
 
   .phone-sub-1 {
-    width: min(38%, 148px);
+    width: min(29%, 116px);
+    top: clamp(48px, 17vw, 74px);
+    left: clamp(12px, 3.2vw, 24px);
+    right: auto;
   }
 
   .phone-sub-2 {
-    width: min(34%, 136px);
-    right: clamp(20px, 7vw, 40px);
+    width: min(26%, 104px);
+    top: clamp(134px, 41vw, 178px);
+    left: clamp(26px, 7vw, 46px);
+    right: auto;
   }
 
   .pose-visual {
-    width: min(42%, 168px);
+    width: min(33%, 136px);
+    left: clamp(-4px, -1vw, 8px);
   }
 
   .auth-shell {

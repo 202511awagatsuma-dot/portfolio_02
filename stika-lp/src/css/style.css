@@ -2689,11 +2689,12 @@ input:focus {
     font-size: 34px;
   }
 
-  .plan-cards {
+  #plans .plan-cards {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 
-  .plan-headings {
+  #plans .plan-headings {
     grid-template-columns: 1fr;
     gap: 18px;
   }
@@ -2833,6 +2834,52 @@ input:focus {
 
   .forgot-link {
     margin-top: 24px;
+  }
+}
+
+@media (min-width: 390px) and (max-width: 840px) {
+  #plans .plan-cards,
+  #plans .plan-headings {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  #plans .plan-headings {
+    margin-top: 62px;
+  }
+
+  #plans .plan-note {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  #plans .discount {
+    margin-top: 6px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  #plans .plan-card {
+    padding: 20px 14px;
+  }
+
+  #plans .price {
+    font-size: clamp(32px, 8.8vw, 40px);
+  }
+
+  #plans .unit {
+    margin: 8px 0 18px;
+    font-size: 13px;
+  }
+
+  #plans .plan-cards .plan-card .btn {
+    width: 100%;
+    min-height: 48px;
+    height: auto;
+    padding: 11px 10px;
+    font-size: 13px;
+    line-height: 1.35;
+    white-space: normal;
   }
 }
 

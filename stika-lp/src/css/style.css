@@ -2474,26 +2474,50 @@ input:focus {
   }
 
   .problem-copy ul {
-    gap: 18px;
+    gap: 16px;
+    justify-items: center;
   }
 
   .problem-copy li {
-    width: 100%;
-    max-width: 640px;
+    width: fit-content;
+    max-width: min(90%, 40ch);
     margin-left: 0;
-    padding: 12px 26px;
+    padding: 10px 24px;
+    font-size: clamp(12.5px, 3.3vw, 14.5px);
+    line-height: 1.5;
+    white-space: nowrap;
   }
 
   .problem-copy li::after {
-    right: 42px;
-    width: 42px;
+    right: 36px;
+    width: 38px;
     height: 20px;
     bottom: -11px;
   }
 
-  .problem-copy li:nth-child(2),
+  .problem-copy li:nth-child(1) {
+    margin-left: clamp(-10px, -2.4vw, -4px);
+    max-width: min(86%, 34ch);
+  }
+
+  .problem-copy li:nth-child(2) {
+    margin-left: clamp(8px, 2.6vw, 14px);
+    max-width: min(90%, 39ch);
+  }
+
   .problem-copy li:nth-child(3) {
-    margin-left: 0;
+    margin-left: clamp(-4px, -1vw, 0px);
+    max-width: min(88%, 36ch);
+  }
+
+  .problem-visual {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  .problem-visual img {
+    width: min(50vw, 198px);
   }
 
   .phone-main {
@@ -2632,7 +2656,37 @@ input:focus {
   }
 
   .comparison-table .row {
-    min-width: 1000px;
+    min-width: 820px;
+    grid-template-columns: 236px repeat(3, minmax(160px, 1fr));
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .comparison-table .row > div {
+    min-height: 60px;
+    padding: 12px 13px;
+    font-size: 15px;
+  }
+
+  .comparison-table .row > div:first-child {
+    gap: 9px;
+    padding: 10px 10px;
+    font-size: 15px;
+    line-height: 1.32;
+    white-space: normal;
+  }
+
+  .comparison-table .row > div:first-child img {
+    width: 34px;
+  }
+
+  .comparison-table .head > div {
+    padding: 0 8px 5px;
+    font-size: 15px;
+  }
+
+  .comparison-table .mark {
+    font-size: 34px;
   }
 
   .plan-cards {
@@ -2783,6 +2837,38 @@ input:focus {
 }
 
 @media (max-width: 768px) {
+  .comparison-table .row {
+    min-width: 740px;
+    grid-template-columns: 210px repeat(3, minmax(150px, 1fr));
+    gap: 5px;
+  }
+
+  .comparison-table .row > div {
+    min-height: 54px;
+    padding: 10px 11px;
+    font-size: 14px;
+  }
+
+  .comparison-table .row > div:first-child {
+    gap: 7px;
+    padding: 8px 8px;
+    font-size: 14px;
+    line-height: 1.28;
+  }
+
+  .comparison-table .row > div:first-child img {
+    width: 30px;
+  }
+
+  .comparison-table .head > div {
+    padding: 0 6px 4px;
+    font-size: 14px;
+  }
+
+  .comparison-table .mark {
+    font-size: 30px;
+  }
+
   .section.feature-showcase {
     padding-bottom: 80px;
   }

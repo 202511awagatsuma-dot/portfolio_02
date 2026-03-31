@@ -677,6 +677,10 @@ a {
     transition: none !important;
   }
 
+  .value-card.reveal.is-inview {
+    animation: none !important;
+  }
+
   .reveal {
     opacity: 1 !important;
     transform: none !important;
@@ -803,6 +807,7 @@ a {
   grid-template-columns: repeat(3, 250px);
   justify-content: center;
   justify-items: center;
+  align-items: stretch;
 }
 
 .value-section-heading {
@@ -816,37 +821,49 @@ a {
 }
 
 .value-card {
+  display: flex;
+  flex-direction: column;
   width: 250px;
-  aspect-ratio: 1 / 1;
+  min-height: 250px;
+  height: 100%;
   padding: 26px 22px;
   transition:
     transform 0.34s var(--ease-soft),
     box-shadow 0.34s var(--ease-soft);
 }
 
-.value-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 28px rgba(29, 50, 79, 0.14);
+.value-card.reveal.is-inview {
+  animation: value-card-reveal-in 1.02s cubic-bezier(0.42, 0, 1, 1);
 }
 
 .value-card h3 {
-  margin: 0 0 18px;
-  color: var(--bg-accent);
-  font-size: 24px;
-  text-align: center !important;
-}
-
-.value-card-title-tight {
+  margin: 0 0 50px;
+  padding-top: 40px;
+  min-height: 56px;
   line-height: 28px;
-}
-
-.value-card-title-wide-gap {
-  margin-bottom: 50px;
+  color: var(--bg-accent);
+  font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  text-align: center !important;
 }
 
 .value-card p {
   margin: 0;
+  font-size: 14px;
   text-align: left !important;
+}
+
+@keyframes value-card-reveal-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 .value-section-copy {

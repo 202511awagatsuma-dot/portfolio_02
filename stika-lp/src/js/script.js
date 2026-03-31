@@ -176,7 +176,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const valueHeading = document.querySelector(".value-section .section-heading");
     registerReveal(valueHeading, "reveal-up");
     document.querySelectorAll(".value-card").forEach((card, index) => {
-      registerReveal(card, "reveal-up", 0.14 + index * 0.1);
+      registerReveal(card, "reveal-up");
+      card.dataset.revealLag = String(140 + index * 100);
     });
 
     const timelineHeading = document.querySelector(".timeline-wrap")?.previousElementSibling;
@@ -236,7 +237,14 @@ document.addEventListener("DOMContentLoaded", () => {
       (entries, observer) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-inview");
+          const revealLagMs = Number(entry.target.dataset.revealLag || 0);
+          if (revealLagMs > 0) {
+            window.setTimeout(() => {
+              entry.target.classList.add("is-inview");
+            }, revealLagMs);
+          } else {
+            entry.target.classList.add("is-inview");
+          }
           observer.unobserve(entry.target);
         });
       },

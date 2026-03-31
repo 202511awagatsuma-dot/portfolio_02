@@ -22,8 +22,29 @@
         <a href="#faq">よくある質問</a>
       </nav>
       <a class="btn btn-primary btn-header" href="signup.html">新規登録 / ログイン</a>
+      <button
+        class="header-menu-toggle"
+        type="button"
+        aria-controls="mobileMenu"
+        aria-expanded="false"
+        aria-label="メニューを開く"
+      >
+        <span class="menu-line"></span>
+        <span class="menu-line"></span>
+        <span class="menu-line"></span>
+      </button>
+    </div>
+    <div class="container">
+      <nav class="mobile-menu" id="mobileMenu" aria-label="モバイルメニュー" hidden>
+        <a href="#about">Stikaとは</a>
+        <a href="#features">機能</a>
+        <a href="#plans">料金プラン</a>
+        <a href="#faq">よくある質問</a>
+        <a class="btn btn-primary mobile-menu-cta" href="signup.html">新規登録 / ログイン</a>
+      </nav>
     </div>
   </header>
+  <button class="mobile-menu-overlay" type="button" aria-hidden="true" tabindex="-1" hidden></button>
 
   <main>
     <section class="hero" data-hero-intro>

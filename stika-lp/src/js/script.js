@@ -21,6 +21,52 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  const menuToggle = document.querySelector(".header-menu-toggle");
+  const mobileMenu = document.getElementById("mobileMenu");
+  const mobileMenuOverlay = document.querySelector(".mobile-menu-overlay");
+  const mobileLayoutMedia = window.matchMedia("(max-width: 840px)");
+
+  if (menuToggle && mobileMenu && mobileMenuOverlay) {
+    const setMobileMenuState = (shouldOpen) => {
+      document.body.classList.toggle("is-mobile-menu-open", shouldOpen);
+      menuToggle.setAttribute("aria-expanded", String(shouldOpen));
+      menuToggle.setAttribute("aria-label", shouldOpen ? "メニューを閉じる" : "メニューを開く");
+      mobileMenu.hidden = !shouldOpen;
+      mobileMenuOverlay.hidden = !shouldOpen;
+    };
+
+    const closeMobileMenu = () => setMobileMenuState(false);
+
+    menuToggle.addEventListener("click", () => {
+      const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+      setMobileMenuState(!isOpen);
+    });
+
+    mobileMenuOverlay.addEventListener("click", closeMobileMenu);
+
+    mobileMenu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMobileMenu);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      closeMobileMenu();
+    });
+
+    const syncMobileMenuToViewport = () => {
+      if (mobileLayoutMedia.matches) return;
+      closeMobileMenu();
+    };
+
+    if (typeof mobileLayoutMedia.addEventListener === "function") {
+      mobileLayoutMedia.addEventListener("change", syncMobileMenuToViewport);
+    } else {
+      mobileLayoutMedia.addListener(syncMobileMenuToViewport);
+    }
+
+    closeMobileMenu();
+  }
+
   const faqButtons = document.querySelectorAll(".faq-question");
   const setupFaqIcon = (button) => {
     if (button.querySelector(".faq-toggle-icon")) return;

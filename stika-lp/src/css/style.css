@@ -190,7 +190,7 @@ a {
 }
 
 .feature-slide-copy h4 {
-  margin: 32px 0 0;
+  margin: 26px 0 0;
   color: var(--bg-accent);
   font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
   font-size: 22px;
@@ -198,7 +198,7 @@ a {
   font-weight: 500;
 }
 
-.feature-slide-lead {
+.feature-slide-copy .feature-slide-lead {
   margin: 60px 0 0;
   color: var(--text-main);
   font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
@@ -2186,13 +2186,13 @@ input:focus {
   }
 
   .feature-slide-copy h4 {
-    margin-top: 18px;
+    margin-top: 12px;
     font-size: 26px;
     line-height: 1.45;
   }
 
-  .feature-slide-lead {
-    margin-top: 18px;
+  .feature-slide-copy .feature-slide-lead {
+    margin-top: 60px;
     font-size: 17px;
     line-height: 1.75;
   }
@@ -2405,13 +2405,13 @@ input:focus {
   }
 
   .feature-slide-copy h4 {
-    margin-top: 16px;
+    margin-top: 10px;
     font-size: 20px;
     line-height: 1.5;
   }
 
-  .feature-slide-lead {
-    margin-top: 16px;
+  .feature-slide-copy .feature-slide-lead {
+    margin-top: 60px;
     font-size: 14px;
     line-height: 1.72;
   }
@@ -2945,13 +2945,13 @@ input:focus {
   }
 
   .feature-slide-copy h4 {
-    margin-top: 14px;
+    margin-top: 8px;
     font-size: 18px;
     line-height: 1.45;
   }
 
-  .feature-slide-lead {
-    margin-top: 14px;
+  .feature-slide-copy .feature-slide-lead {
+    margin-top: 60px;
     font-size: 13.5px;
     line-height: 1.68;
   }

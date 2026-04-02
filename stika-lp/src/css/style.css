@@ -1,4 +1,4 @@
-﻿@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Mono:wght@100&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Mono:wght@100&display=swap");
 
 :root {
   --bg-main: #f0f1f3;
@@ -104,9 +104,7 @@ a {
 .feature-showcase {
   display: block;
   min-height: 0;
-  /* Root cause: sticky carousel end relied too much on JS height only.
-     Keep guaranteed section footer space so orange background never ends early. */
-  padding-bottom: 140px;
+  padding-bottom: 0;
   overflow-x: hidden;
   background: var(--bg-accent);
 }
@@ -119,18 +117,20 @@ a {
   --feature-scroll-distance: 0px;
   --feature-box-height: 600px;
   --feature-release-top: 0px;
-  --feature-carousel-height: calc(100vh + var(--feature-scroll-distance));
+  --feature-carousel-height: auto;
+  --feature-bottom-gap: 0px;
   position: relative;
   height: var(--feature-carousel-height);
   margin-top: 50px;
-  margin-bottom: 24px;
+  margin-bottom: 0;
 }
 
 .feature-carousel-sticky {
   position: relative;
-  height: 100vh;
+  height: auto;
+  min-height: var(--feature-box-height);
   display: grid;
-  place-items: center;
+  place-items: start center;
 }
 
 .feature-carousel-viewport {
@@ -1980,12 +1980,18 @@ input:focus {
 }
 
 @media (min-width: 1201px) {
-  .section.feature-showcase {
-    padding-bottom: 160px;
+  .feature-showcase {
+    padding-bottom: 0;
   }
 
   .feature-carousel {
-    margin-bottom: 32px;
+    --feature-bottom-gap: 80px;
+    margin-bottom: 0;
+  }
+
+  .feature-carousel-sticky {
+    min-height: 100vh;
+    place-items: center;
   }
 
   .hero-inner {
@@ -2020,6 +2026,69 @@ input:focus {
 }
 
 @media (max-width: 1200px) {
+  .section.feature-showcase {
+    padding-bottom: 72px;
+  }
+
+  .feature-carousel {
+    --feature-scroll-distance: 0px !important;
+    --feature-carousel-height: auto !important;
+    height: auto;
+    margin-top: 46px;
+    margin-bottom: 0;
+    padding-inline: 0;
+  }
+
+  .feature-carousel-sticky {
+    position: static;
+    min-height: 0;
+    height: auto;
+    padding: 0;
+    display: block;
+  }
+
+  .feature-carousel.is-pinned .feature-carousel-viewport,
+  .feature-carousel.is-after .feature-carousel-viewport {
+    position: static;
+    left: auto;
+    top: auto;
+    transform: none;
+  }
+
+  .feature-carousel-viewport {
+    width: min(400px, calc(100vw - 40px));
+    max-width: 100%;
+    height: auto;
+    margin-inline: auto;
+    border-radius: 0;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .feature-carousel-track {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+    transform: none !important;
+  }
+
+  .feature-slide {
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    height: auto !important;
+    min-height: 0 !important;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    align-content: start;
+    border-radius: 24px;
+    background: #fff;
+    padding: 38px 32px;
+    gap: 0;
+  }
+
   .site-header .container {
     width: min(1120px, calc(100% - 36px));
   }
@@ -2046,7 +2115,7 @@ input:focus {
 
 @media (max-width: 1024px) {
   .section.feature-showcase {
-    padding-bottom: 104px;
+    padding-bottom: 72px;
   }
 
   .header-inner {
@@ -2137,7 +2206,7 @@ input:focus {
     --feature-scroll-distance: 0px !important;
     height: auto;
     margin-top: 46px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
     padding-inline: 0;
   }
 
@@ -2225,7 +2294,7 @@ input:focus {
   }
 
   .feature-slide-copy .feature-slide-lead {
-    margin-top: 60px;
+    margin-top: 30px;
     font-size: 17px;
     line-height: 1.75;
   }
@@ -2292,7 +2361,7 @@ input:focus {
 
 @media (max-width: 840px) {
   .section.feature-showcase {
-    padding-bottom: 88px;
+    padding-bottom: 56px;
   }
 
   .reveal {
@@ -2444,7 +2513,7 @@ input:focus {
   }
 
   .feature-slide-copy .feature-slide-lead {
-    margin-top: 60px;
+    margin-top: 24px;
     font-size: 14px;
     line-height: 1.72;
   }
@@ -2951,7 +3020,7 @@ input:focus {
   }
 
   .section.feature-showcase {
-    padding-bottom: 80px;
+    padding-bottom: 48px;
   }
 
   .feature-carousel {
@@ -2985,7 +3054,7 @@ input:focus {
   }
 
   .feature-slide-copy .feature-slide-lead {
-    margin-top: 60px;
+    margin-top: 20px;
     font-size: 13.5px;
     line-height: 1.68;
   }

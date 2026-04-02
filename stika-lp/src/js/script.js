@@ -281,12 +281,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const featureCarousel = document.querySelector("[data-feature-carousel]");
   const featureTrack = featureCarousel?.querySelector("[data-feature-track]");
   const featureViewport = featureCarousel?.querySelector(".feature-carousel-viewport");
-  const featureSection = featureCarousel?.closest(".feature-showcase");
 
   if (featureCarousel && featureTrack && featureViewport) {
-    const desktopMedia = window.matchMedia("(min-width: 1025px)");
+    const desktopMedia = window.matchMedia("(min-width: 1201px)");
     const scrollCompression = 0.22;
-    const bottomGap = 240;
     let maxTranslate = 0;
     let verticalDistance = 0;
     let sectionTop = 0;
@@ -295,43 +293,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
+    const getBottomGap = () => {
+      const styles = getComputedStyle(featureCarousel);
+      const value = parseFloat(styles.getPropertyValue("--feature-bottom-gap"));
+      return Number.isFinite(value) ? value : 0;
+    };
+
+    const resetMobileLayout = () => {
+      featureCarousel.style.removeProperty("--feature-scroll-distance");
+      featureCarousel.style.removeProperty("--feature-release-top");
+      featureCarousel.style.removeProperty("--feature-carousel-height");
+      featureTrack.style.transform = "translate3d(0, 0, 0)";
+      featureCarousel.classList.remove("is-pinned", "is-after");
+    };
+
     const updateProgress = () => {
       if (!desktopMedia.matches) return;
-      const scrolled = window.scrollY - sectionTop;
+
+      const scrollY = window.scrollY;
+      const scrolled = clamp(scrollY - sectionTop, 0, verticalDistance);
       const progressed = clamp(scrolled / scrollCompression, 0, maxTranslate);
+
       featureTrack.style.transform = `translate3d(${-progressed}px, 0, 0)`;
-      featureCarousel.classList.toggle("is-pinned", window.scrollY >= sectionTop && window.scrollY <= sectionEnd);
-      featureCarousel.classList.toggle("is-after", window.scrollY > sectionEnd);
+
+      const isPinned = scrollY >= sectionTop && scrollY < sectionEnd;
+      const isAfter = scrollY >= sectionEnd;
+
+      featureCarousel.classList.toggle("is-pinned", isPinned);
+      featureCarousel.classList.toggle("is-after", isAfter);
     };
 
     const recalc = () => {
       if (!desktopMedia.matches) {
-        featureCarousel.style.setProperty("--feature-scroll-distance", "0px");
-        featureCarousel.style.setProperty("--feature-release-top", "0px");
-        featureCarousel.style.setProperty("--feature-carousel-height", "auto");
-        featureTrack.style.transform = "translate3d(0, 0, 0)";
-        featureCarousel.classList.remove("is-pinned", "is-after");
+        resetMobileLayout();
         return;
       }
 
-      const boxHeight = featureViewport.clientHeight;
-      const pinTop = Math.max((window.innerHeight - boxHeight) / 2, 0);
-      maxTranslate = Math.max(featureTrack.scrollWidth - featureViewport.clientWidth, 0);
+      const viewportHeight = featureViewport.offsetHeight;
+      const viewportWidth = featureViewport.clientWidth;
+      const pinTop = Math.max((window.innerHeight - viewportHeight) / 2, 0);
+      const bottomGap = getBottomGap();
+
+      maxTranslate = Math.max(featureTrack.scrollWidth - viewportWidth, 0);
       verticalDistance = maxTranslate * scrollCompression;
-      const releaseTop = Math.max(verticalDistance + pinTop, 0);
-      // Root cause: carousel height was based on a fixed gap only.
-      // Also factor in section bottom padding so orange background never ends too early.
-      const sectionBottomPadding = featureSection
-        ? parseFloat(window.getComputedStyle(featureSection).paddingBottom) || 0
-        : 0;
-      const carouselMarginBottom = parseFloat(window.getComputedStyle(featureCarousel).marginBottom) || 0;
-      const safeBottomGap = Math.max(bottomGap, sectionBottomPadding + carouselMarginBottom + 48);
-      const carouselHeight = releaseTop + boxHeight + safeBottomGap;
+
+      const releaseTop = verticalDistance + pinTop;
+      const totalHeight = releaseTop + viewportHeight + bottomGap;
+
       sectionTop = featureCarousel.getBoundingClientRect().top + window.scrollY;
       sectionEnd = sectionTop + verticalDistance;
+
       featureCarousel.style.setProperty("--feature-scroll-distance", `${verticalDistance}px`);
       featureCarousel.style.setProperty("--feature-release-top", `${releaseTop}px`);
-      featureCarousel.style.setProperty("--feature-carousel-height", `${carouselHeight}px`);
+      featureCarousel.style.setProperty("--feature-carousel-height", `${totalHeight}px`);
+
       updateProgress();
     };
 
@@ -346,8 +361,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener("scroll", requestProgressUpdate, { passive: true });
     window.addEventListener("resize", recalc);
-    desktopMedia.addEventListener("change", recalc);
+
+    if (typeof desktopMedia.addEventListener === "function") {
+      desktopMedia.addEventListener("change", recalc);
+    } else {
+      desktopMedia.addListener(recalc);
+    }
+
     recalc();
   }
 });
-

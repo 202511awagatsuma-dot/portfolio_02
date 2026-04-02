@@ -2580,14 +2580,18 @@ input:focus {
   }
 
   .problem-copy ul {
+    display: flex;
+    flex-direction: column;
     gap: 16px;
-    justify-items: center;
+    align-items: stretch;
   }
 
   .problem-copy li {
     width: fit-content;
-    max-width: min(90%, 40ch);
+    max-width: min(92%, 34ch);
     margin-left: 0;
+    margin-right: 0;
+    align-self: flex-start;
     padding: 10px 24px;
     font-size: clamp(12.5px, 3.3vw, 14.5px);
     line-height: 1.5;
@@ -2602,18 +2606,18 @@ input:focus {
   }
 
   .problem-copy li:nth-child(1) {
-    margin-left: clamp(-10px, -2.4vw, -4px);
-    max-width: min(86%, 34ch);
+    margin-left: 0;
   }
 
   .problem-copy li:nth-child(2) {
-    margin-left: clamp(8px, 2.6vw, 14px);
-    max-width: min(90%, 39ch);
+    align-self: flex-end;
+    margin-right: 4%;
+    max-width: min(90%, 36ch);
+    padding: 10px 30px 10px 26px;
   }
 
   .problem-copy li:nth-child(3) {
-    margin-left: clamp(-4px, -1vw, 0px);
-    max-width: min(88%, 36ch);
+    margin-left: clamp(4%, 6vw, 9%);
   }
 
   .problem-visual {

@@ -238,6 +238,10 @@ a {
   color: var(--text-main);
 }
 
+.section-heading h2 ruby rt {
+  font-size: 0.35em;
+}
+
 .section-heading p {
   margin: 0;
   color: #50789d;

@@ -1305,6 +1305,23 @@ a {
   margin-top: 50px;
 }
 
+.plan-sub-cta .btn-secondary {
+  transition:
+    transform 0.26s var(--ease-soft),
+    background-color 0.26s var(--ease-soft),
+    color 0.26s var(--ease-soft),
+    border-color 0.26s var(--ease-soft),
+    box-shadow 0.26s var(--ease-soft);
+}
+
+.plan-sub-cta .btn-secondary:hover {
+  background: var(--text-main);
+  color: #fff;
+  border-color: var(--text-main);
+  box-shadow: 0 10px 20px rgba(32, 53, 74, 0.2);
+  transform: none;
+}
+
 .faq-wrap {
   max-width: 980px;
   font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;

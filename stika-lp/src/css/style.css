@@ -1186,6 +1186,10 @@ a {
   width: 40px;
 }
 
+.comparison-label {
+  display: inline;
+}
+
 .comparison-table .head>div {
   min-height: auto;
   background: transparent;
@@ -2771,6 +2775,7 @@ input:focus {
   }
 
   .comparison-table .row>div:first-child {
+    align-items: center;
     gap: 9px;
     padding: 10px 10px;
     font-size: 15px;
@@ -2778,7 +2783,14 @@ input:focus {
     white-space: normal;
   }
 
+  .comparison-table .row>div:first-child .comparison-label {
+    display: inline-block;
+    max-width: 7em;
+    line-height: 1.35;
+  }
+
   .comparison-table .row>div:first-child img {
+    flex-shrink: 0;
     width: 34px;
   }
 

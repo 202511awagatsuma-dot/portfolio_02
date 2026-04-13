@@ -137,6 +137,11 @@ input {
         var(--surface);
 }
 
+/* Home sections: slightly loosen vertical rhythm between major blocks. */
+.home-screen .hero-card {
+    margin-bottom: 28px;
+}
+
 .hero-card__link {
     display: block;
     padding: 28px 22px;
@@ -171,6 +176,14 @@ input {
 }
 
 .section-block {
+    margin-bottom: 20px;
+}
+
+.home-screen .section-block {
+    margin-bottom: 30px;
+}
+
+.home-screen .section-block:last-of-type {
     margin-bottom: 20px;
 }
 

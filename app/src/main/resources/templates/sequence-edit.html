@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stika | シークエンス編集</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body class="stika-body">
+    <div class="app-shell">
+        <main class="screen edit-screen">
+            <header class="page-header">
+                <a class="back-link" th:href="@{/sequence/setup}">‹</a>
+                <div>
+                    <p class="page-header__eyebrow">Sequence Editor</p>
+                    <h1>シークエンス編集画面（仮）</h1>
+                </div>
+            </header>
+
+            <section class="card placeholder-card">
+                <p class="placeholder-card__badge">Draft</p>
+                <h2>ここから編集画面を広げていけます</h2>
+                <p>
+                    初期設定画面からの遷移確認用のプレースホルダーです。今後は、セクション追加・ポーズ追加・メモ編集などを
+                    この画面に実装していく想定です。
+                </p>
+                <div class="placeholder-card__actions">
+                    <a class="secondary-button" th:href="@{/sequence/setup}">設定へ戻る</a>
+                    <a class="primary-button primary-button--inline" th:href="@{/}">トップへ戻る</a>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>

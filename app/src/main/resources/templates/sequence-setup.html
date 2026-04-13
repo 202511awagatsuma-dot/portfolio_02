@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stika | シークエンス作成</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body class="stika-body">
+    <div class="app-shell">
+        <main class="screen setup-screen">
+            <header class="page-header">
+                <a class="back-link" th:href="@{/}">‹</a>
+                <div>
+                    <p class="page-header__eyebrow">Sequence Builder</p>
+                    <h1>シークエンス作成</h1>
+                </div>
+            </header>
+
+            <section class="page-intro">
+                <p>レッスン開始前に、基本条件を選んで流れを整えます。</p>
+            </section>
+
+            <form class="setup-form" th:action="@{/sequence/edit}" method="get">
+                <section class="card form-section">
+                    <div class="form-section__header">
+                        <h2>1. レッスン時間</h2>
+                        <span>初期値: 60分</span>
+                    </div>
+                    <div class="chip-group">
+                        <label class="choice-chip">
+                            <input type="radio" name="duration" value="30">
+                            <span>30分</span>
+                        </label>
+                        <label class="choice-chip">
+                            <input type="radio" name="duration" value="45">
+                            <span>45分</span>
+                        </label>
+                        <label class="choice-chip">
+                            <input type="radio" name="duration" value="60" checked>
+                            <span>60分</span>
+                        </label>
+                        <label class="choice-chip">
+                            <input type="radio" name="duration" value="75">
+                            <span>75分</span>
+                        </label>
+                        <label class="choice-chip">
+                            <input type="radio" name="duration" value="90">
+                            <span>90分</span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="card form-section">
+                    <div class="form-section__header">
+                        <h2>2. 難易度</h2>
+                        <span>初期値: ★★★☆☆ 中級</span>
+                    </div>
+                    <div class="option-list">
+                        <label class="choice-row">
+                            <input type="radio" name="level" value="1">
+                            <span>★☆☆☆☆ 初心者向け</span>
+                        </label>
+                        <label class="choice-row">
+                            <input type="radio" name="level" value="2">
+                            <span>★★☆☆☆ 初級</span>
+                        </label>
+                        <label class="choice-row">
+                            <input type="radio" name="level" value="3" checked>
+                            <span>★★★☆☆ 中級</span>
+                        </label>
+                        <label class="choice-row">
+                            <input type="radio" name="level" value="4">
+                            <span>★★★★☆ 中上級</span>
+                        </label>
+                        <label class="choice-row">
+                            <input type="radio" name="level" value="5">
+                            <span>★★★★★ 上級者向け</span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="card form-section">
+                    <div class="form-section__header">
+                        <h2>3. ピークポーズ</h2>
+                        <span>初期値: なし</span>
+                    </div>
+                    <div class="toggle-group">
+                        <label class="toggle-card">
+                            <input type="radio" name="peakPoseEnabled" value="false" checked>
+                            <span>なし</span>
+                        </label>
+                        <label class="toggle-card">
+                            <input type="radio" name="peakPoseEnabled" value="true">
+                            <span>あり</span>
+                        </label>
+                    </div>
+
+                    <div class="peak-pose-field" id="peakPoseField" hidden>
+                        <label for="peakPoseName">4. ピークポーズ名</label>
+                        <input id="peakPoseName" name="peakPoseName" type="text" placeholder="バカーサナ">
+                    </div>
+                </section>
+
+                <button class="primary-button" type="submit">作成開始</button>
+            </form>
+        </main>
+    </div>
+
+    <script th:src="@{/js/script.js}"></script>
+</body>
+
+</html>

@@ -63,14 +63,30 @@
           <div class="fill-label">システムの目的 <span class="required">必須</span></div>
           <div class="fill-hint">このシステムが解決する課題と提供する価値</div>
           <div class="fill-content">
-            <p>（システムの目的を記載）</p>
+            <p>Stikaは、ヨガインストラクターが学び・練習・セルフケアを一元管理し、日々の積み重ねを可視化することで、安心して継続的に成長できる環境を提供するシステムです。</p>
           </div>
         </div>
         <div class="fill-block">
           <div class="fill-label">システム構成図 <span class="required">必須</span></div>
           <div class="fill-hint">フロントエンド ↔ バックエンド ↔ データベースの関係を図示</div>
           <div class="fill-content">
-            <p>（システム構成図を記載）</p>
+            <p>[利用者]<br>
+   ↓<br>
+[ブラウザ]<br>
+   ↓<br>
+[Thymeleaf + HTML/CSS/JavaScript]<br>
+   ↓<br>
+[Controller]<br>
+   ↓<br>
+[Service]<br>
+   ↓<br>
+[Repository]<br>
+   ↓<br>
+[H2 Database]</p>
+            <p>データの流れ：<br>
+ブラウザ → Controller → Service → Repository → H2</p>
+            <p>表示の流れ：<br>
+H2 → Repository → Service → Controller → Thymeleaf → ブラウザ</p>
           </div>
         </div>
 

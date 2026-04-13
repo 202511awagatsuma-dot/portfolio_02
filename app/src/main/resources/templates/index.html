@@ -3,13 +3,142 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Stika</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stika | トップ</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
-<body>
-    <h1>トップページ</h1>
-    <a th:href="@{/signup}">新規登録へ</a>
+<body class="stika-body">
+    <div class="app-shell">
+        <main class="screen home-screen">
+            <header class="topbar">
+                <div class="topbar__brand">
+                    <div class="brand-mark">St</div>
+                </div>
+                <p class="topbar__date" th:text="${today}">2026.04.13(月)</p>
+                <div class="topbar__actions">
+                    <span class="icon-badge">🔔</span>
+                    <span class="icon-badge">◼</span>
+                </div>
+            </header>
+
+            <section class="card message-card">
+                <p class="section-eyebrow">今日の一言</p>
+                <p class="message-card__title">ステイラスタック</p>
+                <p class="message-card__text" th:text="${todayMessage}">
+                    ステイタスを整えて、今日もやさしく積み上げましょう。
+                </p>
+            </section>
+
+            <section class="hero-card">
+                <a class="hero-card__link" th:href="@{/sequence/setup}">
+                    <span class="hero-card__label">Sequence</span>
+                    <strong>シークエンス作成</strong>
+                    <p>その日の目的に合わせて、やさしくレッスンの流れを組み立てます。</p>
+                </a>
+            </section>
+
+            <section class="section-block">
+                <div class="section-heading">
+                    <h2>ナレッジ</h2>
+                    <span>学びのメモ</span>
+                </div>
+                <div class="knowledge-grid">
+                    <article class="round-card">
+                        <span class="round-card__icon">哲</span>
+                        <p>哲学</p>
+                    </article>
+                    <article class="round-card">
+                        <span class="round-card__icon">解</span>
+                        <p>解剖学</p>
+                    </article>
+                    <article class="round-card">
+                        <span class="round-card__icon">呼</span>
+                        <p>呼吸法</p>
+                    </article>
+                    <article class="round-card">
+                        <span class="round-card__icon">指</span>
+                        <p>指導法</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section-block">
+                <div class="section-heading">
+                    <h2>セルフケア</h2>
+                    <span>今週の状態</span>
+                </div>
+                <div class="card selfcare-card">
+                    <div class="mood-row">
+                        <div class="mood-item is-active">
+                            <span class="mood-dot"></span>
+                            <small>良好</small>
+                        </div>
+                        <div class="mood-item">
+                            <span class="mood-dot"></span>
+                            <small>ふつう</small>
+                        </div>
+                        <div class="mood-item">
+                            <span class="mood-dot"></span>
+                            <small>要ケア</small>
+                        </div>
+                    </div>
+                    <div class="selfcare-stats">
+                        <article class="metric-card">
+                            <p>瞑想</p>
+                            <strong>00回</strong>
+                        </article>
+                        <article class="play-card">
+                            <span class="play-card__button">▶</span>
+                            <div>
+                                <p>ブレスワーク</p>
+                                <strong>00回</strong>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-block">
+                <div class="section-heading">
+                    <h2>レポート</h2>
+                    <span>今月の記録</span>
+                </div>
+                <div class="card report-card">
+                    <div class="report-card__header">
+                        <button type="button" aria-label="前月">‹</button>
+                        <strong>2026年4月</strong>
+                        <button type="button" aria-label="次月">›</button>
+                    </div>
+                    <div class="report-dots">
+                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <nav class="bottom-nav" aria-label="下部ナビゲーション">
+            <a class="bottom-nav__item is-active" th:href="@{/}">
+                <span>⌂</span>
+                <small>ホーム</small>
+            </a>
+            <a class="bottom-nav__item" href="#">
+                <span>◎</span>
+                <small>ナレッジ</small>
+            </a>
+            <a class="bottom-nav__item" href="#">
+                <span>✦</span>
+                <small>セルフケア</small>
+            </a>
+            <a class="bottom-nav__item" href="#">
+                <span>◫</span>
+                <small>レポート</small>
+            </a>
+        </nav>
+    </div>
 </body>
 
 </html>

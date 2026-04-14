@@ -138,6 +138,7 @@ input {
 .message-card {
     padding: 14px 16px;
     margin-bottom: 16px;
+    text-align: center;
 }
 
 .message-card__title {
@@ -167,13 +168,28 @@ input {
     margin-bottom: 36px;
 }
 
+.home-screen > .hero-card__caption {
+    margin: 0 0 8px;
+    text-align: center;
+}
+
 .hero-card__link {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 20px 22px;
-    min-height: 160px;
+    padding: 16px 22px;
+    min-height: 100px;
     text-align: center;
+}
+
+.hero-card__caption {
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--muted);
+}
+
+.hero-card__link > .hero-card__caption {
+    display: none;
 }
 
 .hero-card strong {
@@ -190,6 +206,10 @@ input {
     color: #6f8290;
     line-height: 1.7;
     font-size: 0.92rem;
+}
+
+.home-screen .hero-card p {
+    display: none;
 }
 
 .section-block {

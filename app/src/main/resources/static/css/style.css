@@ -93,6 +93,30 @@ input {
     gap: 8px;
 }
 
+.topbar__actions .icon-badge {
+    width: auto;
+    height: auto;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+}
+
+.icon-badge--menu {
+    display: grid;
+    grid-template-columns: repeat(3, 4px);
+    gap: 4px;
+    align-content: center;
+    justify-content: center;
+}
+
+.icon-badge--menu span {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
 .section-eyebrow,
 .page-header__eyebrow,
 .section-heading span,

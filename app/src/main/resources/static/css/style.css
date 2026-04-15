@@ -61,7 +61,6 @@ input {
     margin-bottom: 18px;
 }
 
-.topbar__brand,
 .icon-badge,
 .back-link {
     width: 34px;
@@ -74,9 +73,18 @@ input {
     color: var(--navy);
 }
 
+.topbar__brand {
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 50px;
+    text-decoration: none;
+}
+
 .brand-mark {
-    font-size: 0.8rem;
-    font-weight: 700;
+    width: 50px;
+    height: 50px;
+    display: block;
 }
 
 .topbar__date {

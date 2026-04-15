@@ -86,7 +86,8 @@ function initGrowthCalendar() {
             button.className = "calendar-day";
             button.dataset.date = isoDate;
             button.setAttribute("role", "gridcell");
-            button.setAttribute("aria-label", `${isoDate}${hasRecord ? " report available" : ""}`);
+            button.setAttribute("aria-label", `${isoDate}${hasRecord ? " レポートあり" : ""}${isToday ? " 今日" : ""}`);
+            button.setAttribute("aria-selected", String(isSelected));
 
             if (!isCurrentMonth) {
                 button.classList.add("calendar-day--muted");
@@ -96,6 +97,9 @@ function initGrowthCalendar() {
             }
             if (isSelected) {
                 button.classList.add("calendar-day--selected");
+            }
+            if (hasRecord) {
+                button.classList.add("calendar-day--has-record");
             }
 
             button.innerHTML = `

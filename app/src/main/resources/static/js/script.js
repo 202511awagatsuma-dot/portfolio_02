@@ -102,10 +102,7 @@ function initGrowthCalendar() {
                 button.classList.add("calendar-day--has-record");
             }
 
-            button.innerHTML = `
-                <span class="calendar-day__number">${date.getDate()}</span>
-                <span class="calendar-day__markers">${hasRecord ? '<span class="calendar-day__dot" aria-hidden="true"></span>' : ""}</span>
-            `;
+            button.innerHTML = `<span class="calendar-day__number">${date.getDate()}</span>`;
 
             button.addEventListener("click", () => {
                 selectedDate = isoDate;

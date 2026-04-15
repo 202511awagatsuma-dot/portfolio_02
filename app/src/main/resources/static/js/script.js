@@ -101,7 +101,6 @@ function initGrowthCalendar() {
             button.innerHTML = `
                 <span class="calendar-day__number">${date.getDate()}</span>
                 <span class="calendar-day__markers">${hasRecord ? '<span class="calendar-day__dot" aria-hidden="true"></span>' : ""}</span>
-                <span class="calendar-day__label">${hasRecord ? "Done" : ""}</span>
             `;
 
             button.addEventListener("click", () => {

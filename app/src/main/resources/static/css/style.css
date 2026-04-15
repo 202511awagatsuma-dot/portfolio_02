@@ -420,7 +420,6 @@ input {
     font-size: 1.15rem;
     line-height: 1;
     cursor: pointer;
-    box-shadow: 0 8px 18px rgba(82, 97, 115, 0.08);
 }
 
 .calendar-nav__label {
@@ -501,20 +500,6 @@ input {
     line-height: 1;
 }
 
-.calendar-day__label {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 28px;
-    min-height: 18px;
-    padding: 0 6px;
-    border-radius: 999px;
-    background: rgba(60, 98, 130, 0.08);
-    color: var(--muted);
-    font-size: 0.62rem;
-    font-weight: 700;
-}
-
 .calendar-day__markers {
     min-height: 10px;
     display: flex;
@@ -529,39 +514,6 @@ input {
     border-radius: 50%;
     background: var(--accent);
     box-shadow: 0 0 0 4px rgba(239, 139, 99, 0.14);
-}
-
-.calendar-card__legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    margin-top: 14px;
-    color: var(--muted);
-    font-size: 0.76rem;
-}
-
-.calendar-card__legend span {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.calendar-legend__dot,
-.calendar-legend__today {
-    width: 10px;
-    height: 10px;
-    display: inline-block;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-.calendar-legend__dot {
-    background: var(--accent);
-}
-
-.calendar-legend__today {
-    background: #fff0e7;
-    border: 2px solid rgba(239, 139, 99, 0.9);
 }
 
 .bottom-nav {

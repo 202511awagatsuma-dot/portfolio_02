@@ -257,20 +257,47 @@ input {
     text-align: center;
 }
 
-.round-card__icon {
+.knowledge-icon {
+    position: relative;
     width: 68px;
     height: 68px;
-    margin: 0 auto 8px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background:
-        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95), transparent 35%),
-        linear-gradient(180deg, #f8dccb 0%, #f0c0aa 100%);
+    margin: 0 auto;
+    display: block;
+    overflow: hidden;
+}
+
+.knowledge-icon__image {
+    width: 68px;
+    height: 68px;
+    display: block;
+}
+
+.knowledge-icon__label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    width: 100%;
+    max-width: calc(100% - 10px);
+    padding: 0 5px;
     color: var(--navy);
-    font-weight: 700;
-    border: 1px solid rgba(220, 169, 146, 0.6);
-    box-shadow: 0 10px 22px rgba(205, 156, 132, 0.18);
+    font-size: 0.88rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-align: center;
+    white-space: nowrap;
+    text-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.95),
+        0 0 8px rgba(255, 255, 255, 0.7);
+    pointer-events: none;
+}
+
+.knowledge-icon__label--wide {
+    max-width: calc(100% - 8px);
+    font-size: 0.72rem;
+    letter-spacing: 0;
 }
 
 .round-card p {
@@ -755,6 +782,24 @@ input {
 }
 
 @media (max-width: 380px) {
+    .knowledge-grid {
+        gap: 8px;
+    }
+
+    .knowledge-icon,
+    .knowledge-icon__image {
+        width: 62px;
+        height: 62px;
+    }
+
+    .knowledge-icon__label {
+        font-size: 0.8rem;
+    }
+
+    .knowledge-icon__label--wide {
+        font-size: 0.68rem;
+    }
+
     .calendar-card__header {
         flex-direction: column;
     }

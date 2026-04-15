@@ -539,7 +539,7 @@ input {
 
 .calendar-day--has-record .calendar-day__number {
     font-weight: 630;
-    color: rgba(43, 60, 74, 0.92);
+    color: rgba(39, 55, 69, 0.96);
 }
 
 .calendar-day--today .calendar-day__number {

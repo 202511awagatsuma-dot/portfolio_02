@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stika | トップ</title>
+    <title>Stika | ホーム</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
@@ -17,7 +17,7 @@
                 </div>
                 <p class="topbar__date" th:text="${today}">2026.04.13(月)</p>
                 <div class="topbar__actions">
-                    <span class="icon-badge">🔔</span>
+                    <span class="icon-badge" aria-label="お知らせ">●</span>
                     <span class="icon-badge icon-badge--menu" aria-label="メニュー">
                         <span></span><span></span><span></span>
                         <span></span><span></span><span></span>
@@ -27,19 +27,19 @@
             </header>
 
             <section class="card message-card">
-                <p class="section-eyebrow">今日のひとこと哲学</p>
-                <p class="message-card__title">スティラ スッカ</p>
+                <p class="section-eyebrow">今日のひとこと成長メモ</p>
+                <p class="message-card__title">スティカ メッセージ</p>
                 <p class="message-card__text" th:text="${todayMessage}">
-                    ステイタスを整えて、今日もやさしく積み上げましょう。
+                    今日は少しだけでも体を動かして、自分の変化をやさしく記録してみましょう。
                 </p>
             </section>
 
-            <p class="hero-card__caption">今日はどんなシークエンスを作りますか？</p>
+            <p class="hero-card__caption">今日はどんなシーケンスを始めますか？</p>
             <section class="hero-card">
                 <a class="hero-card__link" th:href="@{/sequence/setup}">
-                    <span class="hero-card__caption">今日はどんなシークエンスを作りますか？</span>
-                    <strong>シークエンス作成</strong>
-                    <p>その日の目的に合わせて、やさしくレッスンの流れを組み立てます。</p>
+                    <span class="hero-card__caption">今日はどんなシーケンスを始めますか？</span>
+                    <strong>シーケンス開始</strong>
+                    <p>その日の気分や体調に合わせて、やさしくレッスンの流れを整えられます。</p>
                 </a>
             </section>
 
@@ -49,16 +49,16 @@
                 </div>
                 <div class="knowledge-grid">
                     <article class="round-card">
-                        <span class="round-card__icon">哲学</span>
+                        <span class="round-card__icon">姿勢</span>
                     </article>
                     <article class="round-card">
-                        <span class="round-card__icon">解剖学</span>
+                        <span class="round-card__icon">解剖</span>
                     </article>
                     <article class="round-card">
-                        <span class="round-card__icon">呼吸法</span>
+                        <span class="round-card__icon">呼吸</span>
                     </article>
                     <article class="round-card">
-                        <span class="round-card__icon">指導法</span>
+                        <span class="round-card__icon">習慣</span>
                     </article>
                 </div>
             </section>
@@ -71,7 +71,7 @@
                     <div class="mood-row">
                         <div class="mood-item is-active">
                             <span class="mood-dot"></span>
-                            <small>良好</small>
+                            <small>快調</small>
                         </div>
                         <div class="mood-item">
                             <span class="mood-dot"></span>
@@ -79,21 +79,21 @@
                         </div>
                         <div class="mood-item">
                             <span class="mood-dot"></span>
-                            <small>要ケア</small>
+                            <small>ケア</small>
                         </div>
                     </div>
                     <div class="selfcare-stats">
                         <article class="play-card">
                             <div class="play-card__content">
-                                <p>瞑想</p>
-                                <strong>00回</strong>
+                                <p>運動</p>
+                                <strong>00分</strong>
                             </div>
                             <span class="play-card__button">▶</span>
                         </article>
                         <article class="play-card">
                             <div class="play-card__content">
                                 <p>ブレスワーク</p>
-                                <strong>00回</strong>
+                                <strong>00分</strong>
                             </div>
                             <span class="play-card__button">▶</span>
                         </article>
@@ -103,31 +103,43 @@
 
             <section class="section-block">
                 <div class="section-heading">
-                    <span>今月の記録</span>
+                    <h2>レポート</h2>
                 </div>
-                <div class="card report-card">
-                    <div class="report-card__header">
-                        <button type="button" aria-label="前月">‹</button>
-                        <strong>2026年4月</strong>
-                        <button type="button" aria-label="次月">›</button>
+                <div class="card report-card calendar-card">
+                    <div class="calendar-card__header">
+                        <div class="calendar-nav" aria-label="月送り">
+                            <button type="button" class="calendar-nav__button" data-calendar-nav="prev" aria-label="前月">‹</button>
+                            <strong class="calendar-nav__label" id="calendarMonthLabel">2026年4月</strong>
+                            <button type="button" class="calendar-nav__button" data-calendar-nav="next" aria-label="次月">›</button>
+                        </div>
                     </div>
-                    <div class="report-dots">
-                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                    <section class="calendar" id="growthCalendar" aria-labelledby="calendarMonthLabel">
+                        <div class="calendar__weekdays" aria-hidden="true">
+                            <span>日</span>
+                            <span>月</span>
+                            <span>火</span>
+                            <span>水</span>
+                            <span>木</span>
+                            <span>金</span>
+                            <span>土</span>
+                        </div>
+                        <div class="calendar__grid" id="calendarGrid" role="grid"></div>
+                    </section>
+                    <div class="calendar-card__legend" aria-label="カレンダー凡例">
+                        <span><i class="calendar-legend__dot"></i> レポートあり</span>
+                        <span><i class="calendar-legend__today"></i> 今日</span>
                     </div>
                 </div>
             </section>
         </main>
 
-        <nav class="bottom-nav" aria-label="下部ナビゲーション">
+        <nav class="bottom-nav" aria-label="メインナビゲーション">
             <a class="bottom-nav__item is-active" th:href="@{/}">
                 <span>⌂</span>
                 <small>ホーム</small>
             </a>
             <a class="bottom-nav__item" href="#">
-                <span>◎</span>
+                <span>◌</span>
                 <small>ナレッジ</small>
             </a>
             <a class="bottom-nav__item" href="#">
@@ -135,11 +147,13 @@
                 <small>セルフケア</small>
             </a>
             <a class="bottom-nav__item" href="#">
-                <span>◫</span>
+                <span>▣</span>
                 <small>レポート</small>
             </a>
         </nav>
     </div>
+
+    <script th:src="@{/js/script.js}"></script>
 </body>
 
 </html>

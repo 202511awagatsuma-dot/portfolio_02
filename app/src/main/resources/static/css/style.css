@@ -597,6 +597,12 @@ input {
     font-size: 1.15rem;
 }
 
+.bottom-nav__icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
 .bottom-nav__item.is-active {
     color: var(--navy);
     font-weight: 700;

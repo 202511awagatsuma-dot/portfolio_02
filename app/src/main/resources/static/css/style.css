@@ -979,11 +979,11 @@ input {
 }
 
 .sequence-comp-summary__time {
-    font-size: 1.22rem;
+    font-size: 14px;
 }
 
 .sequence-comp-summary__level {
-    font-size: 1.06rem;
+    font-size: 14px;
     letter-spacing: 0.08em;
 }
 

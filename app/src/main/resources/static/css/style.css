@@ -1137,6 +1137,7 @@ input {
     background: transparent;
     display: flex;
     align-items: center;
+    gap: 14px;
 }
 
 .sequence-comp-slot__plus {
@@ -1168,6 +1169,110 @@ input {
     height: 18px;
 }
 
+.sequence-comp-slot__label {
+    font-size: 1rem;
+    line-height: 1.4;
+    color: #50657c;
+    font-weight: 600;
+}
+
+.sequence-comp-added-list {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.sequence-comp-added-item {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: #fff8f5;
+    border: 1px solid rgba(197, 177, 167, 0.8);
+}
+
+.sequence-comp-added-item__order {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #e5654f;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.sequence-comp-added-item__body {
+    min-width: 0;
+}
+
+.sequence-comp-added-item__name,
+.sequence-comp-added-item__memo,
+.sequence-comp-added-empty {
+    margin: 0;
+}
+
+.sequence-comp-added-item__name {
+    color: #204775;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.sequence-comp-added-item__memo,
+.sequence-comp-added-empty {
+    margin-top: 6px;
+    color: #5c7188;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.sequence-comp-picker {
+    margin-top: 8px;
+}
+
+.sequence-comp-picker[open] .sequence-comp-slot {
+    margin-bottom: 14px;
+}
+
+.sequence-comp-picker > summary {
+    list-style: none;
+}
+
+.sequence-comp-picker > summary::-webkit-details-marker {
+    display: none;
+}
+
+.sequence-comp-picker__form {
+    display: grid;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 14px;
+    background: #f6e2db;
+}
+
+.sequence-comp-picker__field {
+    display: grid;
+    gap: 6px;
+    color: #27466e;
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.sequence-comp-picker__field select,
+.sequence-comp-picker__field input {
+    width: 100%;
+    min-height: 42px;
+    padding: 0 12px;
+    border: 1px solid #b8c5d0;
+    border-radius: 8px;
+    background: #fff;
+    color: #173a62;
+    font-size: 1rem;
+}
+
 .sequence-comp-section__label {
     margin: 32px 0 8px;
     font-size: 0.9rem;
@@ -1194,6 +1299,12 @@ input {
     color: #1f4572;
     font-size: 1rem;
     font-weight: 700;
+}
+
+.sequence-comp-add--inline {
+    min-width: 0;
+    width: 100%;
+    margin-top: 4px;
 }
 
 .sequence-comp-empty {

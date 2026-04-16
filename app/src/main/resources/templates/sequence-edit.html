@@ -28,9 +28,9 @@
 
             <section class="sequence-comp-summary" aria-label="初期設定サマリー">
                 <div class="sequence-comp-summary__row">
-                    <span class="sequence-comp-summary__time">60分</span>
-                    <span class="sequence-comp-summary__level">★★★☆☆</span>
-                    <span class="sequence-comp-summary__peak">アルダ チャンドラーサナ</span>
+                    <span class="sequence-comp-summary__time" th:text="${sequence.durationMinutes} + '分'">60分</span>
+                    <span class="sequence-comp-summary__level" th:text="${levelIndicator}">★★★☆☆</span>
+                    <span class="sequence-comp-summary__peak" th:text="${peakPoseLabel}">アルダ チャンドラーサナ</span>
                 </div>
                 <div class="sequence-comp-summary__tags">
                     <button class="sequence-comp-tag" type="button">解剖学的テーマ</button>
@@ -57,17 +57,42 @@
                     <div class="sequence-comp-section__time">5分</div>
                     <div class="sequence-comp-section__content">
                         <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>呼吸法</h2>
-                        <div class="sequence-comp-slot-list">
-                            <button class="sequence-comp-slot" type="button" aria-label="呼吸法を追加">
-                                <span class="sequence-comp-slot__plus"></span>
-                            </button>
-                            <button class="sequence-comp-slot" type="button" aria-label="呼吸法を追加">
-                                <span class="sequence-comp-slot__plus"></span>
-                            </button>
+                        <div class="sequence-comp-added-list" th:if="${!#lists.isEmpty(sequenceBreathings)}">
+                            <div class="sequence-comp-added-item" th:each="item : ${sequenceBreathings}">
+                                <span class="sequence-comp-added-item__order" th:text="${item.displayOrder}">1</span>
+                                <div class="sequence-comp-added-item__body">
+                                    <p class="sequence-comp-added-item__name" th:text="${item.breathingName}">腹式呼吸</p>
+                                    <p class="sequence-comp-added-item__memo" th:if="${item.memo != null and !#strings.isEmpty(item.memo)}" th:text="${item.memo}">メモ</p>
+                                </div>
+                            </div>
                         </div>
+                        <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceBreathings)}">まだ呼吸法は追加されていません。</p>
+                        <details class="sequence-comp-picker">
+                            <summary class="sequence-comp-slot" aria-label="呼吸法を追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                                <span class="sequence-comp-slot__label">呼吸法を追加</span>
+                            </summary>
+                            <form class="sequence-comp-picker__form"
+                                  th:action="@{/sequence/{sequenceId}/breathing(sequenceId=${sequenceId})}"
+                                  method="post">
+                                <label class="sequence-comp-picker__field">
+                                    <span>登録済み呼吸法</span>
+                                    <select name="breathingMasterId" required>
+                                        <option value="">選択してください</option>
+                                        <option th:each="breathing : ${breathingMasters}"
+                                                th:value="${breathing.id}"
+                                                th:text="${breathing.name}">腹式呼吸</option>
+                                    </select>
+                                </label>
+                                <label class="sequence-comp-picker__field">
+                                    <span>メモ（任意）</span>
+                                    <input type="text" name="memo" maxlength="255" placeholder="必要ならメモを追加">
+                                </label>
+                                <button class="sequence-comp-add sequence-comp-add--inline" type="submit">選択した呼吸法を追加</button>
+                            </form>
+                        </details>
                         <p class="sequence-comp-section__label">おすすめ</p>
-                        <p class="sequence-comp-section__recommend">完全呼吸法　カパラバティ</p>
-                        <button class="sequence-comp-add" type="button">セクションを追加する</button>
+                        <p class="sequence-comp-section__recommend">完全呼吸　片鼻呼吸（ナディーショーダナー）</p>
                     </div>
                 </article>
 

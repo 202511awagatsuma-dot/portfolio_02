@@ -4,35 +4,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stika | シークエンス編集</title>
+    <title>Stika | シークエンス作成</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body class="stika-body">
     <div class="app-shell">
-        <main class="screen edit-screen">
-            <header class="page-header">
-                <a class="back-link" th:href="@{/sequence/setup}">‹</a>
-                <div>
-                    <p class="page-header__eyebrow">Sequence Editor</p>
-                    <h1>シークエンス編集画面（仮）</h1>
+        <main class="screen sequence-screen">
+            <header class="sequence-header">
+                <div class="sequence-header__side sequence-header__side--left">
+                    <a class="icon-button icon-button--soft back-link" th:href="@{/sequence/setup}" aria-label="戻る">
+                        <span class="icon-arrow" aria-hidden="true"></span>
+                    </a>
+                </div>
+
+                <h1 class="sequence-header__title">シークエンス作成</h1>
+
+                <div class="sequence-header__side sequence-header__side--right">
+                    <button class="icon-button icon-button--soft" type="button" aria-label="お知らせ">
+                        <span class="icon-bell" aria-hidden="true"></span>
+                    </button>
+                    <button class="icon-button icon-button--soft" type="button" aria-label="メニュー">
+                        <span class="icon-grid" aria-hidden="true">
+                            <span></span><span></span><span></span>
+                            <span></span><span></span><span></span>
+                            <span></span><span></span><span></span>
+                        </span>
+                    </button>
                 </div>
             </header>
 
-            <section class="card placeholder-card">
-                <p class="placeholder-card__badge">Draft</p>
-                <h2>ここから編集画面を広げていけます</h2>
-                <p>
-                    初期設定画面からの遷移確認用のプレースホルダーです。今後は、セクション追加・ポーズ追加・メモ編集などを
-                    この画面に実装していく想定です。
-                </p>
-                <div class="placeholder-card__actions">
-                    <a class="secondary-button" th:href="@{/sequence/setup}">設定へ戻る</a>
-                    <a class="primary-button primary-button--inline" th:href="@{/}">トップへ戻る</a>
+            <section class="card sequence-summary" aria-labelledby="sequenceSummaryHeading">
+                <div class="sequence-summary__head">
+                    <div>
+                        <p class="page-header__eyebrow" id="sequenceSummaryHeading">Initial Summary</p>
+                        <h2 class="sequence-summary__title">初期設定の確認</h2>
+                    </div>
+                    <span class="sequence-summary__status">確認用</span>
+                </div>
+
+                <div class="sequence-summary__top">
+                    <div class="summary-item">
+                        <span class="summary-item__label">時間</span>
+                        <span class="summary-item__value">60分</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-item__label">難易度</span>
+                        <span class="summary-item__value summary-item__value--stars" aria-label="難易度 3">
+                            <span class="summary-stars summary-stars--active">★</span>
+                            <span class="summary-stars summary-stars--active">★</span>
+                            <span class="summary-stars summary-stars--active">★</span>
+                            <span class="summary-stars">★</span>
+                            <span class="summary-stars">★</span>
+                        </span>
+                    </div>
+                    <div class="summary-item summary-item--wide">
+                        <span class="summary-item__label">ピークポーズ</span>
+                        <span class="summary-item__value">アルダ チャンドラーサナ</span>
+                    </div>
+                </div>
+
+                <div class="sequence-summary__tags" aria-label="テーマタグ">
+                    <button class="theme-tag" type="button">
+                        <span class="theme-tag__label">解剖学的テーマ</span>
+                        <span class="theme-tag__value">股関節の安定</span>
+                    </button>
+                    <button class="theme-tag is-empty" type="button">
+                        <span class="theme-tag__label">哲学的テーマ</span>
+                        <span class="theme-tag__value">未設定</span>
+                    </button>
+                    <button class="theme-tag" type="button">
+                        <span class="theme-tag__label">効果・効能①</span>
+                        <span class="theme-tag__value">集中力アップ</span>
+                    </button>
+                    <button class="theme-tag is-empty" type="button">
+                        <span class="theme-tag__label">効果・効能②</span>
+                        <span class="theme-tag__value">未設定</span>
+                    </button>
                 </div>
             </section>
+
+            <nav class="sequence-tabs" aria-label="レッスン構成タブ">
+                <button class="sequence-tab is-active" type="button" data-tab="all" aria-pressed="true">一覧</button>
+                <button class="sequence-tab" type="button" data-tab="breathing" aria-pressed="false">呼吸法</button>
+                <button class="sequence-tab" type="button" data-tab="warming-up" aria-pressed="false">Warming UP</button>
+                <button class="sequence-tab" type="button" data-tab="sun-salutation" aria-pressed="false">太陽礼拝</button>
+                <button class="sequence-tab" type="button" data-tab="standing" aria-pressed="false">立位</button>
+                <button class="sequence-tab" type="button" data-tab="peak" aria-pressed="false">ピーク</button>
+                <button class="sequence-tab" type="button" data-tab="pose" aria-pressed="false">ポーズ</button>
+                <button class="sequence-tab" type="button" data-tab="seated" aria-pressed="false">座位</button>
+            </nav>
+
+            <section class="sequence-sections" aria-live="polite">
+                <article class="card sequence-card" data-category="breathing">
+                    <header class="sequence-card__header">
+                        <div class="sequence-card__meta">
+                            <p class="sequence-card__time">5分</p>
+                            <span class="sequence-card__dot" aria-hidden="true"></span>
+                            <p class="sequence-card__category">呼吸法</p>
+                        </div>
+                    </header>
+                    <div class="sequence-card__body">
+                        <p class="sequence-card__label">おすすめ</p>
+                        <p class="sequence-card__content">完全呼吸法　カパラバティ</p>
+                        <p class="sequence-card__note">呼吸を整えながら集中へ入りやすい導入パートです。</p>
+                    </div>
+                    <footer class="sequence-card__footer">
+                        <button class="sequence-card__add" type="button">セクションを追加する</button>
+                    </footer>
+                </article>
+
+                <article class="card sequence-card" data-category="warming-up">
+                    <header class="sequence-card__header">
+                        <div class="sequence-card__meta">
+                            <p class="sequence-card__time">10分</p>
+                            <span class="sequence-card__dot" aria-hidden="true"></span>
+                            <p class="sequence-card__category">Warming UP</p>
+                        </div>
+                    </header>
+                    <div class="sequence-card__body">
+                        <p class="sequence-card__label">おすすめ</p>
+                        <p class="sequence-card__content">キャット&カウ　虎のポーズ</p>
+                        <p class="sequence-card__note">背骨と体幹をやわらかく起こして、立位へつなげます。</p>
+                    </div>
+                    <footer class="sequence-card__footer">
+                        <button class="sequence-card__add" type="button">セクションを追加する</button>
+                    </footer>
+                </article>
+
+                <article class="card sequence-card" data-category="sun-salutation">
+                    <header class="sequence-card__header">
+                        <div class="sequence-card__meta">
+                            <p class="sequence-card__time">10分</p>
+                            <span class="sequence-card__dot" aria-hidden="true"></span>
+                            <p class="sequence-card__category">太陽礼拝</p>
+                        </div>
+                    </header>
+                    <div class="sequence-card__body">
+                        <p class="sequence-card__label">おすすめ</p>
+                        <p class="sequence-card__content">太陽礼拝A　太陽礼拝B</p>
+                        <p class="sequence-card__note">熱量を上げながら全身を均等に目覚めさせる構成です。</p>
+                    </div>
+                    <footer class="sequence-card__footer">
+                        <button class="sequence-card__add" type="button">セクションを追加する</button>
+                    </footer>
+                </article>
+
+                <article class="card sequence-card" data-category="standing">
+                    <header class="sequence-card__header">
+                        <div class="sequence-card__meta">
+                            <p class="sequence-card__time">15分</p>
+                            <span class="sequence-card__dot" aria-hidden="true"></span>
+                            <p class="sequence-card__category">立位</p>
+                        </div>
+                    </header>
+                    <div class="sequence-card__body">
+                        <p class="sequence-card__label">おすすめ</p>
+                        <p class="sequence-card__content">戦士のポーズII　リバースウォーリア</p>
+                        <p class="sequence-card__note">下半身の安定感を育ててピークへ向かう土台を作ります。</p>
+                    </div>
+                    <footer class="sequence-card__footer">
+                        <button class="sequence-card__add" type="button">セクションを追加する</button>
+                    </footer>
+                </article>
+
+                <article class="card sequence-card" data-category="peak">
+                    <header class="sequence-card__header">
+                        <div class="sequence-card__meta">
+                            <p class="sequence-card__time">5分</p>
+                            <span class="sequence-card__dot" aria-hidden="true"></span>
+                            <p class="sequence-card__category">ピーク</p>
+                        </div>
+                    </header>
+                    <div class="sequence-card__body">
+                        <p class="sequence-card__label">おすすめ</p>
+                        <p class="sequence-card__content">アルダ チャンドラーサナ</p>
+                        <p class="sequence-card__note">本日のピークポーズとして静的に表示しています。</p>
+                    </div>
+                    <footer class="sequence-card__footer">
+                        <button class="sequence-card__add" type="button">セクションを追加する</button>
+                    </footer>
+                </article>
+
+                <article class="card sequence-card" data-category="pose">
+                    <header class="sequence-card__header">
+                        <div class="sequence-card__meta">
+                            <p class="sequence-card__time">10分</p>
+                            <span class="sequence-card__dot" aria-hidden="true"></span>
+                            <p class="sequence-card__category">ポーズ</p>
+                        </div>
+                    </header>
+                    <div class="sequence-card__body">
+                        <p class="sequence-card__label">おすすめ</p>
+                        <p class="sequence-card__content">ねじった三角のポーズ　ハーフスプリット</p>
+                        <p class="sequence-card__note">ピークの前後で必要な可動域と安定性を補います。</p>
+                    </div>
+                    <footer class="sequence-card__footer">
+                        <button class="sequence-card__add" type="button">セクションを追加する</button>
+                    </footer>
+                </article>
+
+                <article class="card sequence-card" data-category="seated">
+                    <header class="sequence-card__header">
+                        <div class="sequence-card__meta">
+                            <p class="sequence-card__time">5分</p>
+                            <span class="sequence-card__dot" aria-hidden="true"></span>
+                            <p class="sequence-card__category">座位</p>
+                        </div>
+                    </header>
+                    <div class="sequence-card__body">
+                        <p class="sequence-card__label">おすすめ</p>
+                        <p class="sequence-card__content">ジャーヌシールシャーサナ　仰向けのツイスト</p>
+                        <p class="sequence-card__note">静かに鎮めながらレッスンを締める終盤パートです。</p>
+                    </div>
+                    <footer class="sequence-card__footer">
+                        <button class="sequence-card__add" type="button">セクションを追加する</button>
+                    </footer>
+                </article>
+            </section>
+
+            <p class="sequence-empty-state" id="sequenceEmptyState" hidden>選択中のセクションはまだありません。</p>
         </main>
     </div>
+
+    <script th:src="@{/js/script.js}"></script>
 </body>
 
 </html>

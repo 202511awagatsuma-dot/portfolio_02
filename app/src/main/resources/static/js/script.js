@@ -145,43 +145,54 @@ function isSameDate(a, b) {
 }
 
 function initSequenceTabs() {
-    const tabs = document.querySelectorAll(".sequence-tab");
-    const cards = document.querySelectorAll(".sequence-card");
-    const emptyState = document.getElementById("sequenceEmptyState");
-
-    if (tabs.length === 0 || cards.length === 0) {
-        return;
-    }
-
-    const applyFilter = (tabName) => {
-        let visibleCount = 0;
-
-        cards.forEach((card) => {
-            const shouldShow = tabName === "all" || card.dataset.category === tabName;
-            card.hidden = !shouldShow;
-
-            if (shouldShow) {
-                visibleCount += 1;
-            }
-        });
-
-        if (emptyState) {
-            emptyState.hidden = visibleCount > 0;
+    const tabGroups = [
+        {
+            tabs: document.querySelectorAll(".sequence-tab"),
+            sections: document.querySelectorAll(".sequence-card"),
+            emptyState: document.getElementById("sequenceEmptyState")
+        },
+        {
+            tabs: document.querySelectorAll(".sequence-comp-tab"),
+            sections: document.querySelectorAll(".sequence-comp-section"),
+            emptyState: document.getElementById("sequenceCompEmpty")
         }
-    };
+    ];
 
-    tabs.forEach((tab) => {
-        tab.addEventListener("click", () => {
-            tabs.forEach((candidate) => {
-                const isActive = candidate === tab;
-                candidate.classList.toggle("is-active", isActive);
-                candidate.setAttribute("aria-pressed", String(isActive));
+    tabGroups.forEach(({ tabs, sections, emptyState }) => {
+        if (tabs.length === 0 || sections.length === 0) {
+            return;
+        }
+
+        const applyFilter = (tabName) => {
+            let visibleCount = 0;
+
+            sections.forEach((section) => {
+                const shouldShow = tabName === "all" || section.dataset.category === tabName;
+                section.hidden = !shouldShow;
+
+                if (shouldShow) {
+                    visibleCount += 1;
+                }
             });
 
-            applyFilter(tab.dataset.tab || "all");
-        });
-    });
+            if (emptyState) {
+                emptyState.hidden = visibleCount > 0;
+            }
+        };
 
-    const activeTab = document.querySelector(".sequence-tab.is-active")?.dataset.tab || "all";
-    applyFilter(activeTab);
+        tabs.forEach((tab) => {
+            tab.addEventListener("click", () => {
+                tabs.forEach((candidate) => {
+                    const isActive = candidate === tab;
+                    candidate.classList.toggle("is-active", isActive);
+                    candidate.setAttribute("aria-pressed", String(isActive));
+                });
+
+                applyFilter(tab.dataset.tab || "all");
+            });
+        });
+
+        const activeTab = Array.from(tabs).find((tab) => tab.classList.contains("is-active"))?.dataset.tab || "all";
+        applyFilter(activeTab);
+    });
 }

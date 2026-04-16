@@ -10,220 +10,204 @@
 
 <body class="stika-body">
     <div class="app-shell">
-        <main class="screen sequence-screen">
-            <header class="sequence-header">
-                <div class="sequence-header__side sequence-header__side--left">
-                    <a class="icon-button icon-button--soft back-link" th:href="@{/sequence/setup}" aria-label="戻る">
-                        <span class="icon-arrow" aria-hidden="true"></span>
-                    </a>
+        <main class="screen sequence-comp-screen">
+            <header class="ios-statusbar" aria-hidden="true">
+                <div class="ios-statusbar__time">13:41</div>
+                <div class="ios-statusbar__notch"></div>
+                <div class="ios-statusbar__icons">
+                    <span class="ios-signal"><span></span><span></span><span></span><span></span></span>
+                    <span class="ios-wifi"></span>
+                    <span class="ios-battery">90</span>
                 </div>
+            </header>
 
-                <h1 class="sequence-header__title">シークエンス作成</h1>
-
-                <div class="sequence-header__side sequence-header__side--right">
-                    <button class="icon-button icon-button--soft" type="button" aria-label="お知らせ">
-                        <span class="icon-bell" aria-hidden="true"></span>
-                    </button>
-                    <button class="icon-button icon-button--soft" type="button" aria-label="メニュー">
-                        <span class="icon-grid" aria-hidden="true">
-                            <span></span><span></span><span></span>
-                            <span></span><span></span><span></span>
-                            <span></span><span></span><span></span>
-                        </span>
+            <header class="sequence-comp-header">
+                <a class="sequence-comp-header__brand" th:href="@{/}" aria-label="トップへ戻る">
+                    <img th:src="@{/assets/icon/img_home.svg}" src="/assets/icon/img_home.svg" alt="">
+                </a>
+                <h1 class="sequence-comp-header__title">シークエンス作成</h1>
+                <div class="sequence-comp-header__actions">
+                    <button class="sequence-comp-icon sequence-comp-icon--bell" type="button" aria-label="お知らせ"></button>
+                    <button class="sequence-comp-icon sequence-comp-icon--grid" type="button" aria-label="メニュー">
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
                     </button>
                 </div>
             </header>
 
-            <section class="card sequence-summary" aria-labelledby="sequenceSummaryHeading">
-                <div class="sequence-summary__head">
-                    <div>
-                        <p class="page-header__eyebrow" id="sequenceSummaryHeading">Initial Summary</p>
-                        <h2 class="sequence-summary__title">初期設定の確認</h2>
-                    </div>
-                    <span class="sequence-summary__status">確認用</span>
+            <section class="sequence-comp-summary" aria-label="初期設定サマリー">
+                <div class="sequence-comp-summary__row">
+                    <span class="sequence-comp-summary__time">60分</span>
+                    <span class="sequence-comp-summary__level">★★★☆☆</span>
+                    <span class="sequence-comp-summary__peak">アルダ チャンドラーサナ</span>
                 </div>
-
-                <div class="sequence-summary__top">
-                    <div class="summary-item">
-                        <span class="summary-item__label">時間</span>
-                        <span class="summary-item__value">60分</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-item__label">難易度</span>
-                        <span class="summary-item__value summary-item__value--stars" aria-label="難易度 3">
-                            <span class="summary-stars summary-stars--active">★</span>
-                            <span class="summary-stars summary-stars--active">★</span>
-                            <span class="summary-stars summary-stars--active">★</span>
-                            <span class="summary-stars">★</span>
-                            <span class="summary-stars">★</span>
-                        </span>
-                    </div>
-                    <div class="summary-item summary-item--wide">
-                        <span class="summary-item__label">ピークポーズ</span>
-                        <span class="summary-item__value">アルダ チャンドラーサナ</span>
-                    </div>
-                </div>
-
-                <div class="sequence-summary__tags" aria-label="テーマタグ">
-                    <button class="theme-tag" type="button">
-                        <span class="theme-tag__label">解剖学的テーマ</span>
-                        <span class="theme-tag__value">股関節の安定</span>
-                    </button>
-                    <button class="theme-tag is-empty" type="button">
-                        <span class="theme-tag__label">哲学的テーマ</span>
-                        <span class="theme-tag__value">未設定</span>
-                    </button>
-                    <button class="theme-tag" type="button">
-                        <span class="theme-tag__label">効果・効能①</span>
-                        <span class="theme-tag__value">集中力アップ</span>
-                    </button>
-                    <button class="theme-tag is-empty" type="button">
-                        <span class="theme-tag__label">効果・効能②</span>
-                        <span class="theme-tag__value">未設定</span>
-                    </button>
+                <div class="sequence-comp-summary__tags">
+                    <button class="sequence-comp-tag" type="button">解剖学的テーマ</button>
+                    <button class="sequence-comp-tag" type="button">哲学的テーマ</button>
+                    <button class="sequence-comp-tag" type="button">効果・効能①</button>
+                    <button class="sequence-comp-tag" type="button">効果・効能②</button>
                 </div>
             </section>
 
-            <nav class="sequence-tabs" aria-label="レッスン構成タブ">
-                <button class="sequence-tab is-active" type="button" data-tab="all" aria-pressed="true">一覧</button>
-                <button class="sequence-tab" type="button" data-tab="breathing" aria-pressed="false">呼吸法</button>
-                <button class="sequence-tab" type="button" data-tab="warming-up" aria-pressed="false">Warming UP</button>
-                <button class="sequence-tab" type="button" data-tab="sun-salutation" aria-pressed="false">太陽礼拝</button>
-                <button class="sequence-tab" type="button" data-tab="standing" aria-pressed="false">立位</button>
-                <button class="sequence-tab" type="button" data-tab="peak" aria-pressed="false">ピーク</button>
-                <button class="sequence-tab" type="button" data-tab="pose" aria-pressed="false">ポーズ</button>
-                <button class="sequence-tab" type="button" data-tab="seated" aria-pressed="false">座位</button>
+            <nav class="sequence-comp-tabs" aria-label="レッスン構成タブ">
+                <button class="sequence-comp-tab is-active" type="button" data-tab="all" aria-pressed="true">一覧</button>
+                <button class="sequence-comp-tab" type="button" data-tab="breathing" aria-pressed="false">呼吸法</button>
+                <button class="sequence-comp-tab" type="button" data-tab="warming-up" aria-pressed="false">Warming<br>UP</button>
+                <button class="sequence-comp-tab" type="button" data-tab="sun-salutation" aria-pressed="false">太陽礼拝</button>
+                <button class="sequence-comp-tab" type="button" data-tab="standing" aria-pressed="false">立位</button>
+                <button class="sequence-comp-tab" type="button" data-tab="peak" aria-pressed="false">ピーク<br>ポーズ</button>
+                <button class="sequence-comp-tab" type="button" data-tab="pose" aria-pressed="false">ポーズ</button>
+                <button class="sequence-comp-tab" type="button" data-tab="seated" aria-pressed="false">座位</button>
             </nav>
 
-            <section class="sequence-sections" aria-live="polite">
-                <article class="card sequence-card" data-category="breathing">
-                    <header class="sequence-card__header">
-                        <div class="sequence-card__meta">
-                            <p class="sequence-card__time">5分</p>
-                            <span class="sequence-card__dot" aria-hidden="true"></span>
-                            <p class="sequence-card__category">呼吸法</p>
+            <section class="sequence-comp-sections" aria-live="polite">
+                <article class="sequence-comp-section" data-category="breathing">
+                    <div class="sequence-comp-section__time">5分</div>
+                    <div class="sequence-comp-section__content">
+                        <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>呼吸法</h2>
+                        <div class="sequence-comp-slot-list">
+                            <button class="sequence-comp-slot" type="button" aria-label="呼吸法を追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
+                            <button class="sequence-comp-slot" type="button" aria-label="呼吸法を追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
                         </div>
-                    </header>
-                    <div class="sequence-card__body">
-                        <p class="sequence-card__label">おすすめ</p>
-                        <p class="sequence-card__content">完全呼吸法　カパラバティ</p>
-                        <p class="sequence-card__note">呼吸を整えながら集中へ入りやすい導入パートです。</p>
+                        <p class="sequence-comp-section__label">おすすめ</p>
+                        <p class="sequence-comp-section__recommend">完全呼吸法　カパラバティ</p>
+                        <button class="sequence-comp-add" type="button">セクションを追加する</button>
                     </div>
-                    <footer class="sequence-card__footer">
-                        <button class="sequence-card__add" type="button">セクションを追加する</button>
-                    </footer>
                 </article>
 
-                <article class="card sequence-card" data-category="warming-up">
-                    <header class="sequence-card__header">
-                        <div class="sequence-card__meta">
-                            <p class="sequence-card__time">10分</p>
-                            <span class="sequence-card__dot" aria-hidden="true"></span>
-                            <p class="sequence-card__category">Warming UP</p>
+                <article class="sequence-comp-section" data-category="warming-up">
+                    <div class="sequence-comp-section__time">10分</div>
+                    <div class="sequence-comp-section__content">
+                        <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>Warming UP</h2>
+                        <div class="sequence-comp-slot-list">
+                            <button class="sequence-comp-slot" type="button" aria-label="Warming UPを追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
+                            <button class="sequence-comp-slot" type="button" aria-label="Warming UPを追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
+                            <button class="sequence-comp-slot" type="button" aria-label="Warming UPを追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
+                            <button class="sequence-comp-slot" type="button" aria-label="Warming UPを追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
                         </div>
-                    </header>
-                    <div class="sequence-card__body">
-                        <p class="sequence-card__label">おすすめ</p>
-                        <p class="sequence-card__content">キャット&カウ　虎のポーズ</p>
-                        <p class="sequence-card__note">背骨と体幹をやわらかく起こして、立位へつなげます。</p>
+                        <p class="sequence-comp-section__label">おすすめ</p>
+                        <p class="sequence-comp-section__recommend">キャット&amp;カウ　虎のポーズ</p>
+                        <button class="sequence-comp-add" type="button">セクションを追加する</button>
                     </div>
-                    <footer class="sequence-card__footer">
-                        <button class="sequence-card__add" type="button">セクションを追加する</button>
-                    </footer>
                 </article>
 
-                <article class="card sequence-card" data-category="sun-salutation">
-                    <header class="sequence-card__header">
-                        <div class="sequence-card__meta">
-                            <p class="sequence-card__time">10分</p>
-                            <span class="sequence-card__dot" aria-hidden="true"></span>
-                            <p class="sequence-card__category">太陽礼拝</p>
+                <article class="sequence-comp-section" data-category="sun-salutation">
+                    <div class="sequence-comp-section__time">10分</div>
+                    <div class="sequence-comp-section__content">
+                        <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>太陽礼拝</h2>
+                        <div class="sequence-comp-slot-list">
+                            <button class="sequence-comp-slot" type="button" aria-label="太陽礼拝を追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
+                            <button class="sequence-comp-slot" type="button" aria-label="太陽礼拝を追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
                         </div>
-                    </header>
-                    <div class="sequence-card__body">
-                        <p class="sequence-card__label">おすすめ</p>
-                        <p class="sequence-card__content">太陽礼拝A　太陽礼拝B</p>
-                        <p class="sequence-card__note">熱量を上げながら全身を均等に目覚めさせる構成です。</p>
+                        <p class="sequence-comp-section__label">おすすめ</p>
+                        <p class="sequence-comp-section__recommend">太陽礼拝A　太陽礼拝B</p>
+                        <button class="sequence-comp-add" type="button">セクションを追加する</button>
                     </div>
-                    <footer class="sequence-card__footer">
-                        <button class="sequence-card__add" type="button">セクションを追加する</button>
-                    </footer>
                 </article>
 
-                <article class="card sequence-card" data-category="standing">
-                    <header class="sequence-card__header">
-                        <div class="sequence-card__meta">
-                            <p class="sequence-card__time">15分</p>
-                            <span class="sequence-card__dot" aria-hidden="true"></span>
-                            <p class="sequence-card__category">立位</p>
+                <article class="sequence-comp-section" data-category="standing">
+                    <div class="sequence-comp-section__time">15分</div>
+                    <div class="sequence-comp-section__content">
+                        <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>立位</h2>
+                        <div class="sequence-comp-slot-list">
+                            <button class="sequence-comp-slot" type="button" aria-label="立位を追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
+                            <button class="sequence-comp-slot" type="button" aria-label="立位を追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
+                            <button class="sequence-comp-slot" type="button" aria-label="立位を追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
                         </div>
-                    </header>
-                    <div class="sequence-card__body">
-                        <p class="sequence-card__label">おすすめ</p>
-                        <p class="sequence-card__content">戦士のポーズII　リバースウォーリア</p>
-                        <p class="sequence-card__note">下半身の安定感を育ててピークへ向かう土台を作ります。</p>
+                        <p class="sequence-comp-section__label">おすすめ</p>
+                        <p class="sequence-comp-section__recommend">戦士のポーズII　リバースウォーリア</p>
+                        <button class="sequence-comp-add" type="button">セクションを追加する</button>
                     </div>
-                    <footer class="sequence-card__footer">
-                        <button class="sequence-card__add" type="button">セクションを追加する</button>
-                    </footer>
                 </article>
 
-                <article class="card sequence-card" data-category="peak">
-                    <header class="sequence-card__header">
-                        <div class="sequence-card__meta">
-                            <p class="sequence-card__time">5分</p>
-                            <span class="sequence-card__dot" aria-hidden="true"></span>
-                            <p class="sequence-card__category">ピーク</p>
+                <article class="sequence-comp-section" data-category="peak">
+                    <div class="sequence-comp-section__time">5分</div>
+                    <div class="sequence-comp-section__content">
+                        <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>ピークポーズ</h2>
+                        <div class="sequence-comp-slot-list">
+                            <button class="sequence-comp-slot" type="button" aria-label="ピークポーズを追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
                         </div>
-                    </header>
-                    <div class="sequence-card__body">
-                        <p class="sequence-card__label">おすすめ</p>
-                        <p class="sequence-card__content">アルダ チャンドラーサナ</p>
-                        <p class="sequence-card__note">本日のピークポーズとして静的に表示しています。</p>
+                        <p class="sequence-comp-section__label">おすすめ</p>
+                        <p class="sequence-comp-section__recommend">アルダ チャンドラーサナ</p>
+                        <button class="sequence-comp-add" type="button">セクションを追加する</button>
                     </div>
-                    <footer class="sequence-card__footer">
-                        <button class="sequence-card__add" type="button">セクションを追加する</button>
-                    </footer>
                 </article>
 
-                <article class="card sequence-card" data-category="pose">
-                    <header class="sequence-card__header">
-                        <div class="sequence-card__meta">
-                            <p class="sequence-card__time">10分</p>
-                            <span class="sequence-card__dot" aria-hidden="true"></span>
-                            <p class="sequence-card__category">ポーズ</p>
+                <article class="sequence-comp-section" data-category="pose">
+                    <div class="sequence-comp-section__time">10分</div>
+                    <div class="sequence-comp-section__content">
+                        <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>ポーズ</h2>
+                        <div class="sequence-comp-slot-list">
+                            <button class="sequence-comp-slot" type="button" aria-label="ポーズを追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
+                            <button class="sequence-comp-slot" type="button" aria-label="ポーズを追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
                         </div>
-                    </header>
-                    <div class="sequence-card__body">
-                        <p class="sequence-card__label">おすすめ</p>
-                        <p class="sequence-card__content">ねじった三角のポーズ　ハーフスプリット</p>
-                        <p class="sequence-card__note">ピークの前後で必要な可動域と安定性を補います。</p>
+                        <p class="sequence-comp-section__label">おすすめ</p>
+                        <p class="sequence-comp-section__recommend">ねじった三角のポーズ　ハーフスプリット</p>
+                        <button class="sequence-comp-add" type="button">セクションを追加する</button>
                     </div>
-                    <footer class="sequence-card__footer">
-                        <button class="sequence-card__add" type="button">セクションを追加する</button>
-                    </footer>
                 </article>
 
-                <article class="card sequence-card" data-category="seated">
-                    <header class="sequence-card__header">
-                        <div class="sequence-card__meta">
-                            <p class="sequence-card__time">5分</p>
-                            <span class="sequence-card__dot" aria-hidden="true"></span>
-                            <p class="sequence-card__category">座位</p>
+                <article class="sequence-comp-section" data-category="seated">
+                    <div class="sequence-comp-section__time">5分</div>
+                    <div class="sequence-comp-section__content">
+                        <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>座位</h2>
+                        <div class="sequence-comp-slot-list">
+                            <button class="sequence-comp-slot" type="button" aria-label="座位を追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
+                            <button class="sequence-comp-slot" type="button" aria-label="座位を追加">
+                                <span class="sequence-comp-slot__plus"></span>
+                            </button>
                         </div>
-                    </header>
-                    <div class="sequence-card__body">
-                        <p class="sequence-card__label">おすすめ</p>
-                        <p class="sequence-card__content">ジャーヌシールシャーサナ　仰向けのツイスト</p>
-                        <p class="sequence-card__note">静かに鎮めながらレッスンを締める終盤パートです。</p>
+                        <p class="sequence-comp-section__label">おすすめ</p>
+                        <p class="sequence-comp-section__recommend">ジャーヌシールシャーサナ　仰向けのツイスト</p>
+                        <button class="sequence-comp-add" type="button">セクションを追加する</button>
                     </div>
-                    <footer class="sequence-card__footer">
-                        <button class="sequence-card__add" type="button">セクションを追加する</button>
-                    </footer>
                 </article>
             </section>
 
-            <p class="sequence-empty-state" id="sequenceEmptyState" hidden>選択中のセクションはまだありません。</p>
+            <p class="sequence-comp-empty" id="sequenceCompEmpty" hidden>選択中のセクションはありません。</p>
+
+            <footer class="sequence-comp-footer">
+                <div class="sequence-comp-footer__tools">
+                    <button class="sequence-comp-footer__icon sequence-comp-footer__icon--undo" type="button" aria-label="戻す"></button>
+                    <button class="sequence-comp-footer__icon sequence-comp-footer__icon--redo" type="button" aria-label="やり直す"></button>
+                    <button class="sequence-comp-footer__circle" type="button" aria-label="操作1"></button>
+                    <button class="sequence-comp-footer__circle" type="button" aria-label="操作2"></button>
+                    <button class="sequence-comp-footer__circle" type="button" aria-label="操作3"></button>
+                    <button class="sequence-comp-footer__circle" type="button" aria-label="操作4"></button>
+                </div>
+                <button class="sequence-comp-footer__book" type="button" aria-label="ブック"></button>
+            </footer>
         </main>
     </div>
 

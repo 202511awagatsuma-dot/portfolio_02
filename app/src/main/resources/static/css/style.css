@@ -807,7 +807,7 @@ input {
 }
 
 .sequence-comp-screen {
-    padding: 0 14px 18px;
+    padding: 12px 14px 18px;
     background: #fbf3ef;
     color: #1f4572;
 }
@@ -1390,14 +1390,6 @@ input {
 
     .calendar__weekdays span {
         font-size: 0.7rem;
-    }
-
-    .ios-statusbar {
-        padding: 0 4px;
-    }
-
-    .ios-statusbar__notch {
-        width: 156px;
     }
 
     .sequence-comp-header {

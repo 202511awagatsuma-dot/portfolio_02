@@ -11,16 +11,6 @@
 <body class="stika-body">
     <div class="app-shell">
         <main class="screen sequence-comp-screen">
-            <header class="ios-statusbar" aria-hidden="true">
-                <div class="ios-statusbar__time">13:41</div>
-                <div class="ios-statusbar__notch"></div>
-                <div class="ios-statusbar__icons">
-                    <span class="ios-signal"><span></span><span></span><span></span><span></span></span>
-                    <span class="ios-wifi"></span>
-                    <span class="ios-battery">90</span>
-                </div>
-            </header>
-
             <header class="sequence-comp-header">
                 <a class="sequence-comp-header__brand" th:href="@{/}" aria-label="トップへ戻る">
                     <img th:src="@{/assets/icon/img_home.svg}" src="/assets/icon/img_home.svg" alt="">
@@ -59,6 +49,7 @@
                 <button class="sequence-comp-tab" type="button" data-tab="peak" aria-pressed="false">ピーク<br>ポーズ</button>
                 <button class="sequence-comp-tab" type="button" data-tab="pose" aria-pressed="false">ポーズ</button>
                 <button class="sequence-comp-tab" type="button" data-tab="seated" aria-pressed="false">座位</button>
+                <button class="sequence-comp-tab" type="button" data-tab="relaxation" aria-pressed="false">リラクゼー<br>ション</button>
             </nav>
 
             <section class="sequence-comp-sections" aria-live="polite">

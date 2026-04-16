@@ -11,18 +11,18 @@
 <body class="stika-body">
     <div class="app-shell">
         <main class="screen sequence-comp-screen">
-            <header class="sequence-comp-header">
-                <a class="sequence-comp-header__brand" th:href="@{/}" aria-label="トップへ戻る">
-                    <img th:src="@{/assets/icon/img_home.svg}" src="/assets/icon/img_home.svg" alt="">
+            <header class="topbar sequence-comp-header">
+                <a class="topbar__brand" th:href="@{/}" aria-label="トップへ戻る">
+                    <img class="brand-mark" th:src="@{/assets/icon/img_home.svg}" src="/assets/icon/img_home.svg" alt="">
                 </a>
-                <h1 class="sequence-comp-header__title">シークエンス作成</h1>
-                <div class="sequence-comp-header__actions">
-                    <button class="sequence-comp-icon sequence-comp-icon--bell" type="button" aria-label="お知らせ"></button>
-                    <button class="sequence-comp-icon sequence-comp-icon--grid" type="button" aria-label="メニュー">
+                <h1 class="topbar__date sequence-comp-header__title">シークエンス作成</h1>
+                <div class="topbar__actions">
+                    <span class="icon-badge sequence-comp-header__notice" aria-label="お知らせ"></span>
+                    <span class="icon-badge icon-badge--menu" aria-label="メニュー">
                         <span></span><span></span><span></span>
                         <span></span><span></span><span></span>
                         <span></span><span></span><span></span>
-                    </button>
+                    </span>
                 </div>
             </header>
 

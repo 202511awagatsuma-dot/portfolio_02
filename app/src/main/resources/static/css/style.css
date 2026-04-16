@@ -916,90 +916,56 @@ input {
 }
 
 .sequence-comp-header {
-    display: grid;
-    grid-template-columns: 50px minmax(0, 1fr) 74px;
     align-items: center;
-    gap: 10px;
     margin-bottom: 14px;
-}
-
-.sequence-comp-header__brand {
-    width: 44px;
-    height: 44px;
-    display: grid;
-    place-items: center;
-}
-
-.sequence-comp-header__brand img {
-    width: 42px;
-    height: 42px;
-    object-fit: contain;
 }
 
 .sequence-comp-header__title {
     margin: 0;
     text-align: center;
-    font-size: 1.92rem;
+    font-size: 22px;
     line-height: 1.1;
     font-weight: 700;
     color: #254a77;
     letter-spacing: 0.03em;
 }
 
-.sequence-comp-header__actions {
-    display: flex;
-    align-items: center;
+.sequence-comp-header .topbar__actions {
+    width: 72px;
     justify-content: flex-end;
-    gap: 12px;
+    gap: 10px;
+    flex-shrink: 0;
 }
 
-.sequence-comp-icon {
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    border: none;
-    background: transparent;
+.sequence-comp-header__notice {
     position: relative;
+    width: 28px;
+    height: 28px;
     color: #3a5577;
 }
 
-.sequence-comp-icon--bell::before {
+.sequence-comp-header__notice::before {
     content: "";
     position: absolute;
-    left: 8px;
-    top: 4px;
-    width: 14px;
-    height: 15px;
+    left: 7px;
+    top: 3px;
+    width: 13px;
+    height: 14px;
     border: 3px solid currentColor;
     border-bottom: none;
     border-radius: 9px 9px 4px 4px;
 }
 
-.sequence-comp-icon--bell::after {
+.sequence-comp-header__notice::after {
     content: "";
     position: absolute;
     left: 6px;
-    bottom: 5px;
-    width: 18px;
-    height: 4px;
+    bottom: 4px;
+    width: 16px;
+    height: 3px;
     border-radius: 99px;
     background: currentColor;
-    box-shadow: 7px 4px 0 -1px currentColor;
-}
-
-.sequence-comp-icon--grid {
-    display: grid;
-    grid-template-columns: repeat(3, 5px);
-    gap: 4px;
-    align-content: center;
-    justify-content: center;
-}
-
-.sequence-comp-icon--grid span {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: currentColor;
+    box-shadow: 6px 4px 0 -1px currentColor;
 }
 
 .sequence-comp-summary {
@@ -1393,11 +1359,11 @@ input {
     }
 
     .sequence-comp-header {
-        grid-template-columns: 42px minmax(0, 1fr) 64px;
+        gap: 8px;
     }
 
     .sequence-comp-header__title {
-        font-size: 1.72rem;
+        font-size: 22px;
     }
 
     .sequence-comp-summary__row {

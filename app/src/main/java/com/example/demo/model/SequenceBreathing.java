@@ -7,6 +7,7 @@ public record SequenceBreathing(
         Long sequenceId,
         Long breathingMasterId,
         String breathingName,
+        String breathingDescription,
         int displayOrder,
         String memo,
         LocalDateTime createdAt,

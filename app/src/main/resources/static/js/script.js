@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initPeakPoseField();
     initGrowthCalendar();
     initSequenceTabs();
+    initBreathingEditor();
 });
 
 function initPeakPoseField() {
@@ -195,4 +196,90 @@ function initSequenceTabs() {
         const activeTab = Array.from(tabs).find((tab) => tab.classList.contains("is-active"))?.dataset.tab || "all";
         applyFilter(activeTab);
     });
+}
+
+function initBreathingEditor() {
+    const picker = document.getElementById("breathingPicker");
+    const form = document.getElementById("breathingPickerForm");
+    const label = document.getElementById("breathingPickerLabel");
+    const modeLabel = document.getElementById("breathingFormModeLabel");
+    const submitButton = document.getElementById("breathingSubmitButton");
+    const cancelButton = document.getElementById("breathingCancelButton");
+    const masterSelect = document.getElementById("breathingMasterId");
+    const memoInput = document.getElementById("breathingMemo");
+    const description = document.getElementById("breathingDescription");
+    const editButtons = document.querySelectorAll(".sequence-comp-added-item__edit");
+    const deleteButtons = document.querySelectorAll("[data-breathing-delete]");
+
+    if (!picker || !form || !label || !modeLabel || !submitButton || !cancelButton || !masterSelect || !memoInput || !description) {
+        return;
+    }
+
+    const createAction = form.getAttribute("action") || "";
+    const createState = {
+        pickerLabel: "\u547c\u5438\u6cd5\u3092\u8ffd\u52a0",
+        modeLabel: "\u65b0\u898f\u8ffd\u52a0",
+        submitLabel: "\u9078\u629e\u3057\u305f\u547c\u5438\u6cd5\u3092\u8ffd\u52a0"
+    };
+    const editState = {
+        pickerLabel: "\u547c\u5438\u6cd5\u3092\u7de8\u96c6",
+        modeLabel: "\u7de8\u96c6\u4e2d",
+        submitLabel: "\u3053\u306e\u5185\u5bb9\u3067\u66f4\u65b0"
+    };
+
+    const syncDescription = () => {
+        const selectedOption = masterSelect.options[masterSelect.selectedIndex];
+        const text = selectedOption?.dataset.description?.trim() || "";
+        description.textContent = text;
+        description.hidden = text.length === 0;
+    };
+
+    const applyCreateState = () => {
+        form.setAttribute("action", createAction);
+        form.reset();
+        label.textContent = createState.pickerLabel;
+        modeLabel.textContent = createState.modeLabel;
+        submitButton.textContent = createState.submitLabel;
+        cancelButton.hidden = true;
+        picker.open = false;
+        syncDescription();
+    };
+
+    editButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const id = button.dataset.id;
+            form.setAttribute("action", `${createAction}/${id}/update`);
+            masterSelect.value = button.dataset.breathingMasterId || "";
+            memoInput.value = button.dataset.memo || "";
+            label.textContent = editState.pickerLabel;
+            modeLabel.textContent = editState.modeLabel;
+            submitButton.textContent = editState.submitLabel;
+            cancelButton.hidden = false;
+            picker.open = true;
+            syncDescription();
+            form.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+    });
+
+    deleteButtons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+            const fallbackName = "\u3053\u306e\u547c\u5438\u6cd5";
+            const confirmSuffix = " \u3092\u524a\u9664\u3057\u307e\u3059\u304b\uff1f";
+            const name = button.dataset.name || fallbackName;
+
+            if (!window.confirm(`${name}${confirmSuffix}`)) {
+                event.preventDefault();
+            }
+        });
+    });
+
+    cancelButton.addEventListener("click", applyCreateState);
+    masterSelect.addEventListener("change", syncDescription);
+    picker.addEventListener("toggle", () => {
+        if (!picker.open && !cancelButton.hidden) {
+            applyCreateState();
+        }
+    });
+
+    syncDescription();
 }

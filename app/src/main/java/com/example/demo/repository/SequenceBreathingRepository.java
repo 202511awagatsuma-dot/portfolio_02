@@ -27,6 +27,7 @@ public class SequenceBreathingRepository {
                        sb.sequence_id,
                        sb.breathing_master_id,
                        bm.name AS breathing_name,
+                       bm.description AS breathing_description,
                        sb.display_order,
                        sb.memo,
                        sb.created_at,
@@ -41,6 +42,7 @@ public class SequenceBreathingRepository {
                         rs.getLong("sequence_id"),
                         rs.getLong("breathing_master_id"),
                         rs.getString("breathing_name"),
+                        rs.getString("breathing_description"),
                         rs.getInt("display_order"),
                         rs.getString("memo"),
                         rs.getTimestamp("created_at").toLocalDateTime(),
@@ -75,5 +77,30 @@ public class SequenceBreathingRepository {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    public void update(Long id, Long sequenceId, Long breathingMasterId, String memo) {
+        jdbcTemplate.update(
+                """
+                UPDATE sequence_breathing
+                SET breathing_master_id = ?,
+                    memo = ?,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = ? AND sequence_id = ?
+                """,
+                breathingMasterId,
+                memo,
+                id,
+                sequenceId);
+    }
+
+    public void delete(Long id, Long sequenceId) {
+        jdbcTemplate.update(
+                """
+                DELETE FROM sequence_breathing
+                WHERE id = ? AND sequence_id = ?
+                """,
+                id,
+                sequenceId);
     }
 }

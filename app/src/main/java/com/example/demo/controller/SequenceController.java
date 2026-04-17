@@ -63,4 +63,22 @@ public class SequenceController {
         breathingService.addBreathingToSequence(sequenceId, breathingMasterId, memo);
         return "redirect:/sequence/edit/" + sequenceId;
     }
+
+    @PostMapping("/sequence/{sequenceId}/breathing/{breathingId}/update")
+    public String updateBreathing(
+            @PathVariable Long sequenceId,
+            @PathVariable Long breathingId,
+            @RequestParam Long breathingMasterId,
+            @RequestParam(required = false) String memo) {
+        breathingService.updateSequenceBreathing(sequenceId, breathingId, breathingMasterId, memo);
+        return "redirect:/sequence/edit/" + sequenceId;
+    }
+
+    @PostMapping("/sequence/{sequenceId}/breathing/{breathingId}/delete")
+    public String deleteBreathing(
+            @PathVariable Long sequenceId,
+            @PathVariable Long breathingId) {
+        breathingService.deleteSequenceBreathing(sequenceId, breathingId);
+        return "redirect:/sequence/edit/" + sequenceId;
+    }
 }

@@ -51,4 +51,14 @@ public class BreathingService {
         getSequence(sequenceId);
         sequenceBreathingRepository.add(sequenceId, breathingMasterId, memo);
     }
+
+    public void updateSequenceBreathing(Long sequenceId, Long breathingId, Long breathingMasterId, String memo) {
+        getSequence(sequenceId);
+        sequenceBreathingRepository.update(breathingId, sequenceId, breathingMasterId, memo);
+    }
+
+    public void deleteSequenceBreathing(Long sequenceId, Long breathingId) {
+        getSequence(sequenceId);
+        sequenceBreathingRepository.delete(breathingId, sequenceId);
+    }
 }

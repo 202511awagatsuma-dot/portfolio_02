@@ -1537,44 +1537,83 @@ input {
 }
 
 .sequence-comp-footer__tools {
-    width: calc(100% - 132px);
+    width: 168px;
     height: 60px;
     border-radius: 6px;
     background: #dbe1e4;
     display: flex;
     align-items: center;
-    gap: 14px;
+    justify-content: center;
+    gap: 30px;
     padding: 0 22px;
     pointer-events: auto;
 }
 
-.sequence-comp-footer__icon,
-.sequence-comp-footer__circle,
+.sequence-comp-footer__action,
 .sequence-comp-footer__book {
     padding: 0;
     border: none;
     background: transparent;
 }
 
-.sequence-comp-footer__icon {
-    width: 30px;
-    height: 30px;
+.sequence-comp-footer__action {
+    position: relative;
+    width: 34px;
+    height: 34px;
     flex: 0 0 auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #1f1f1f;
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1;
 }
 
-.sequence-comp-footer__circle {
-    flex: 0 0 auto;
-    width: 30px;
-    height: 30px;
+.sequence-comp-footer__action::before,
+.sequence-comp-footer__action::after {
+    content: "";
+    position: absolute;
+    box-sizing: border-box;
+}
+
+.sequence-comp-footer__action--save::before {
+    left: 6px;
+    top: 5px;
+    width: 22px;
+    height: 24px;
+    border: 2.5px solid #254a77;
+    border-radius: 4px;
+    background:
+        linear-gradient(#254a77, #254a77) center 16px / 12px 2.5px no-repeat,
+        linear-gradient(#254a77, #254a77) right 4px top 4px / 5px 7px no-repeat,
+        linear-gradient(#dbe1e4, #dbe1e4) left 4px top 4px / 10px 6px no-repeat;
+}
+
+.sequence-comp-footer__action--save::after {
+    left: 11px;
+    top: 17px;
+    width: 12px;
+    height: 8px;
+    border: 2.5px solid #254a77;
+    border-top: none;
+    border-radius: 0 0 2px 2px;
+}
+
+.sequence-comp-footer__action--list::before {
+    left: 5px;
+    top: 7px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    border: 2px solid #254a77;
+    background: #254a77;
+    box-shadow: 0 7px 0 #254a77, 0 14px 0 #254a77;
+}
+
+.sequence-comp-footer__action--list::after {
+    left: 15px;
+    top: 8px;
+    width: 14px;
+    height: 4px;
+    border-radius: 999px;
+    background: #254a77;
+    box-shadow: 0 7px 0 #254a77, 0 14px 0 #254a77;
 }
 
 .sequence-comp-footer__book {
@@ -1690,14 +1729,9 @@ input {
     }
 
     .sequence-comp-footer__tools {
-        width: calc(100% - 118px);
-        gap: 10px;
+        width: 156px;
+        gap: 24px;
         padding: 0 16px;
-    }
-
-    .sequence-comp-footer__circle {
-        width: 30px;
-        height: 30px;
     }
 
     .sequence-comp-footer__book {

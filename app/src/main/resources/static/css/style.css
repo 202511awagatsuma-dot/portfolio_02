@@ -1130,7 +1130,7 @@ input {
 
 .sequence-comp-slot {
     width: 100%;
-    min-height: 56px;
+    min-height: 40px;
     padding: 0 10px;
     border-radius: 14px;
     border: 2px dashed #8e96a1;
@@ -1141,8 +1141,8 @@ input {
 }
 
 .sequence-comp-slot__plus {
-    width: 42px;
-    height: 42px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     border: 2px solid #9097a0;
     position: relative;
@@ -1160,20 +1160,20 @@ input {
 }
 
 .sequence-comp-slot__plus::before {
-    width: 18px;
+    width: 16px;
     height: 2px;
 }
 
 .sequence-comp-slot__plus::after {
     width: 2px;
-    height: 18px;
+    height: 16px;
 }
 
 .sequence-comp-slot__label {
-    font-size: 1rem;
+    font-size: 0.875rem;
     line-height: 1.4;
     color: #50657c;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .sequence-comp-added-list {

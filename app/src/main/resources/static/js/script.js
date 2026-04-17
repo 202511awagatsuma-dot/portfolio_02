@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initGrowthCalendar();
     initSequenceTabs();
     initBreathingEditor();
+    initSequenceConfirmNavigation();
 });
 
 function initPeakPoseField() {
@@ -284,4 +285,24 @@ function initBreathingEditor() {
     });
 
     syncDescription();
+}
+
+function initSequenceConfirmNavigation() {
+    const saveButton = document.querySelector(".sequence-comp-footer__action--save");
+
+    if (!saveButton) {
+        return;
+    }
+
+    const pathMatch = window.location.pathname.match(/\/sequence\/edit\/(\d+)$/);
+    const sequenceId = pathMatch ? pathMatch[1] : null;
+
+    if (!sequenceId) {
+        return;
+    }
+
+    saveButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        window.location.href = `/sequence/confirm/${sequenceId}`;
+    });
 }

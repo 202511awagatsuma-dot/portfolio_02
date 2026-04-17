@@ -65,12 +65,12 @@
                                         th:attr="data-id=${item.id},data-breathing-master-id=${item.breathingMasterId},data-name=${item.breathingName},data-description=${item.breathingDescription},data-memo=${item.memo}">
                                     <span class="sequence-comp-added-item__body">
                                         <span class="sequence-comp-added-item__name" th:text="${item.breathingName}">腹式呼吸</span>
-                                        <span class="sequence-comp-added-item__description"
-                                              th:if="${item.breathingDescription != null and !#strings.isEmpty(item.breathingDescription)}"
-                                              th:text="${item.breathingDescription}">説明</span>
                                         <span class="sequence-comp-added-item__memo"
                                               th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
                                               th:text="${item.memo}">メモ</span>
+                                        <span class="sequence-comp-added-item__description"
+                                              th:if="${item.breathingDescription != null and !#strings.isEmpty(item.breathingDescription)}"
+                                              th:text="${item.breathingDescription}">説明</span>
                                     </span>
                                 </button>
                                 <form class="sequence-comp-added-item__delete-form"

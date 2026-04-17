@@ -1226,9 +1226,10 @@ input {
 .sequence-comp-added-item__body {
     min-width: 0;
     display: flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    white-space: normal;
 }
 
 .sequence-comp-added-item__name,
@@ -1262,11 +1263,13 @@ input {
 .sequence-comp-added-empty {
     color: #5c7188;
     font-size: 0.9rem;
-    line-height: 1.45;
+    line-height: 1.3;
 }
 
 .sequence-comp-added-item__description,
 .sequence-comp-added-item__memo {
+    display: block;
+    width: 100%;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;

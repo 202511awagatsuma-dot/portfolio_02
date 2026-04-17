@@ -1606,7 +1606,7 @@ input {
 .sequence-comp-footer__book {
     position: absolute;
     right: 0;
-    bottom: -4px;
+    bottom: 6px;
     width: 98px;
     height: 98px;
     border-radius: 50%;

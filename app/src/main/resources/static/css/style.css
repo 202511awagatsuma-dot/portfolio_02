@@ -1228,7 +1228,6 @@ input {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding-right: 28px;
     white-space: nowrap;
 }
 
@@ -1239,28 +1238,13 @@ input {
     margin: 0;
 }
 
-.sequence-comp-added-item__body::after {
-    content: "";
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    width: 8px;
-    height: 8px;
-    border-top: 1.5px solid rgba(101, 123, 145, 0.9);
-    border-right: 1.5px solid rgba(101, 123, 145, 0.9);
-    transform: translateY(-50%) rotate(45deg);
-}
-
 .sequence-comp-added-item__edit:hover,
 .sequence-comp-added-item__edit:focus-visible {
-    background: rgba(255, 248, 245, 0.98);
-    box-shadow: 0 4px 16px rgba(69, 95, 123, 0.08);
     outline: none;
 }
 
 .sequence-comp-added-item__edit:active {
-    background: rgba(255, 243, 238, 1);
-    transform: scale(0.995);
+    transform: none;
 }
 
 .sequence-comp-added-item__name {

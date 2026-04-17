@@ -217,14 +217,14 @@ function initBreathingEditor() {
 
     const createAction = form.getAttribute("action") || "";
     const createState = {
-        pickerLabel: "\u547c\u5438\u6cd5\u3092\u8ffd\u52a0",
-        modeLabel: "\u65b0\u898f\u8ffd\u52a0",
-        submitLabel: "\u9078\u629e\u3057\u305f\u547c\u5438\u6cd5\u3092\u8ffd\u52a0"
+        pickerLabel: "呼吸法を追加",
+        modeLabel: "新規追加",
+        submitLabel: "選択した呼吸法を追加"
     };
     const editState = {
-        pickerLabel: "\u547c\u5438\u6cd5\u3092\u7de8\u96c6",
-        modeLabel: "\u7de8\u96c6\u4e2d",
-        submitLabel: "\u3053\u306e\u5185\u5bb9\u3067\u66f4\u65b0"
+        pickerLabel: "呼吸法を編集",
+        modeLabel: "編集中",
+        submitLabel: "この内容で更新"
     };
 
     const syncDescription = () => {
@@ -265,8 +265,8 @@ function initBreathingEditor() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const fallbackName = "\u3053\u306e\u547c\u5438\u6cd5";
-            const confirmSuffix = " \u3092\u524a\u9664\u3057\u307e\u3059\u304b\uff1f";
+            const fallbackName = "この呼吸法";
+            const confirmSuffix = " を削除しますか？";
             const name = button.dataset.name || fallbackName;
 
             if (!window.confirm(`${name}${confirmSuffix}`)) {

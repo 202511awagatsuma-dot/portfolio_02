@@ -1184,7 +1184,7 @@ input {
 
 .sequence-comp-added-item {
     display: grid;
-    grid-template-columns: 32px minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: stretch;
     gap: 8px;
     padding: 10px 12px;
@@ -1207,10 +1207,29 @@ input {
     font-weight: 700;
 }
 
+.sequence-comp-added-item__edit {
+    min-width: 0;
+    position: relative;
+    min-height: 44px;
+    padding: 2px 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
 .sequence-comp-added-item__body {
     min-width: 0;
     display: grid;
     gap: 4px;
+    padding-right: 28px;
 }
 
 .sequence-comp-added-item__name,
@@ -1220,22 +1239,7 @@ input {
     margin: 0;
 }
 
-.sequence-comp-added-item__edit {
-    position: relative;
-    min-height: 44px;
-    padding: 2px 28px 2px 0;
-    border: none;
-    background: transparent;
-    color: inherit;
-    text-align: left;
-    display: grid;
-    align-content: center;
-    cursor: pointer;
-    border-radius: 12px;
-    transition: background-color 0.18s ease, transform 0.18s ease;
-}
-
-.sequence-comp-added-item__edit::after {
+.sequence-comp-added-item__body::after {
     content: "";
     position: absolute;
     right: 8px;
@@ -1249,12 +1253,13 @@ input {
 
 .sequence-comp-added-item__edit:hover,
 .sequence-comp-added-item__edit:focus-visible {
-    background: rgba(140, 165, 188, 0.08);
+    background: rgba(255, 248, 245, 0.98);
+    box-shadow: 0 4px 16px rgba(69, 95, 123, 0.08);
     outline: none;
 }
 
 .sequence-comp-added-item__edit:active {
-    background: rgba(140, 165, 188, 0.14);
+    background: rgba(255, 243, 238, 1);
     transform: scale(0.995);
 }
 
@@ -1379,6 +1384,85 @@ input {
 .sequence-comp-picker__actions {
     display: grid;
     gap: 8px;
+}
+
+.sequence-comp-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(23, 36, 51, 0.48);
+}
+
+.sequence-comp-modal__dialog {
+    position: relative;
+    width: min(100%, 420px);
+    max-height: min(100vh - 40px, 680px);
+    overflow: auto;
+    padding: 20px 18px 18px;
+    border-radius: 20px;
+    background: #fffaf7;
+    box-shadow: 0 18px 40px rgba(26, 44, 65, 0.18);
+}
+
+.sequence-comp-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(152, 165, 179, 0.16);
+    color: #4a6179;
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.sequence-comp-modal__close:hover,
+.sequence-comp-modal__close:focus-visible {
+    background: rgba(152, 165, 179, 0.24);
+    outline: none;
+}
+
+.sequence-comp-modal__header {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 14px;
+    padding-right: 36px;
+}
+
+.sequence-comp-modal__eyebrow {
+    margin: 0;
+    color: #5c7188;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.sequence-comp-modal__title {
+    margin: 0;
+    color: #204775;
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
+
+.sequence-comp-modal__form {
+    display: grid;
+    gap: 12px;
+}
+
+.sequence-comp-modal__actions {
+    display: grid;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.stika-body.modal-open {
+    overflow: hidden;
 }
 
 .sequence-comp-section__label {

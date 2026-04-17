@@ -1,7 +1,8 @@
 package com.example.demo.repository;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,7 +37,7 @@ public class SequenceRepository {
             return statement;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        return extractGeneratedId(keyHolder);
     }
 
     public Optional<Sequence> findById(Long id) {
@@ -55,5 +56,45 @@ public class SequenceRepository {
                         rs.getTimestamp("created_at").toLocalDateTime(),
                         rs.getTimestamp("updated_at").toLocalDateTime()),
                 id).stream().findFirst();
+    }
+
+    private Long extractGeneratedId(KeyHolder keyHolder) {
+        Map<String, Object> keys = keyHolder.getKeys();
+        Long generatedId = extractId(keys);
+        if (generatedId != null) {
+            return generatedId;
+        }
+
+        List<Map<String, Object>> keyList = keyHolder.getKeyList();
+        if (keyList.size() == 1) {
+            generatedId = extractId(keyList.get(0));
+            if (generatedId != null) {
+                return generatedId;
+            }
+        }
+
+        throw new IllegalStateException("Failed to extract generated sequence id.");
+    }
+
+    private Long extractId(Map<String, Object> keys) {
+        if (keys == null || keys.isEmpty()) {
+            return null;
+        }
+
+        for (String candidateKey : new String[] { "id", "ID" }) {
+            Object value = keys.get(candidateKey);
+            if (value instanceof Number generatedId) {
+                return generatedId.longValue();
+            }
+        }
+
+        if (keys.size() == 1) {
+            Object onlyValue = keys.values().iterator().next();
+            if (onlyValue instanceof Number generatedId) {
+                return generatedId.longValue();
+            }
+        }
+
+        return null;
     }
 }

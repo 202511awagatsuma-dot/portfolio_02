@@ -1,8 +1,8 @@
 package com.example.demo.repository;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -76,7 +76,7 @@ public class SequenceBreathingRepository {
             return statement;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        return extractGeneratedId(keyHolder);
     }
 
     public void update(Long id, Long sequenceId, Long breathingMasterId, String memo) {
@@ -102,5 +102,45 @@ public class SequenceBreathingRepository {
                 """,
                 id,
                 sequenceId);
+    }
+
+    private Long extractGeneratedId(KeyHolder keyHolder) {
+        Map<String, Object> keys = keyHolder.getKeys();
+        Long generatedId = extractId(keys);
+        if (generatedId != null) {
+            return generatedId;
+        }
+
+        List<Map<String, Object>> keyList = keyHolder.getKeyList();
+        if (keyList.size() == 1) {
+            generatedId = extractId(keyList.get(0));
+            if (generatedId != null) {
+                return generatedId;
+            }
+        }
+
+        throw new IllegalStateException("Failed to extract generated sequence_breathing id.");
+    }
+
+    private Long extractId(Map<String, Object> keys) {
+        if (keys == null || keys.isEmpty()) {
+            return null;
+        }
+
+        for (String candidateKey : new String[] { "id", "ID" }) {
+            Object value = keys.get(candidateKey);
+            if (value instanceof Number generatedId) {
+                return generatedId.longValue();
+            }
+        }
+
+        if (keys.size() == 1) {
+            Object onlyValue = keys.values().iterator().next();
+            if (onlyValue instanceof Number generatedId) {
+                return generatedId.longValue();
+            }
+        }
+
+        return null;
     }
 }

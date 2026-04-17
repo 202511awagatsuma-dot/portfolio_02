@@ -1537,13 +1537,13 @@ input {
 }
 
 .sequence-comp-footer__tools {
-    width: calc(100% - 92px);
+    width: calc(100% - 132px);
     height: 60px;
     border-radius: 6px;
     background: #dbe1e4;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 14px;
     padding: 0 22px;
     pointer-events: auto;
 }
@@ -1557,33 +1557,40 @@ input {
 }
 
 .sequence-comp-footer__icon {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     position: relative;
+    flex: 0 0 auto;
 }
 
 .sequence-comp-footer__icon::before {
     content: "";
     position: absolute;
-    inset: 0;
-    border-top: 3px solid #33547e;
-    border-left: 3px solid #33547e;
-    border-radius: 10px 0 0 0;
+    left: 9px;
+    top: 12px;
+    width: 11px;
+    height: 8px;
+    border: 0 solid #1f1f1f;
+    border-left-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    border-radius: 12px 0 0 12px;
 }
 
 .sequence-comp-footer__icon--undo::after,
 .sequence-comp-footer__icon--redo::after {
     content: "";
     position: absolute;
-    top: 1px;
-    width: 10px;
-    height: 10px;
-    border-top: 3px solid #33547e;
-    border-left: 3px solid #33547e;
+    left: 6px;
+    top: 7px;
+    width: 9px;
+    height: 9px;
+    border-top: 3px solid #1f1f1f;
+    border-left: 3px solid #1f1f1f;
+    border-radius: 2px 0 0 0;
 }
 
 .sequence-comp-footer__icon--undo::after {
-    left: -2px;
     transform: rotate(-45deg);
 }
 
@@ -1592,13 +1599,13 @@ input {
 }
 
 .sequence-comp-footer__icon--redo::after {
-    left: -2px;
     transform: rotate(-45deg);
 }
 
 .sequence-comp-footer__circle {
-    width: 44px;
-    height: 44px;
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     border: 2px solid #254a77;
 }
@@ -1716,14 +1723,14 @@ input {
     }
 
     .sequence-comp-footer__tools {
-        width: calc(100% - 84px);
-        gap: 14px;
+        width: calc(100% - 118px);
+        gap: 10px;
         padding: 0 16px;
     }
 
     .sequence-comp-footer__circle {
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
     }
 
     .sequence-comp-footer__book {

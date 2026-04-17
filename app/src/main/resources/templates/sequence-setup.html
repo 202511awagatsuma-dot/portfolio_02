@@ -11,11 +11,18 @@
 <body class="stika-body">
     <div class="app-shell">
         <main class="screen setup-screen">
-            <header class="page-header">
-                <a class="back-link" th:href="@{/}">‹</a>
-                <div>
-                    <p class="page-header__eyebrow">Sequence Builder</p>
-                    <h1>シークエンス作成</h1>
+            <header class="topbar sequence-comp-header">
+                <a class="topbar__brand" th:href="@{/}" aria-label="ホーム">
+                    <img class="brand-mark" th:src="@{/assets/icon/img_home.svg}" src="/assets/icon/img_home.svg" alt="ホーム">
+                </a>
+                <h1 class="topbar__date sequence-comp-header__title">シークエンス作成</h1>
+                <div class="topbar__actions">
+                    <span class="icon-badge icon-badge--notice" aria-label="お知らせ"></span>
+                    <span class="icon-badge icon-badge--menu" aria-label="メニュー">
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                    </span>
                 </div>
             </header>
 

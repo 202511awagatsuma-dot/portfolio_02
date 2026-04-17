@@ -72,7 +72,6 @@
                                               th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
                                               th:text="${item.memo}">メモ</span>
                                     </span>
-                                    <span class="sequence-comp-added-item__hint">タップで編集</span>
                                 </button>
                                 <form class="sequence-comp-added-item__delete-form"
                                       th:action="@{/sequence/{sequenceId}/breathing/{breathingId}/delete(sequenceId=${sequenceId},breathingId=${item.id})}"
@@ -80,7 +79,11 @@
                                     <button class="sequence-comp-delete"
                                             type="submit"
                                             data-breathing-delete
-                                            th:attr="data-name=${item.breathingName}">削除</button>
+                                            th:attr="data-name=${item.breathingName},aria-label=${item.breathingName + ' を削除'}">
+                                        <svg class="sequence-comp-delete__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                            <path d="M9 3.75h6a1 1 0 0 1 1 1V6h3a.75.75 0 0 1 0 1.5h-1.1l-.77 11.02A2.5 2.5 0 0 1 14.64 21h-5.28a2.5 2.5 0 0 1-2.49-2.48L6.1 7.5H5a.75.75 0 0 1 0-1.5h3V4.75a1 1 0 0 1 1-1Zm5.5 2.25V5.25H9.5V6h5Zm-5.88 1.5.74 10.91a1 1 0 0 0 1 .94h5.28a1 1 0 0 0 1-.94l.74-10.91H8.62Zm2.13 2.25c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Zm4.5 0c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Z"></path>
+                                        </svg>
+                                    </button>
                                 </form>
                             </div>
                         </div>

@@ -263,6 +263,8 @@ function initBreathingEditor() {
 
     deleteButtons.forEach((button) => {
         button.addEventListener("click", (event) => {
+            event.stopPropagation();
+
             const fallbackName = "\u3053\u306e\u547c\u5438\u6cd5";
             const confirmSuffix = " \u3092\u524a\u9664\u3057\u307e\u3059\u304b\uff1f";
             const name = button.dataset.name || fallbackName;

@@ -661,6 +661,17 @@ input {
     line-height: 1.7;
 }
 
+.sequence-draft-notice {
+    margin: 0 0 14px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(80, 120, 155, 0.1);
+    border: 1px solid rgba(80, 120, 155, 0.14);
+    color: #264a76;
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
 .setup-form {
     display: grid;
     gap: 14px;
@@ -789,6 +800,43 @@ input {
     border: 1px solid #d5dde5;
     background: #fff;
     color: var(--text);
+}
+
+.stacked-fields {
+    display: grid;
+    gap: 12px;
+}
+
+.stacked-field {
+    display: grid;
+    gap: 8px;
+}
+
+.stacked-field span {
+    color: var(--navy);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.stacked-field input,
+.stacked-field textarea {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #d5dde5;
+    background: #fff;
+    color: var(--text);
+    font: inherit;
+}
+
+.stacked-field input {
+    min-height: 50px;
+    padding: 0 14px;
+}
+
+.stacked-field textarea {
+    min-height: 112px;
+    padding: 12px 14px;
+    resize: vertical;
 }
 
 .primary-button,
@@ -1686,9 +1734,48 @@ input {
     line-height: 1.6;
 }
 
+.sequence-confirm-notice--error {
+    background: rgba(229, 101, 79, 0.1);
+    border-color: rgba(229, 101, 79, 0.2);
+    color: #8f4a39;
+}
+
 .sequence-confirm-list {
     display: grid;
     gap: 14px;
+}
+
+.sequence-confirm-meta {
+    display: grid;
+    gap: 10px;
+    margin: 0 0 18px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(255, 250, 247, 0.94);
+    border: 1px solid rgba(220, 169, 146, 0.68);
+    box-shadow: 0 10px 26px rgba(82, 97, 115, 0.08);
+}
+
+.sequence-confirm-meta__row {
+    display: grid;
+    gap: 4px;
+}
+
+.sequence-confirm-meta__label {
+    color: #6a7f93;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.sequence-confirm-meta__value {
+    color: #204775;
+    font-size: 0.98rem;
+    line-height: 1.5;
+}
+
+.sequence-confirm-meta__value--multiline {
+    white-space: pre-wrap;
 }
 
 .sequence-confirm-card {
@@ -1777,6 +1864,120 @@ input {
 .sequence-confirm-actions__primary,
 .sequence-confirm-actions__secondary {
     width: 100%;
+}
+
+.sequence-list-screen {
+    padding: 12px 14px 28px;
+    background: #fbf3ef;
+    color: #1f4572;
+}
+
+.sequence-list-intro {
+    margin-bottom: 14px;
+}
+
+.sequence-list {
+    display: grid;
+    gap: 14px;
+}
+
+.sequence-list-empty {
+    display: grid;
+    gap: 10px;
+    padding: 18px 16px;
+    text-align: center;
+}
+
+.sequence-list-empty__title {
+    margin: 0;
+    color: #204775;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.sequence-list-empty__text {
+    margin: 0;
+    color: #62788b;
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
+
+.sequence-list-empty__button {
+    margin-top: 6px;
+}
+
+.sequence-list-card {
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(255, 250, 247, 0.94);
+    border: 1px solid rgba(220, 169, 146, 0.68);
+    box-shadow: 0 10px 26px rgba(82, 97, 115, 0.08);
+}
+
+.sequence-list-card__header {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.sequence-list-card__title {
+    margin: 0;
+    color: #204775;
+    font-size: 1.02rem;
+    line-height: 1.4;
+}
+
+.sequence-list-card__date {
+    margin: 0;
+    color: #6a7f93;
+    font-size: 0.8rem;
+}
+
+.sequence-list-card__meta {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 10px 12px;
+}
+
+.sequence-list-card__meta dt {
+    color: #6a7f93;
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.sequence-list-card__meta dd {
+    margin: 0;
+    color: #35567c;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.sequence-list-card__actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.sequence-list-card__button,
+.sequence-list-card__delete {
+    min-height: 48px;
+}
+
+.sequence-list-card__button {
+    width: 100%;
+    padding: 0 18px;
+}
+
+.sequence-list-card__delete {
+    border: none;
+    border-radius: 13px;
+    padding: 0 18px;
+    background: #98a5b3;
+    color: #fff;
+    font-weight: 700;
 }
 
 @media (max-width: 380px) {

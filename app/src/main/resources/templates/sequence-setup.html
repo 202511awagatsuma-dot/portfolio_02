@@ -12,8 +12,8 @@
     <div class="app-shell">
         <main class="screen setup-screen">
             <header class="topbar sequence-comp-header">
-                <a class="topbar__brand" th:href="@{/}" aria-label="ホーム">
-                    <img class="brand-mark" th:src="@{/assets/icon/img_home.svg}" src="/assets/icon/img_home.svg" alt="ホーム">
+                <a class="topbar__brand" th:href="@{/}" aria-label="ホームへ戻る">
+                    <img class="brand-mark" th:src="@{/assets/icon/img_home.svg}" src="/assets/icon/img_home.svg" alt="">
                 </a>
                 <h1 class="topbar__date sequence-comp-header__title">シークエンス作成</h1>
                 <div class="topbar__actions">
@@ -27,13 +27,15 @@
             </header>
 
             <section class="page-intro">
-                <p>レッスン開始前に、基本条件を選んで流れを整えます。</p>
+                <p>レッスンの条件に合わせて、確認しやすいシークエンスを作成できます。</p>
             </section>
+
+            <p class="sequence-draft-notice" id="sequenceDraftNotice" hidden></p>
 
             <form class="setup-form" th:action="@{/sequence/create}" method="post">
                 <section class="card form-section">
                     <div class="form-section__header">
-                        <h2>1. レッスン時間</h2>
+                        <h2>1. シークエンス時間</h2>
                     </div>
                     <div class="chip-group chip-group--duration">
                         <label class="choice-chip">
@@ -70,15 +72,15 @@
                         </label>
                         <label class="choice-row">
                             <input type="radio" name="level" value="2">
-                            <span>★★☆☆☆ 初級</span>
+                            <span>★★☆☆☆ やさしめ</span>
                         </label>
                         <label class="choice-row">
                             <input type="radio" name="level" value="3" checked>
-                            <span>★★★☆☆ 中級</span>
+                            <span>★★★☆☆ 標準</span>
                         </label>
                         <label class="choice-row">
                             <input type="radio" name="level" value="4">
-                            <span>★★★★☆ 中上級</span>
+                            <span>★★★★☆ やや上級</span>
                         </label>
                         <label class="choice-row">
                             <input type="radio" name="level" value="5">
@@ -103,12 +105,32 @@
                     </div>
 
                     <div class="peak-pose-field" id="peakPoseField" hidden>
-                        <label for="peakPoseName">4. ピークポーズ名</label>
-                        <input id="peakPoseName" name="peakPoseName" type="text" placeholder="バカーサナ">
+                        <label for="peakPoseName">ピークポーズ名</label>
+                        <input id="peakPoseName" name="peakPoseName" type="text" placeholder="例: バカーサナ">
                     </div>
                 </section>
 
-                <button class="primary-button" type="submit">作成開始</button>
+                <section class="card form-section">
+                    <div class="form-section__header">
+                        <h2>4. 保存用の情報</h2>
+                    </div>
+                    <div class="stacked-fields">
+                        <label class="stacked-field">
+                            <span>シークエンス名</span>
+                            <input type="text" name="sequenceTitle" maxlength="80" placeholder="例: 朝のリフレッシュシークエンス">
+                        </label>
+                        <label class="stacked-field">
+                            <span>対象</span>
+                            <input type="text" name="target" maxlength="80" placeholder="例: 初心者 / 肩こりが気になる方向け">
+                        </label>
+                        <label class="stacked-field">
+                            <span>メモ</span>
+                            <textarea name="sequenceMemo" rows="4" maxlength="500" placeholder="レッスンの意図や補足をメモできます"></textarea>
+                        </label>
+                    </div>
+                </section>
+
+                <button class="primary-button" type="submit">作成をはじめる</button>
             </form>
         </main>
     </div>

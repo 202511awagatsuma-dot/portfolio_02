@@ -34,6 +34,11 @@ public class SequenceController {
         return "redirect:/sequence/setup";
     }
 
+    @GetMapping("/sequence-list.html")
+    public String list() {
+        return "sequence-list";
+    }
+
     @PostMapping("/sequence/create")
     public String createSequence(
             @RequestParam(defaultValue = "60") int duration,
@@ -67,7 +72,7 @@ public class SequenceController {
     public String saveSequence(
             @PathVariable Long sequenceId,
             RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("saveNotice", "保存処理の接続準備ができました。次回ここから一覧登録へつなげられます。");
+        redirectAttributes.addFlashAttribute("saveNotice", "保存しました。次回は一覧から確認できます。");
         return "redirect:/sequence/confirm/" + sequenceId;
     }
 

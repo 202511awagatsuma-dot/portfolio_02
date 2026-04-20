@@ -12,7 +12,7 @@
     <div class="app-shell">
         <main class="screen sequence-confirm-screen">
             <header class="topbar sequence-comp-header">
-                <a class="topbar__brand" th:href="@{/}" aria-label="トップへ戻る">
+                <a class="topbar__brand" th:href="@{/}" aria-label="ホームへ戻る">
                     <img class="brand-mark" th:src="@{/assets/icon/img_home.svg}" src="/assets/icon/img_home.svg" alt="">
                 </a>
                 <h1 class="topbar__date sequence-comp-header__title">シークエンス確認</h1>
@@ -32,12 +32,29 @@
                     <span class="sequence-comp-summary__level" th:text="${levelIndicator}">★★★☆☆</span>
                     <span class="sequence-comp-summary__peak" th:text="${peakPoseLabel}">ピークポーズ未設定</span>
                 </div>
-                <p class="sequence-confirm-summary__text">保存前に、シークエンス全体の流れを上から順に確認できます。</p>
+                <p class="sequence-confirm-summary__text">保存するとローカルストレージに登録され、シークエンス一覧から確認できます。</p>
             </section>
 
-            <p class="sequence-confirm-notice" th:if="${saveNotice}" th:text="${saveNotice}">
-                保存処理の接続準備ができました。次回ここから一覧登録へつなげられます。
-            </p>
+            <section class="sequence-confirm-meta" aria-label="保存内容">
+                <div class="sequence-confirm-meta__row">
+                    <span class="sequence-confirm-meta__label">シークエンス名</span>
+                    <strong class="sequence-confirm-meta__value" id="sequenceDraftTitle">シークエンス</strong>
+                </div>
+                <div class="sequence-confirm-meta__row">
+                    <span class="sequence-confirm-meta__label">対象</span>
+                    <strong class="sequence-confirm-meta__value" id="sequenceDraftTarget">未設定</strong>
+                </div>
+                <div class="sequence-confirm-meta__row">
+                    <span class="sequence-confirm-meta__label">所要時間</span>
+                    <strong class="sequence-confirm-meta__value" id="sequenceDraftDuration">60分</strong>
+                </div>
+                <div class="sequence-confirm-meta__row" id="sequenceDraftMemoRow" hidden>
+                    <span class="sequence-confirm-meta__label">メモ</span>
+                    <strong class="sequence-confirm-meta__value sequence-confirm-meta__value--multiline" id="sequenceDraftMemo"></strong>
+                </div>
+            </section>
+
+            <p class="sequence-confirm-notice sequence-confirm-notice--error" id="sequenceLocalSaveNotice" hidden></p>
 
             <section class="sequence-confirm-list" aria-label="シークエンスの確認一覧">
                 <article class="sequence-confirm-card"
@@ -48,17 +65,17 @@
                         <h2 class="sequence-confirm-card__title" th:text="${section.title()}">呼吸法</h2>
                     </div>
                     <ul class="sequence-confirm-card__items" th:if="${!#lists.isEmpty(section.asanaNames())}">
-                        <li th:each="asanaName : ${section.asanaNames()}" th:text="${asanaName}">完全呼吸法</li>
+                        <li th:each="asanaName : ${section.asanaNames()}" th:text="${asanaName}">カパラバティ</li>
                     </ul>
                 </article>
             </section>
 
             <p class="sequence-confirm-empty" th:if="${!hasSequenceItems}">
-                まだ確認できる項目がありません。編集画面で内容を追加してください。
+                まだ確認できる内容がありません。編集画面から項目を追加してください。
             </p>
 
             <section class="sequence-confirm-actions" aria-label="確認ページの操作">
-                <form th:action="@{/sequence/{sequenceId}/save(sequenceId=${sequenceId})}" method="post">
+                <form id="sequenceLocalSaveForm" th:action="@{/sequence/{sequenceId}/save(sequenceId=${sequenceId})}" method="post">
                     <button class="primary-button sequence-confirm-actions__primary" type="submit">保存する</button>
                 </form>
                 <a class="secondary-button sequence-confirm-actions__secondary"

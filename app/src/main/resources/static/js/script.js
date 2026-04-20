@@ -1,10 +1,31 @@
+const STIKA_SEQUENCE_STORAGE_KEY = "stika_sequences";
+const STIKA_SEQUENCE_DRAFT_KEY = "stika_sequence_draft";
+const STIKA_SEQUENCE_LIST_PATH = "/sequence-list.html";
+const STIKA_SEQUENCE_SETUP_PATH = "/sequence/setup";
+
 document.addEventListener("DOMContentLoaded", () => {
-    initPeakPoseField();
-    initGrowthCalendar();
-    initSequenceTabs();
-    initBreathingEditor();
-    initSequenceConfirmNavigation();
+    runInitializer(initPeakPoseField);
+    runInitializer(initGrowthCalendar);
+    runInitializer(initSequenceTabs);
+    runInitializer(initBreathingEditor);
+    runInitializer(initSequenceConfirmNavigation);
+    runInitializer(initSequenceListNavigation);
+    runInitializer(initSequenceSetupDraft);
+    runInitializer(initSequenceLocalSave);
+    runInitializer(initSequenceListPage);
 });
+
+function runInitializer(initializer) {
+    if (typeof initializer !== "function") {
+        return;
+    }
+
+    try {
+        initializer();
+    } catch (error) {
+        console.warn(`[stika] initializer failed: ${initializer.name}`, error);
+    }
+}
 
 function initPeakPoseField() {
     const peakPoseField = document.getElementById("peakPoseField");
@@ -89,7 +110,7 @@ function initGrowthCalendar() {
             button.className = "calendar-day";
             button.dataset.date = isoDate;
             button.setAttribute("role", "gridcell");
-            button.setAttribute("aria-label", `${isoDate}${hasRecord ? " レポートあり" : ""}${isToday ? " 今日" : ""}`);
+            button.setAttribute("aria-label", `${isoDate}${hasRecord ? " 記録あり" : ""}${isToday ? " 今日" : ""}`);
             button.setAttribute("aria-selected", String(isSelected));
 
             if (!isCurrentMonth) {
@@ -106,10 +127,8 @@ function initGrowthCalendar() {
             }
 
             button.innerHTML = `<span class="calendar-day__number">${date.getDate()}</span>`;
-
             button.addEventListener("click", () => {
                 selectedDate = isoDate;
-                console.log(`Selected date: ${isoDate}`);
                 renderCalendar();
             });
 
@@ -249,6 +268,10 @@ function initBreathingEditor() {
     editButtons.forEach((button) => {
         button.addEventListener("click", () => {
             const id = button.dataset.id;
+            if (!id) {
+                return;
+            }
+
             form.setAttribute("action", `${createAction}/${id}/update`);
             masterSelect.value = button.dataset.breathingMasterId || "";
             memoInput.value = button.dataset.memo || "";
@@ -266,11 +289,9 @@ function initBreathingEditor() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const fallbackName = "この呼吸法";
-            const confirmSuffix = " を削除しますか？";
-            const name = button.dataset.name || fallbackName;
+            const name = button.dataset.name || "この呼吸法";
 
-            if (!window.confirm(`${name}${confirmSuffix}`)) {
+            if (!window.confirm(`${name}を削除しますか？`)) {
                 event.preventDefault();
             }
         });
@@ -305,4 +326,494 @@ function initSequenceConfirmNavigation() {
         event.preventDefault();
         window.location.href = `/sequence/confirm/${sequenceId}`;
     });
+}
+
+function initSequenceListNavigation() {
+    const listButtons = document.querySelectorAll(".sequence-comp-footer__action--list");
+
+    if (listButtons.length === 0) {
+        return;
+    }
+
+    listButtons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+            event.preventDefault();
+            window.location.href = STIKA_SEQUENCE_LIST_PATH;
+        });
+    });
+}
+
+function initSequenceSetupDraft() {
+    const form = document.querySelector(".setup-form");
+
+    if (!form) {
+        return;
+    }
+
+    const titleInput = form.querySelector("[name='sequenceTitle']");
+    const targetInput = form.querySelector("[name='target']");
+    const memoInput = form.querySelector("[name='sequenceMemo']");
+    const peakPoseInput = form.querySelector("[name='peakPoseName']");
+    const notice = document.getElementById("sequenceDraftNotice");
+    const params = new URLSearchParams(window.location.search);
+    const editId = params.get("editId");
+
+    if (editId) {
+        const savedSequence = getSavedSequences().find((item) => item.id === editId);
+        if (savedSequence) {
+            applySavedSequenceToSetupForm(form, savedSequence);
+
+            if (notice) {
+                notice.textContent = "保存済みシークエンスをもとに編集しています。保存すると新しいシークエンスとして追加されます。";
+                notice.hidden = false;
+            }
+        }
+    } else {
+        const draft = getSequenceDraft();
+        if (draft) {
+            fillFieldValue(titleInput, draft.title);
+            fillFieldValue(targetInput, draft.target);
+            fillFieldValue(memoInput, draft.memo);
+            fillFieldValue(peakPoseInput, draft.peakPoseName);
+
+            if (draft.duration) {
+                const durationRadio = form.querySelector(`input[name='duration'][value='${draft.duration}']`);
+                if (durationRadio) {
+                    durationRadio.checked = true;
+                }
+            }
+
+            if (draft.peakPoseName) {
+                const enabledRadio = form.querySelector("input[name='peakPoseEnabled'][value='true']");
+                if (enabledRadio) {
+                    enabledRadio.checked = true;
+                    enabledRadio.dispatchEvent(new Event("change", { bubbles: true }));
+                }
+            }
+        }
+    }
+
+    form.addEventListener("submit", () => {
+        const formData = new FormData(form);
+        const draft = {
+            title: normalizeText(formData.get("sequenceTitle")),
+            target: normalizeText(formData.get("target")),
+            memo: normalizeText(formData.get("sequenceMemo")),
+            duration: normalizeText(formData.get("duration")),
+            peakPoseName: normalizeText(formData.get("peakPoseName")),
+            editId: editId || "",
+            savedAt: new Date().toISOString()
+        };
+
+        setSequenceDraft(draft);
+    });
+}
+
+function initSequenceLocalSave() {
+    const form = document.getElementById("sequenceLocalSaveForm");
+
+    if (!form) {
+        return;
+    }
+
+    const notice = document.getElementById("sequenceLocalSaveNotice");
+    const draft = getSequenceDraft();
+    syncConfirmDraftMeta(draft);
+
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const sequence = buildSequenceFromConfirmPage(draft);
+        const savedSequences = getSavedSequences();
+        savedSequences.push(sequence);
+
+        const saveSucceeded = setSavedSequences(savedSequences);
+
+        if (!saveSucceeded) {
+            if (notice) {
+                notice.textContent = "保存に失敗しました。ブラウザの保存設定をご確認のうえ、もう一度お試しください。";
+                notice.hidden = false;
+            }
+            return;
+        }
+
+        clearSequenceDraft();
+        window.location.href = STIKA_SEQUENCE_LIST_PATH;
+    });
+}
+
+function initSequenceListPage() {
+    const root = document.getElementById("sequenceListPage");
+    const list = document.getElementById("sequenceList");
+    const empty = document.getElementById("sequenceListEmpty");
+
+    if (!root || !list || !empty) {
+        return;
+    }
+
+    const render = () => {
+        const sequences = getSavedSequences()
+            .slice()
+            .sort((a, b) => getTimestamp(b.createdAt) - getTimestamp(a.createdAt));
+
+        list.innerHTML = "";
+
+        if (sequences.length === 0) {
+            empty.hidden = false;
+            return;
+        }
+
+        empty.hidden = true;
+
+        sequences.forEach((sequence) => {
+            list.appendChild(createSequenceListCard(sequence));
+        });
+    };
+
+    list.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-action]");
+
+        if (!button) {
+            return;
+        }
+
+        const sequenceId = button.dataset.sequenceId;
+        const action = button.dataset.action;
+
+        if (!sequenceId || !action) {
+            return;
+        }
+
+        if (action === "delete") {
+            const sequences = getSavedSequences();
+            const target = sequences.find((item) => item.id === sequenceId);
+            const title = target?.title || "このシークエンス";
+
+            if (!window.confirm(`${title}を削除しますか？`)) {
+                return;
+            }
+
+            const nextSequences = sequences.filter((item) => item.id !== sequenceId);
+            setSavedSequences(nextSequences);
+            render();
+            return;
+        }
+
+        if (action === "edit") {
+            const target = getSavedSequences().find((item) => item.id === sequenceId);
+
+            if (!target) {
+                return;
+            }
+
+            setSequenceDraft({
+                title: normalizeText(target.title),
+                target: normalizeText(target.target),
+                memo: normalizeText(target.memo),
+                duration: normalizeDurationValue(target.duration),
+                peakPoseName: extractPeakPoseName(target.sections),
+                editId: target.id,
+                savedAt: new Date().toISOString()
+            });
+
+            window.location.href = `${STIKA_SEQUENCE_SETUP_PATH}?editId=${encodeURIComponent(sequenceId)}`;
+        }
+    });
+
+    render();
+}
+
+function syncConfirmDraftMeta(draft) {
+    const titleElement = document.getElementById("sequenceDraftTitle");
+    const targetElement = document.getElementById("sequenceDraftTarget");
+    const memoElement = document.getElementById("sequenceDraftMemo");
+    const memoWrapper = document.getElementById("sequenceDraftMemoRow");
+    const durationElement = document.getElementById("sequenceDraftDuration");
+
+    if (!titleElement || !targetElement || !memoElement || !memoWrapper || !durationElement) {
+        return;
+    }
+
+    const fallbackDuration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "-";
+    const title = draft?.title || buildFallbackSequenceTitle();
+    const target = draft?.target || "未設定";
+    const memo = draft?.memo || "";
+    const duration = draft?.duration ? `${draft.duration}分` : fallbackDuration;
+
+    titleElement.textContent = title;
+    targetElement.textContent = target;
+    durationElement.textContent = duration;
+    memoElement.textContent = memo;
+    memoWrapper.hidden = memo.length === 0;
+}
+
+function buildSequenceFromConfirmPage(draft) {
+    const duration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "未設定";
+    const sections = Array.from(document.querySelectorAll(".sequence-confirm-card")).map((card) => {
+        const title = normalizeText(card.querySelector(".sequence-confirm-card__title")?.textContent) || "未設定";
+        const durationLabel = normalizeText(card.querySelector(".sequence-confirm-card__time")?.textContent) || "";
+        const items = Array.from(card.querySelectorAll(".sequence-confirm-card__items li"))
+            .map((item) => normalizeText(item.textContent))
+            .filter(Boolean);
+
+        return {
+            category: card.dataset.category || "",
+            title,
+            duration: durationLabel,
+            items
+        };
+    });
+
+    return {
+        id: createSequenceStorageId(),
+        title: draft?.title || buildFallbackSequenceTitle(),
+        duration,
+        target: draft?.target || "未設定",
+        createdAt: new Date().toISOString(),
+        sections,
+        memo: draft?.memo || ""
+    };
+}
+
+function buildFallbackSequenceTitle() {
+    const peakPose = normalizeText(document.querySelector(".sequence-comp-summary__peak")?.textContent);
+    const duration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "シークエンス";
+
+    if (peakPose && peakPose !== "ピークポーズ未設定") {
+        return `${peakPose}のシークエンス`;
+    }
+
+    return `${duration}のシークエンス`;
+}
+
+function createSequenceStorageId() {
+    const randomPart = Math.random().toString(36).slice(2, 8);
+    return `sequence_${Date.now()}_${randomPart}`;
+}
+
+function createSequenceListCard(sequence) {
+    const article = document.createElement("article");
+    article.className = "sequence-list-card";
+
+    const header = document.createElement("div");
+    header.className = "sequence-list-card__header";
+
+    const title = document.createElement("h2");
+    title.className = "sequence-list-card__title";
+    title.textContent = sequence.title || "シークエンス";
+
+    const date = document.createElement("p");
+    date.className = "sequence-list-card__date";
+    date.textContent = formatDateTimeLabel(sequence.createdAt);
+
+    header.appendChild(title);
+    header.appendChild(date);
+
+    const body = document.createElement("dl");
+    body.className = "sequence-list-card__meta";
+
+    body.appendChild(createMetaRow("所要時間", sequence.duration || "-"));
+    body.appendChild(createMetaRow("対象", sequence.target || "未設定"));
+
+    if (sequence.memo) {
+        body.appendChild(createMetaRow("メモ", sequence.memo));
+    }
+
+    const footer = document.createElement("div");
+    footer.className = "sequence-list-card__actions";
+
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "secondary-button sequence-list-card__button";
+    editButton.dataset.action = "edit";
+    editButton.dataset.sequenceId = sequence.id;
+    editButton.textContent = "編集";
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "sequence-list-card__delete";
+    deleteButton.dataset.action = "delete";
+    deleteButton.dataset.sequenceId = sequence.id;
+    deleteButton.textContent = "削除";
+
+    footer.appendChild(editButton);
+    footer.appendChild(deleteButton);
+
+    article.appendChild(header);
+    article.appendChild(body);
+    article.appendChild(footer);
+
+    return article;
+}
+
+function createMetaRow(labelText, valueText) {
+    const fragment = document.createDocumentFragment();
+    const dt = document.createElement("dt");
+    const dd = document.createElement("dd");
+
+    dt.textContent = labelText;
+    dd.textContent = valueText;
+
+    fragment.appendChild(dt);
+    fragment.appendChild(dd);
+    return fragment;
+}
+
+function applySavedSequenceToSetupForm(form, sequence) {
+    if (!form || !sequence) {
+        return;
+    }
+
+    const titleInput = form.querySelector("[name='sequenceTitle']");
+    const targetInput = form.querySelector("[name='target']");
+    const memoInput = form.querySelector("[name='sequenceMemo']");
+    const peakPoseInput = form.querySelector("[name='peakPoseName']");
+    const durationValue = normalizeDurationValue(sequence.duration);
+
+    fillFieldValue(titleInput, sequence.title);
+    fillFieldValue(targetInput, sequence.target);
+    fillFieldValue(memoInput, sequence.memo);
+    fillFieldValue(peakPoseInput, extractPeakPoseName(sequence.sections));
+
+    if (durationValue) {
+        const durationRadio = form.querySelector(`input[name='duration'][value='${durationValue}']`);
+        if (durationRadio) {
+            durationRadio.checked = true;
+        }
+    }
+
+    if (peakPoseInput && peakPoseInput.value) {
+        const enabledRadio = form.querySelector("input[name='peakPoseEnabled'][value='true']");
+        if (enabledRadio) {
+            enabledRadio.checked = true;
+            enabledRadio.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+    }
+}
+
+function extractPeakPoseName(sections) {
+    if (!Array.isArray(sections)) {
+        return "";
+    }
+
+    const peakSection = sections.find((section) => section?.category === "peak");
+    const peakName = peakSection?.items?.[0];
+    return normalizeText(peakName);
+}
+
+function fillFieldValue(field, value) {
+    if (!field || typeof value !== "string" || field.value) {
+        return;
+    }
+
+    field.value = value;
+}
+
+function getSavedSequences() {
+    const rawValue = readWebStorage(window.localStorage, STIKA_SEQUENCE_STORAGE_KEY);
+
+    if (!rawValue) {
+        return [];
+    }
+
+    try {
+        const parsedValue = JSON.parse(rawValue);
+        return Array.isArray(parsedValue) ? parsedValue.filter(isSequenceLike) : [];
+    } catch (_error) {
+        return [];
+    }
+}
+
+function setSavedSequences(sequences) {
+    return writeWebStorage(window.localStorage, STIKA_SEQUENCE_STORAGE_KEY, JSON.stringify(Array.isArray(sequences) ? sequences : []));
+}
+
+function getSequenceDraft() {
+    const rawValue = readWebStorage(window.sessionStorage, STIKA_SEQUENCE_DRAFT_KEY);
+
+    if (!rawValue) {
+        return null;
+    }
+
+    try {
+        const parsedValue = JSON.parse(rawValue);
+        return parsedValue && typeof parsedValue === "object" ? parsedValue : null;
+    } catch (_error) {
+        return null;
+    }
+}
+
+function setSequenceDraft(draft) {
+    if (!draft || typeof draft !== "object") {
+        return false;
+    }
+
+    return writeWebStorage(window.sessionStorage, STIKA_SEQUENCE_DRAFT_KEY, JSON.stringify(draft));
+}
+
+function clearSequenceDraft() {
+    try {
+        window.sessionStorage.removeItem(STIKA_SEQUENCE_DRAFT_KEY);
+    } catch (_error) {
+        return;
+    }
+}
+
+function readWebStorage(storage, key) {
+    if (!storage || !key) {
+        return "";
+    }
+
+    try {
+        return storage.getItem(key) || "";
+    } catch (_error) {
+        return "";
+    }
+}
+
+function writeWebStorage(storage, key, value) {
+    if (!storage || !key) {
+        return false;
+    }
+
+    try {
+        storage.setItem(key, value);
+        return true;
+    } catch (_error) {
+        return false;
+    }
+}
+
+function isSequenceLike(value) {
+    return Boolean(value) && typeof value === "object" && typeof value.id === "string";
+}
+
+function normalizeText(value) {
+    return typeof value === "string" ? value.trim() : "";
+}
+
+function normalizeDurationValue(value) {
+    const matchedValue = String(value || "").match(/\d+/);
+    return matchedValue ? matchedValue[0] : "";
+}
+
+function formatDateTimeLabel(value) {
+    const timestamp = getTimestamp(value);
+
+    if (!timestamp) {
+        return "-";
+    }
+
+    return new Intl.DateTimeFormat("ja-JP", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    }).format(new Date(timestamp));
+}
+
+function getTimestamp(value) {
+    const timestamp = Date.parse(value || "");
+    return Number.isFinite(timestamp) ? timestamp : 0;
 }

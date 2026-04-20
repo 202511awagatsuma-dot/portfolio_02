@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stika | シークエンス一覧</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body class="stika-body">
+    <div class="app-shell">
+        <main class="screen sequence-list-screen" id="sequenceListPage">
+            <header class="topbar sequence-comp-header">
+                <a class="topbar__brand" th:href="@{/}" aria-label="ホームへ戻る">
+                    <img class="brand-mark" th:src="@{/assets/icon/img_home.svg}" src="/assets/icon/img_home.svg" alt="">
+                </a>
+                <h1 class="topbar__date sequence-comp-header__title">シークエンス一覧</h1>
+                <div class="topbar__actions">
+                    <span class="icon-badge icon-badge--notice" aria-hidden="true"></span>
+                    <span class="icon-badge icon-badge--menu" aria-hidden="true">
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                    </span>
+                </div>
+            </header>
+
+            <section class="page-intro sequence-list-intro">
+                <p>保存したシークエンスを新しい順に確認できます。削除や再編集の起点にも使えます。</p>
+            </section>
+
+            <div class="sequence-list-empty card" id="sequenceListEmpty">
+                <p class="sequence-list-empty__title">まだシークエンスが登録されていません</p>
+                <p class="sequence-list-empty__text">作成画面から保存すると、ここに一覧で表示されます。</p>
+                <a class="primary-button sequence-list-empty__button" th:href="@{/sequence/setup}">シークエンスを作成する</a>
+            </div>
+
+            <section class="sequence-list" id="sequenceList" aria-live="polite" aria-label="保存済みシークエンス一覧"></section>
+        </main>
+    </div>
+
+    <script th:src="@{/js/script.js}"></script>
+</body>
+
+</html>

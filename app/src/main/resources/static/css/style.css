@@ -1585,15 +1585,15 @@ input {
 }
 
 .sequence-comp-footer__tools {
-    width: 168px;
-    height: 60px;
+    width: 196px;
+    height: 74px;
     border-radius: 6px;
     background: #dbe1e4;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     gap: 30px;
-    padding: 0 22px;
+    padding: 6px 16px 8px;
     pointer-events: auto;
 }
 
@@ -1607,11 +1607,11 @@ input {
 
 .sequence-comp-footer__action {
     position: relative;
-    width: 34px;
-    height: 34px;
+    width: 58px;
+    height: 60px;
     flex: 0 0 auto;
     display: inline-flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
 }
 
@@ -1622,13 +1622,13 @@ input {
 
 .sequence-comp-footer__action::before,
 .sequence-comp-footer__action::after {
-    content: "";
     position: absolute;
     box-sizing: border-box;
 }
 
 .sequence-comp-footer__action--save::before {
-    left: 6px;
+    content: "";
+    left: 18px;
     top: 5px;
     width: 22px;
     height: 24px;
@@ -1641,33 +1641,40 @@ input {
 }
 
 .sequence-comp-footer__action--save::after {
-    left: 11px;
-    top: 17px;
-    width: 12px;
-    height: 8px;
-    border: 2.5px solid #254a77;
-    border-top: none;
-    border-radius: 0 0 2px 2px;
+    content: "保存する";
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    color: #254a77;
+    font-size: 0.68rem;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
 .sequence-comp-footer__action--list::before {
-    left: 5px;
+    content: "";
+    left: 15px;
     top: 7px;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #254a77;
-    box-shadow: 0 7px 0 #254a77, 0 14px 0 #254a77;
+    width: 28px;
+    height: 20px;
+    background:
+        radial-gradient(circle, #254a77 0 2.5px, transparent 3px) left 0 top 1px / 6px 6px no-repeat,
+        radial-gradient(circle, #254a77 0 2.5px, transparent 3px) left 0 center / 6px 6px no-repeat,
+        radial-gradient(circle, #254a77 0 2.5px, transparent 3px) left 0 bottom 1px / 6px 6px no-repeat,
+        linear-gradient(#254a77, #254a77) right 0 top 2px / 18px 3px no-repeat,
+        linear-gradient(#254a77, #254a77) right 0 center / 18px 3px no-repeat,
+        linear-gradient(#254a77, #254a77) right 0 bottom 2px / 18px 3px no-repeat;
 }
 
 .sequence-comp-footer__action--list::after {
-    left: 15px;
-    top: 8px;
-    width: 14px;
-    height: 4px;
-    border-radius: 999px;
-    background: #254a77;
-    box-shadow: 0 7px 0 #254a77, 0 14px 0 #254a77;
+    content: "一覧";
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    color: #254a77;
+    font-size: 0.68rem;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
 .sequence-comp-footer__book {
@@ -1912,6 +1919,20 @@ input {
     box-shadow: 0 10px 26px rgba(82, 97, 115, 0.08);
 }
 
+.sequence-list-card__link {
+    display: grid;
+    border-radius: 14px;
+    padding: 2px;
+    background: transparent;
+    transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.sequence-list-card__link:focus-visible,
+.sequence-list-card__link:active {
+    outline: none;
+    background: rgba(229, 101, 79, 0.08);
+}
+
 .sequence-list-card__header {
     display: grid;
     gap: 6px;
@@ -1952,6 +1973,28 @@ input {
     word-break: break-word;
 }
 
+.sequence-list-card__affordance {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(239, 154, 112, 0.12) 0%, rgba(229, 101, 79, 0.18) 100%);
+    color: #204775;
+}
+
+.sequence-list-card__affordance-label {
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.sequence-list-card__affordance-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
 .sequence-list-card__actions {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -1973,6 +2016,136 @@ input {
     border: none;
     border-radius: 13px;
     padding: 0 18px;
+    background: #98a5b3;
+    color: #fff;
+    font-weight: 700;
+}
+
+.sequence-detail-screen {
+    padding: 12px 14px 28px;
+    background: #fbf3ef;
+    color: #1f4572;
+}
+
+.sequence-detail-hero {
+    margin-bottom: 18px;
+    padding: 18px 16px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(245, 214, 207, 0.96) 0%, rgba(255, 247, 242, 0.96) 100%);
+    border: 1px solid rgba(220, 169, 146, 0.68);
+}
+
+.sequence-detail-hero__eyebrow {
+    margin: 0 0 8px;
+    color: #6a7f93;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.sequence-detail-hero__title {
+    margin: 0;
+    color: #204775;
+    font-size: 1.2rem;
+    line-height: 1.4;
+}
+
+.sequence-detail-hero__text {
+    margin: 10px 0 0;
+    color: #4d6783;
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
+
+.sequence-detail-notice {
+    margin: 0 0 18px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
+
+.sequence-detail-notice--error {
+    background: rgba(229, 101, 79, 0.1);
+    border: 1px solid rgba(229, 101, 79, 0.2);
+    color: #8f4a39;
+}
+
+.sequence-detail-content {
+    display: grid;
+    gap: 14px;
+}
+
+.sequence-detail-meta {
+    margin-bottom: 0;
+}
+
+.sequence-detail-section-summary {
+    padding: 16px;
+}
+
+.sequence-detail-section-summary__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.sequence-detail-section-summary__title {
+    margin: 0;
+    color: #204775;
+    font-size: 1rem;
+}
+
+.sequence-detail-section-summary__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: #f5d6cf;
+    color: #264a76;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.sequence-detail-section-summary__text {
+    margin: 0;
+    color: #4d6783;
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
+
+.sequence-detail-list {
+    gap: 12px;
+}
+
+.sequence-detail-card__empty {
+    margin: 0;
+    color: #6a7f93;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.sequence-detail-actions {
+    display: grid;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.sequence-detail-actions__primary,
+.sequence-detail-actions__secondary,
+.sequence-detail-actions__delete {
+    width: 100%;
+}
+
+.sequence-detail-actions__delete {
+    min-height: 56px;
+    border: none;
+    border-radius: 13px;
     background: #98a5b3;
     color: #fff;
     font-weight: 700;

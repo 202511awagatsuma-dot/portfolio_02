@@ -39,6 +39,11 @@ public class SequenceController {
         return "sequence-list";
     }
 
+    @GetMapping("/sequence-detail.html")
+    public String detail() {
+        return "sequence-detail";
+    }
+
     @PostMapping("/sequence/create")
     public String createSequence(
             @RequestParam(defaultValue = "60") int duration,

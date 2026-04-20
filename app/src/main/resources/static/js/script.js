@@ -1,6 +1,7 @@
-const STIKA_SEQUENCE_STORAGE_KEY = "stika_sequences";
+﻿const STIKA_SEQUENCE_STORAGE_KEY = "stika_sequences";
 const STIKA_SEQUENCE_DRAFT_KEY = "stika_sequence_draft";
 const STIKA_SEQUENCE_LIST_PATH = "/sequence-list.html";
+const STIKA_SEQUENCE_DETAIL_PATH = "/sequence-detail.html";
 const STIKA_SEQUENCE_SETUP_PATH = "/sequence/setup";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -13,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initSequenceSetupDraft);
     runInitializer(initSequenceLocalSave);
     runInitializer(initSequenceListPage);
+    runInitializer(initSequenceDetailPage);
 });
 
 function runInitializer(initializer) {
@@ -110,7 +112,7 @@ function initGrowthCalendar() {
             button.className = "calendar-day";
             button.dataset.date = isoDate;
             button.setAttribute("role", "gridcell");
-            button.setAttribute("aria-label", `${isoDate}${hasRecord ? " 記録あり" : ""}${isToday ? " 今日" : ""}`);
+            button.setAttribute("aria-label", `${isoDate}${hasRecord ? " 險倬鹸縺ゅｊ" : ""}${isToday ? " 莉頑律" : ""}`);
             button.setAttribute("aria-selected", String(isSelected));
 
             if (!isCurrentMonth) {
@@ -364,7 +366,7 @@ function initSequenceSetupDraft() {
             applySavedSequenceToSetupForm(form, savedSequence);
 
             if (notice) {
-                notice.textContent = "保存済みシークエンスをもとに編集しています。保存すると新しいシークエンスとして追加されます。";
+                notice.textContent = "\u4fdd\u5b58\u6e08\u307f\u30b7\u30fc\u30af\u30a8\u30f3\u30b9\u3092\u3082\u3068\u306b\u7de8\u96c6\u3057\u3066\u3044\u307e\u3059\u3002\u4fdd\u5b58\u3059\u308b\u3068\u65b0\u3057\u3044\u30b7\u30fc\u30af\u30a8\u30f3\u30b9\u3068\u3057\u3066\u8ffd\u52a0\u3055\u308c\u307e\u3059\u3002";
                 notice.hidden = false;
             }
         }
@@ -431,7 +433,7 @@ function initSequenceLocalSave() {
 
         if (!saveSucceeded) {
             if (notice) {
-                notice.textContent = "保存に失敗しました。ブラウザの保存設定をご確認のうえ、もう一度お試しください。";
+                notice.textContent = "\u4fdd\u5b58\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002\u30d6\u30e9\u30a6\u30b6\u306e\u4fdd\u5b58\u8a2d\u5b9a\u3092\u78ba\u8a8d\u306e\u3046\u3048\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002";
                 notice.hidden = false;
             }
             return;
@@ -471,7 +473,12 @@ function initSequenceListPage() {
     };
 
     list.addEventListener("click", (event) => {
+        const detailLink = event.target.closest("a[data-sequence-link]");
         const button = event.target.closest("button[data-action]");
+
+        if (detailLink) {
+            return;
+        }
 
         if (!button) {
             return;
@@ -521,6 +528,90 @@ function initSequenceListPage() {
     });
 
     render();
+}
+
+function initSequenceDetailPage() {
+    const root = document.getElementById("sequenceDetailPage");
+
+    if (!root) {
+        return;
+    }
+
+    const error = document.getElementById("sequenceDetailError");
+    const content = document.getElementById("sequenceDetailContent");
+    const editButton = document.getElementById("sequenceDetailEditButton");
+    const deleteButton = document.getElementById("sequenceDetailDeleteButton");
+    const params = new URLSearchParams(window.location.search);
+    const sequenceId = normalizeText(params.get("id"));
+    const savedSequences = getSavedSequences();
+
+    if (savedSequences.length === 0) {
+        showSequenceDetailError("\u4fdd\u5b58\u6e08\u307f\u306e\u30b7\u30fc\u30af\u30a8\u30f3\u30b9\u304c\u3042\u308a\u307e\u305b\u3093\u3002\u4e00\u89a7\u3078\u623b\u3063\u3066\u65b0\u3057\u304f\u4f5c\u6210\u3057\u3066\u304f\u3060\u3055\u3044\u3002");
+        return;
+    }
+
+    if (!sequenceId) {
+        showSequenceDetailError("\u5bfe\u8c61\u306e\u30b7\u30fc\u30af\u30a8\u30f3\u30b9\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3002\u4e00\u89a7\u304b\u3089\u3082\u3046\u4e00\u5ea6\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\u3002");
+        return;
+    }
+
+    const sequence = savedSequences.find((item) => item.id === sequenceId);
+
+    if (!sequence) {
+        showSequenceDetailError("\u5bfe\u8c61\u306e\u30b7\u30fc\u30af\u30a8\u30f3\u30b9\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3002\u4e00\u89a7\u304b\u3089\u5225\u306e\u9805\u76ee\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002");
+        return;
+    }
+
+    renderSequenceDetail(sequence);
+
+    if (content) {
+        content.hidden = false;
+    }
+
+    if (error) {
+        error.hidden = true;
+    }
+
+    if (editButton) {
+        editButton.addEventListener("click", () => {
+            setSequenceDraft({
+                title: normalizeText(sequence.title),
+                target: normalizeText(sequence.target),
+                memo: normalizeText(sequence.memo),
+                duration: normalizeDurationValue(sequence.duration),
+                peakPoseName: extractPeakPoseName(sequence.sections),
+                editId: sequence.id,
+                savedAt: new Date().toISOString()
+            });
+
+            window.location.href = `${STIKA_SEQUENCE_SETUP_PATH}?editId=${encodeURIComponent(sequence.id)}`;
+        });
+    }
+
+    if (deleteButton) {
+        deleteButton.addEventListener("click", () => {
+            const title = sequence.title || "このシークエンス";
+
+            if (!window.confirm(`${title}を削除しますか？`)) {
+                return;
+            }
+
+            const nextSequences = savedSequences.filter((item) => item.id !== sequence.id);
+            setSavedSequences(nextSequences);
+            window.location.href = STIKA_SEQUENCE_LIST_PATH;
+        });
+    }
+
+    function showSequenceDetailError(message) {
+        if (content) {
+            content.hidden = true;
+        }
+
+        if (error) {
+            error.textContent = message;
+            error.hidden = false;
+        }
+    }
 }
 
 function syncConfirmDraftMeta(draft) {
@@ -579,7 +670,7 @@ function buildFallbackSequenceTitle() {
     const peakPose = normalizeText(document.querySelector(".sequence-comp-summary__peak")?.textContent);
     const duration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "シークエンス";
 
-    if (peakPose && peakPose !== "ピークポーズ未設定") {
+    if (peakPose && peakPose !== "\u30d4\u30fc\u30af\u30dd\u30fc\u30ba\u672a\u8a2d\u5b9a") {
         return `${peakPose}のシークエンス`;
     }
 
@@ -594,6 +685,12 @@ function createSequenceStorageId() {
 function createSequenceListCard(sequence) {
     const article = document.createElement("article");
     article.className = "sequence-list-card";
+
+    const link = document.createElement("a");
+    link.className = "sequence-list-card__link";
+    link.href = `${STIKA_SEQUENCE_DETAIL_PATH}?id=${encodeURIComponent(sequence.id)}`;
+    link.dataset.sequenceLink = "true";
+    link.setAttribute("aria-label", `${sequence.title || "シークエンス"}の内容を確認する`);
 
     const header = document.createElement("div");
     header.className = "sequence-list-card__header";
@@ -619,6 +716,21 @@ function createSequenceListCard(sequence) {
         body.appendChild(createMetaRow("メモ", sequence.memo));
     }
 
+    const affordance = document.createElement("div");
+    affordance.className = "sequence-list-card__affordance";
+
+    const affordanceText = document.createElement("span");
+    affordanceText.className = "sequence-list-card__affordance-label";
+    affordanceText.textContent = "内容を確認する";
+
+    const affordanceIcon = document.createElement("span");
+    affordanceIcon.className = "sequence-list-card__affordance-icon";
+    affordanceIcon.setAttribute("aria-hidden", "true");
+    affordanceIcon.textContent = ">";
+
+    affordance.appendChild(affordanceText);
+    affordance.appendChild(affordanceIcon);
+
     const footer = document.createElement("div");
     footer.className = "sequence-list-card__actions";
 
@@ -639,8 +751,11 @@ function createSequenceListCard(sequence) {
     footer.appendChild(editButton);
     footer.appendChild(deleteButton);
 
-    article.appendChild(header);
-    article.appendChild(body);
+    link.appendChild(header);
+    link.appendChild(body);
+    link.appendChild(affordance);
+
+    article.appendChild(link);
     article.appendChild(footer);
 
     return article;
@@ -657,6 +772,96 @@ function createMetaRow(labelText, valueText) {
     fragment.appendChild(dt);
     fragment.appendChild(dd);
     return fragment;
+}
+
+function renderSequenceDetail(sequence) {
+    const titleElement = document.getElementById("sequenceDetailTitle");
+    const dateElement = document.getElementById("sequenceDetailDate");
+    const durationElement = document.getElementById("sequenceDetailDuration");
+    const targetElement = document.getElementById("sequenceDetailTarget");
+    const memoElement = document.getElementById("sequenceDetailMemo");
+    const memoRow = document.getElementById("sequenceDetailMemoRow");
+    const sectionCountElement = document.getElementById("sequenceDetailSectionCount");
+    const asanaSummaryElement = document.getElementById("sequenceDetailAsanaSummary");
+    const sectionsRoot = document.getElementById("sequenceDetailSections");
+
+    if (!titleElement || !dateElement || !durationElement || !targetElement || !memoElement || !memoRow || !sectionCountElement || !asanaSummaryElement || !sectionsRoot) {
+        return;
+    }
+
+    titleElement.textContent = sequence.title || "シークエンス";
+    dateElement.textContent = formatDateTimeLabel(sequence.createdAt);
+    durationElement.textContent = sequence.duration || "-";
+    targetElement.textContent = sequence.target || "未設定";
+    memoElement.textContent = sequence.memo || "";
+    memoRow.hidden = !normalizeText(sequence.memo);
+
+    const sections = Array.isArray(sequence.sections) ? sequence.sections : [];
+    const asanaNames = sections
+        .flatMap((section) => Array.isArray(section?.items) ? section.items : [])
+        .filter(Boolean);
+
+    sectionCountElement.textContent = `${sections.length}件`;
+    asanaSummaryElement.textContent = asanaNames.length > 0
+        ? `アーサナ一覧: ${asanaNames.join(" / ")}`
+        : "登録されているアーサナはありません。";
+
+    sectionsRoot.innerHTML = "";
+
+    if (sections.length === 0) {
+        const empty = document.createElement("p");
+        empty.className = "sequence-confirm-empty";
+        empty.textContent = "セクション情報が見つかりません。";
+        sectionsRoot.appendChild(empty);
+        return;
+    }
+
+    sections.forEach((section) => {
+        sectionsRoot.appendChild(createSequenceDetailSection(section));
+    });
+}
+
+function createSequenceDetailSection(section) {
+    const article = document.createElement("article");
+    article.className = "sequence-confirm-card sequence-detail-card";
+    article.dataset.category = section?.category || "";
+
+    const header = document.createElement("div");
+    header.className = "sequence-confirm-card__header";
+
+    const time = document.createElement("span");
+    time.className = "sequence-confirm-card__time";
+    time.textContent = normalizeText(section?.duration) || "-";
+
+    const title = document.createElement("h2");
+    title.className = "sequence-confirm-card__title";
+    title.textContent = normalizeText(section?.title) || "セクション";
+
+    header.appendChild(time);
+    header.appendChild(title);
+    article.appendChild(header);
+
+    const items = Array.isArray(section?.items) ? section.items.filter(Boolean) : [];
+
+    if (items.length === 0) {
+        const empty = document.createElement("p");
+        empty.className = "sequence-detail-card__empty";
+        empty.textContent = "登録されている項目はありません。";
+        article.appendChild(empty);
+        return article;
+    }
+
+    const list = document.createElement("ul");
+    list.className = "sequence-confirm-card__items";
+
+    items.forEach((item) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = item;
+        list.appendChild(listItem);
+    });
+
+    article.appendChild(list);
+    return article;
 }
 
 function applySavedSequenceToSetupForm(form, sequence) {

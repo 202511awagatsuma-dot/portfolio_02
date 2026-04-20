@@ -1751,7 +1751,7 @@ input {
     margin: 0 0 18px;
     padding: 14px 16px;
     border-radius: 18px;
-    background: rgba(255, 250, 247, 0.94);
+    background: #fff7f2;
     border: 1px solid rgba(220, 169, 146, 0.68);
     box-shadow: 0 10px 26px rgba(82, 97, 115, 0.08);
 }
@@ -1781,7 +1781,7 @@ input {
 .sequence-confirm-card {
     padding: 16px 16px 14px;
     border-radius: 18px;
-    background: rgba(255, 250, 247, 0.94);
+    background: #fff7f2;
     border: 1px solid rgba(220, 169, 146, 0.68);
     box-shadow: 0 10px 26px rgba(82, 97, 115, 0.08);
 }
@@ -1872,18 +1872,16 @@ input {
     color: #1f4572;
 }
 
-.sequence-list-intro {
-    margin-bottom: 14px;
-}
-
 .sequence-list {
     display: grid;
     gap: 14px;
+    margin-top: 50px;
 }
 
 .sequence-list-empty {
     display: grid;
     gap: 10px;
+    margin-top: 10px;
     padding: 18px 16px;
     text-align: center;
 }

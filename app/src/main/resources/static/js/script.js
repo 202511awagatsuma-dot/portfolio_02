@@ -692,6 +692,9 @@ function createSequenceListCard(sequence) {
     link.dataset.sequenceLink = "true";
     link.setAttribute("aria-label", `${sequence.title || "シークエンス"}の内容を確認する`);
 
+    const content = document.createElement("div");
+    content.className = "sequence-list-card__content";
+
     const header = document.createElement("div");
     header.className = "sequence-list-card__header";
 
@@ -719,16 +722,11 @@ function createSequenceListCard(sequence) {
     const affordance = document.createElement("div");
     affordance.className = "sequence-list-card__affordance";
 
-    const affordanceText = document.createElement("span");
-    affordanceText.className = "sequence-list-card__affordance-label";
-    affordanceText.textContent = "内容を確認する";
-
     const affordanceIcon = document.createElement("span");
     affordanceIcon.className = "sequence-list-card__affordance-icon";
     affordanceIcon.setAttribute("aria-hidden", "true");
     affordanceIcon.textContent = ">";
 
-    affordance.appendChild(affordanceText);
     affordance.appendChild(affordanceIcon);
 
     const footer = document.createElement("div");
@@ -751,11 +749,12 @@ function createSequenceListCard(sequence) {
     footer.appendChild(editButton);
     footer.appendChild(deleteButton);
 
-    link.appendChild(header);
-    link.appendChild(body);
-    link.appendChild(affordance);
+    content.appendChild(header);
+    content.appendChild(body);
+    content.appendChild(affordance);
 
     article.appendChild(link);
+    article.appendChild(content);
     article.appendChild(footer);
 
     return article;

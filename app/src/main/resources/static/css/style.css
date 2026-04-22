@@ -1915,25 +1915,44 @@ input {
 }
 
 .sequence-list-card {
+    position: relative;
+    display: grid;
+    gap: 16px;
     padding: 16px;
     border-radius: 18px;
     background: rgba(255, 250, 247, 0.94);
     border: 1px solid rgba(220, 169, 146, 0.68);
     box-shadow: 0 10px 26px rgba(82, 97, 115, 0.08);
+    transition: background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .sequence-list-card__link {
-    display: grid;
-    border-radius: 14px;
-    padding: 2px;
-    background: transparent;
-    transition: background-color 0.18s ease, transform 0.18s ease;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: 18px;
 }
 
-.sequence-list-card__link:focus-visible,
-.sequence-list-card__link:active {
+.sequence-list-card:hover,
+.sequence-list-card:focus-within {
+    background: rgba(255, 245, 239, 0.98);
+    box-shadow: 0 14px 32px rgba(82, 97, 115, 0.12);
+}
+
+.sequence-list-card__link:focus-visible {
     outline: none;
-    background: rgba(229, 101, 79, 0.08);
+}
+
+.sequence-list-card__content,
+.sequence-list-card__actions {
+    position: relative;
+    z-index: 2;
+}
+
+.sequence-list-card__content {
+    display: grid;
+    gap: 0;
+    pointer-events: none;
 }
 
 .sequence-list-card__header {
@@ -1979,18 +1998,11 @@ input {
 .sequence-list-card__affordance {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 12px;
     margin-top: 16px;
-    padding: 12px 14px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, rgba(239, 154, 112, 0.12) 0%, rgba(229, 101, 79, 0.18) 100%);
+    padding: 4px 2px 0;
     color: #204775;
-}
-
-.sequence-list-card__affordance-label {
-    font-size: 0.92rem;
-    font-weight: 700;
 }
 
 .sequence-list-card__affordance-icon {
@@ -2002,7 +2014,6 @@ input {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 10px;
-    margin-top: 16px;
 }
 
 .sequence-list-card__button,

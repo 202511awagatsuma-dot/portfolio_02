@@ -78,14 +78,8 @@ ALTER TABLE warming_up_master
 ALTER TABLE warming_up_master
     ADD COLUMN IF NOT EXISTS standing_subcategory VARCHAR(50);
 
-UPDATE warming_up_master
-SET category = 'standing'
-WHERE category IS NULL;
-
-UPDATE warming_up_master
-SET standing_subcategory = 'symmetric'
-WHERE category = 'standing'
-  AND standing_subcategory IS NULL;
+-- Classification is maintained by application-side seeders.
+-- Avoid coercing all historical records into standing, because that pollutes standing-only candidate lists.
 
 CREATE INDEX IF NOT EXISTS idx_sequence_warming_up_sequence_id
     ON sequence_warming_up(sequence_id, sort_order);

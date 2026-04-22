@@ -32,6 +32,10 @@ public class WarmingUpService {
         return warmingUpMasterRepository.findActiveAll();
     }
 
+    public List<WarmingUpMaster> getWarmingUpMastersByCategory(String category) {
+        return warmingUpMasterRepository.findActiveByCategory(category);
+    }
+
     public List<SequenceWarmingUp> getSequenceWarmingUps(Long sequenceId) {
         requireSequence(sequenceId);
         return sequenceWarmingUpRepository.findBySequenceId(sequenceId);

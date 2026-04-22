@@ -40,6 +40,28 @@ public class WarmingUpMasterRepository {
                         rs.getTimestamp("updated_at").toLocalDateTime()));
     }
 
+    public List<WarmingUpMaster> findActiveByCategory(String category) {
+        return jdbcTemplate.query(
+                """
+                SELECT id, name_ja, name_sanskrit, category, standing_subcategory, display_order, is_active, created_at, updated_at
+                FROM warming_up_master
+                WHERE is_active = TRUE
+                  AND category = ?
+                ORDER BY display_order ASC, id ASC
+                """,
+                (rs, rowNum) -> new WarmingUpMaster(
+                        rs.getLong("id"),
+                        rs.getString("name_ja"),
+                        rs.getString("name_sanskrit"),
+                        rs.getString("category"),
+                        rs.getString("standing_subcategory"),
+                        rs.getInt("display_order"),
+                        rs.getBoolean("is_active"),
+                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getTimestamp("updated_at").toLocalDateTime()),
+                category);
+    }
+
     public boolean existsActiveById(Long id) {
         Integer count = jdbcTemplate.queryForObject(
                 """
@@ -76,7 +98,7 @@ public class WarmingUpMasterRepository {
     }
 
     public void save(String nameJa, String nameSanskrit, int displayOrder) {
-        save(nameJa, nameSanskrit, "standing", "symmetric", displayOrder);
+        save(nameJa, nameSanskrit, null, null, displayOrder);
     }
 
     public Long save(String nameJa, String nameSanskrit, String category, String standingSubcategory, int displayOrder) {
@@ -109,6 +131,20 @@ public class WarmingUpMasterRepository {
                 """,
                 Integer.class);
         return nextOrder == null ? 1 : nextOrder;
+    }
+
+    public void updateClassificationByNameJa(String nameJa, String category, String standingSubcategory) {
+        jdbcTemplate.update(
+                """
+                UPDATE warming_up_master
+                SET category = ?,
+                    standing_subcategory = ?,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE name_ja = ?
+                """,
+                category,
+                standingSubcategory,
+                nameJa);
     }
 
     private Long extractGeneratedId(KeyHolder keyHolder) {

@@ -92,7 +92,8 @@ public class SequenceController {
         model.addAttribute("breathingMasters", breathingService.getBreathingMasters());
         model.addAttribute("sequenceBreathings", sequenceBreathings);
         model.addAttribute("warmingUpMasters", warmingUpMasters);
-        model.addAttribute("standingWarmingUpMasters", filterStandingWarmingUpMasters(warmingUpMasters));
+        model.addAttribute("standingWarmingUpMasters",
+                warmingUpService.getWarmingUpMastersByCategory(AsanaClassification.CATEGORY_STANDING));
         model.addAttribute("sequenceWarmingUps", sequenceWarmingUps);
         model.addAttribute("sunSalutationMasters", sunSalutationService.getSunSalutationMasters());
         model.addAttribute("sequenceSunSalutations", sequenceSunSalutations);
@@ -112,7 +113,8 @@ public class SequenceController {
         model.addAttribute("breathingMasters", breathingService.getBreathingMasters());
         model.addAttribute("sequenceBreathings", sequenceBreathings);
         model.addAttribute("warmingUpMasters", warmingUpMasters);
-        model.addAttribute("standingWarmingUpMasters", filterStandingWarmingUpMasters(warmingUpMasters));
+        model.addAttribute("standingWarmingUpMasters",
+                warmingUpService.getWarmingUpMastersByCategory(AsanaClassification.CATEGORY_STANDING));
         model.addAttribute("sequenceWarmingUps", sequenceWarmingUps);
         model.addAttribute("sunSalutationMasters", sunSalutationService.getSunSalutationMasters());
         model.addAttribute("sequenceSunSalutations", sequenceSunSalutations);
@@ -352,9 +354,4 @@ public class SequenceController {
         model.addAttribute("standingSubcategoryOptions", AsanaClassification.standingSubcategoryOptions());
     }
 
-    private List<WarmingUpMaster> filterStandingWarmingUpMasters(List<WarmingUpMaster> warmingUpMasters) {
-        return warmingUpMasters.stream()
-                .filter(master -> AsanaClassification.CATEGORY_STANDING.equals(master.category()))
-                .toList();
-    }
 }

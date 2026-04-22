@@ -39,6 +39,9 @@ public class WarmingUpDataInitializer {
                 if (!warmingUpMasterRepository.existsByNameJa(name)) {
                     warmingUpMasterRepository.save(name, null, index + 1);
                 }
+                // Legacy data may have been temporarily classified as standing.
+                // Keep default warm-up seeds unclassified so they do not leak into standing candidates.
+                warmingUpMasterRepository.updateClassificationByNameJa(name, null, null);
             }
 
             List<StandingAsanaSeed> standingAsanaSeeds = List.of(
@@ -74,6 +77,11 @@ public class WarmingUpDataInitializer {
                             AsanaClassification.CATEGORY_STANDING,
                             seed.standingSubcategory(),
                             warmingUpMasterRepository.nextDisplayOrder());
+                } else {
+                    warmingUpMasterRepository.updateClassificationByNameJa(
+                            seed.nameJa(),
+                            AsanaClassification.CATEGORY_STANDING,
+                            seed.standingSubcategory());
                 }
             }
         };

@@ -26,12 +26,6 @@
                 </div>
             </header>
 
-            <section class="sequence-detail-hero" aria-label="確認ページの案内">
-                <p class="sequence-detail-hero__eyebrow">Saved Sequence</p>
-                <h2 class="sequence-detail-hero__title">保存内容の見直し</h2>
-                <p class="sequence-detail-hero__text">一覧から選んだシークエンスの内容を確認してから、編集や削除に進めます。</p>
-            </section>
-
             <p class="sequence-detail-notice sequence-detail-notice--error" id="sequenceDetailError" hidden></p>
 
             <section class="sequence-detail-content" id="sequenceDetailContent" hidden>
@@ -41,7 +35,7 @@
                         <strong class="sequence-confirm-meta__value" id="sequenceDetailTitle">-</strong>
                     </div>
                     <div class="sequence-confirm-meta__row">
-                        <span class="sequence-confirm-meta__label">保存日時</span>
+                        <span class="sequence-confirm-meta__label">登録日時</span>
                         <strong class="sequence-confirm-meta__value" id="sequenceDetailDate">-</strong>
                     </div>
                     <div class="sequence-confirm-meta__row">
@@ -63,7 +57,7 @@
                         <h2 class="sequence-detail-section-summary__title">セクション情報</h2>
                         <span class="sequence-detail-section-summary__count" id="sequenceDetailSectionCount">0件</span>
                     </div>
-                    <p class="sequence-detail-section-summary__text" id="sequenceDetailAsanaSummary">アーサナはまだ登録されていません。</p>
+                    <p class="sequence-detail-section-summary__text" id="sequenceDetailAsanaSummary">アーサナがまだ登録されていません。</p>
                 </section>
 
                 <section class="sequence-confirm-list sequence-detail-list" id="sequenceDetailSections" aria-label="シークエンスの詳細セクション"></section>
@@ -71,7 +65,7 @@
 
             <section class="sequence-detail-actions" aria-label="確認ページの操作">
                 <button class="primary-button sequence-detail-actions__primary" type="button" id="sequenceDetailEditButton">編集に戻る</button>
-                <a class="secondary-button sequence-detail-actions__secondary" th:href="@{/sequence-list.html}">一覧へ戻る</a>
+                <a class="secondary-button sequence-detail-actions__secondary" th:href="@{/sequence-list.html}">一覧に戻る</a>
                 <button class="sequence-detail-actions__delete" type="button" id="sequenceDetailDeleteButton">削除する</button>
             </section>
         </main>

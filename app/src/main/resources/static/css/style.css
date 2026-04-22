@@ -2041,37 +2041,6 @@ input {
     color: #1f4572;
 }
 
-.sequence-detail-hero {
-    margin-bottom: 18px;
-    padding: 18px 16px;
-    border-radius: 18px;
-    background: linear-gradient(135deg, rgba(245, 214, 207, 0.96) 0%, rgba(255, 247, 242, 0.96) 100%);
-    border: 1px solid rgba(220, 169, 146, 0.68);
-}
-
-.sequence-detail-hero__eyebrow {
-    margin: 0 0 8px;
-    color: #6a7f93;
-    font-size: 0.76rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-.sequence-detail-hero__title {
-    margin: 0;
-    color: #204775;
-    font-size: 1.2rem;
-    line-height: 1.4;
-}
-
-.sequence-detail-hero__text {
-    margin: 10px 0 0;
-    color: #4d6783;
-    font-size: 0.92rem;
-    line-height: 1.7;
-}
-
 .sequence-detail-notice {
     margin: 0 0 18px;
     padding: 14px 16px;

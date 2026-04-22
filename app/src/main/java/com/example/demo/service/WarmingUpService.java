@@ -82,12 +82,15 @@ public class WarmingUpService {
         }
 
         Long masterId = warmingUpMasterRepository.findActiveIdByNameJa(normalizedNameJa)
-                .orElseGet(() -> warmingUpMasterRepository.save(
-                        normalizedNameJa,
-                        normalizedSanskrit,
-                        normalizedCategory,
-                        normalizedStandingSubcategory,
-                        warmingUpMasterRepository.nextDisplayOrder()));
+                .orElse(null);
+        if (masterId == null) {
+            masterId = warmingUpMasterRepository.save(
+                    normalizedNameJa,
+                    normalizedSanskrit,
+                    normalizedCategory,
+                    normalizedStandingSubcategory,
+                    warmingUpMasterRepository.nextDisplayOrder());
+        }
 
         sequenceWarmingUpRepository.addMasterSelection(sequenceId, masterId, normalizeOptionalText(memo));
     }

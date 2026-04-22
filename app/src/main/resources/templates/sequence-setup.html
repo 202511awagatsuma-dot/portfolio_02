@@ -26,10 +26,6 @@
                 </div>
             </header>
 
-            <section class="page-intro">
-                <p>レッスンの条件に合わせて、確認しやすいシークエンスを作成できます。</p>
-            </section>
-
             <p class="sequence-draft-notice" id="sequenceDraftNotice" hidden></p>
 
             <form class="setup-form" th:action="@{/sequence/create}" method="post">
@@ -76,7 +72,7 @@
                         </label>
                         <label class="choice-row">
                             <input type="radio" name="level" value="3" checked>
-                            <span>★★★☆☆ 標準</span>
+                            <span>★★★☆☆ 中級</span>
                         </label>
                         <label class="choice-row">
                             <input type="radio" name="level" value="4">
@@ -111,9 +107,6 @@
                 </section>
 
                 <section class="card form-section">
-                    <div class="form-section__header">
-                        <h2>4. 保存用の情報</h2>
-                    </div>
                     <div class="stacked-fields">
                         <label class="stacked-field">
                             <span>シークエンス名</span>

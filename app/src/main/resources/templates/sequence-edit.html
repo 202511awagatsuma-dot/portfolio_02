@@ -404,19 +404,60 @@
                     <div class="sequence-comp-section__content">
                         <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>立位</h2>
                         <div class="sequence-comp-slot-list">
-                            <button class="sequence-comp-slot" type="button" aria-label="立位を追加">
+                            <button class="sequence-comp-slot" type="button" aria-label="立位を追加" data-standing-slot>
                                 <span class="sequence-comp-slot__plus"></span>
+                                <span class="sequence-comp-slot__label" data-standing-slot-label>立位を追加</span>
                             </button>
-                            <button class="sequence-comp-slot" type="button" aria-label="立位を追加">
+                            <button class="sequence-comp-slot" type="button" aria-label="立位を追加" data-standing-slot>
                                 <span class="sequence-comp-slot__plus"></span>
+                                <span class="sequence-comp-slot__label" data-standing-slot-label>立位を追加</span>
                             </button>
-                            <button class="sequence-comp-slot" type="button" aria-label="立位を追加">
+                            <button class="sequence-comp-slot" type="button" aria-label="立位を追加" data-standing-slot>
                                 <span class="sequence-comp-slot__plus"></span>
+                                <span class="sequence-comp-slot__label" data-standing-slot-label>立位を追加</span>
                             </button>
                         </div>
                         <p class="sequence-comp-section__label">おすすめ</p>
                         <p class="sequence-comp-section__recommend">戦士のポーズII リバースウォーリア</p>
                         <button class="sequence-comp-add" type="button">セクションを追加する</button>
+
+                        <div class="sequence-comp-modal"
+                             id="standingAsanaModal"
+                             hidden
+                             aria-hidden="true">
+                            <div class="sequence-comp-modal__dialog warming-up-modal__dialog"
+                                 role="dialog"
+                                 aria-modal="true"
+                                 aria-labelledby="standingAsanaModalTitle">
+                                <button class="sequence-comp-modal__close"
+                                        type="button"
+                                        id="standingAsanaModalClose"
+                                        aria-label="モーダルを閉じる">×</button>
+                                <div class="sequence-comp-modal__header">
+                                    <p class="sequence-comp-modal__eyebrow">立位</p>
+                                    <h3 class="sequence-comp-modal__title" id="standingAsanaModalTitle">候補から選択</h3>
+                                </div>
+                                <div class="warming-up-modal__content">
+                                    <div class="warming-up-modal__master-list"
+                                         th:if="${!#lists.isEmpty(standingWarmingUpMasters)}">
+                                        <button class="warming-up-modal__master-item warming-up-modal__master-button"
+                                                type="button"
+                                                th:each="master : ${standingWarmingUpMasters}"
+                                                th:attr="data-standing-candidate-button=true,data-asana-name=${master.nameJa},data-asana-id=${master.id}">
+                                            <span class="warming-up-modal__master-name" th:text="${master.nameJa}">タダーサナ</span>
+                                            <span class="warming-up-modal__master-sub"
+                                                  th:if="${master.nameSanskrit != null and !#strings.isEmpty(master.nameSanskrit)}"
+                                                  th:text="${master.nameSanskrit}">Tadasana</span>
+                                            <span class="warming-up-modal__master-sub"
+                                                  th:if="${master.standingSubcategoryLabel() != null and !#strings.isEmpty(master.standingSubcategoryLabel())}"
+                                                  th:text="${master.standingSubcategoryLabel()}">左右対称立位</span>
+                                        </button>
+                                    </div>
+                                    <p class="sequence-comp-added-empty"
+                                       th:if="${#lists.isEmpty(standingWarmingUpMasters)}">立位候補がありません。</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </article>
 

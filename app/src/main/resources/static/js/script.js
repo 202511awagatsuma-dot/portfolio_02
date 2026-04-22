@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initBreathingEditor);
     runInitializer(initWarmingUpModal);
     runInitializer(initSunSalutationModal);
+    runInitializer(initStandingAsanaPicker);
     runInitializer(initSequenceConfirmNavigation);
     runInitializer(initSequenceListNavigation);
     runInitializer(initSequenceSetupDraft);
@@ -480,6 +481,82 @@ function initSunSalutationModal() {
             customToggle.setAttribute("aria-expanded", String(shouldExpand));
         });
     }
+}
+
+function initStandingAsanaPicker() {
+    const section = document.querySelector(".sequence-comp-section[data-category='standing']");
+    const slots = section?.querySelectorAll("[data-standing-slot]");
+    const modal = document.getElementById("standingAsanaModal");
+    const dialog = modal?.querySelector(".sequence-comp-modal__dialog");
+    const closeButton = document.getElementById("standingAsanaModalClose");
+    const candidateButtons = modal?.querySelectorAll("[data-standing-candidate-button]");
+
+    if (!section || !slots || slots.length === 0 || !modal || !dialog || !closeButton) {
+        return;
+    }
+
+    let activeSlot = null;
+
+    const closeModal = () => {
+        modal.hidden = true;
+        modal.setAttribute("aria-hidden", "true");
+        modal.classList.remove("open", "is-open", "active", "show");
+        document.body.classList.remove("modal-open");
+    };
+
+    const openModal = (slot) => {
+        activeSlot = slot;
+        modal.hidden = false;
+        modal.setAttribute("aria-hidden", "false");
+        modal.classList.remove("open", "is-open", "active", "show");
+        document.body.classList.add("modal-open");
+    };
+
+    closeModal();
+
+    slots.forEach((slot) => {
+        slot.addEventListener("click", (event) => {
+            event.preventDefault();
+            openModal(slot);
+        });
+    });
+
+    closeButton.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    dialog.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.hidden) {
+            closeModal();
+        }
+    });
+
+    candidateButtons?.forEach((button) => {
+        button.addEventListener("click", () => {
+            const selectedName = button.dataset.asanaName?.trim() || "";
+            if (!selectedName || !activeSlot) {
+                closeModal();
+                return;
+            }
+
+            const slotLabel = activeSlot.querySelector("[data-standing-slot-label]");
+            if (slotLabel) {
+                slotLabel.textContent = selectedName;
+            }
+
+            activeSlot.dataset.selectedName = selectedName;
+            activeSlot.setAttribute("aria-label", `${selectedName}を選択済み。タップで変更`);
+            closeModal();
+        });
+    });
 }
 
 function initSequenceConfirmNavigation() {

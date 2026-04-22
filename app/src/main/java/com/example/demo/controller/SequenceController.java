@@ -18,6 +18,7 @@ import com.example.demo.model.SequenceBreathing;
 import com.example.demo.model.SequenceConfirmationSection;
 import com.example.demo.model.SequenceSunSalutation;
 import com.example.demo.model.SequenceWarmingUp;
+import com.example.demo.model.WarmingUpMaster;
 import com.example.demo.service.BreathingService;
 import com.example.demo.service.SunSalutationService;
 import com.example.demo.service.WarmingUpService;
@@ -84,12 +85,14 @@ public class SequenceController {
         List<SequenceBreathing> sequenceBreathings = breathingService.getSequenceBreathings(sequenceId);
         List<SequenceWarmingUp> sequenceWarmingUps = warmingUpService.getSequenceWarmingUps(sequenceId);
         List<SequenceSunSalutation> sequenceSunSalutations = sunSalutationService.getSequenceSunSalutations(sequenceId);
+        List<WarmingUpMaster> warmingUpMasters = warmingUpService.getWarmingUpMasters();
         populateSequenceModel(model, sequence, sequenceId, sequenceBreathings, sequenceWarmingUps, sequenceSunSalutations);
         model.addAttribute("createMode", true);
         model.addAttribute("pageTitle", "シークエンス新規作成");
         model.addAttribute("breathingMasters", breathingService.getBreathingMasters());
         model.addAttribute("sequenceBreathings", sequenceBreathings);
-        model.addAttribute("warmingUpMasters", warmingUpService.getWarmingUpMasters());
+        model.addAttribute("warmingUpMasters", warmingUpMasters);
+        model.addAttribute("standingWarmingUpMasters", filterStandingWarmingUpMasters(warmingUpMasters));
         model.addAttribute("sequenceWarmingUps", sequenceWarmingUps);
         model.addAttribute("sunSalutationMasters", sunSalutationService.getSunSalutationMasters());
         model.addAttribute("sequenceSunSalutations", sequenceSunSalutations);
@@ -102,12 +105,14 @@ public class SequenceController {
         List<SequenceBreathing> sequenceBreathings = breathingService.getSequenceBreathings(sequenceId);
         List<SequenceWarmingUp> sequenceWarmingUps = warmingUpService.getSequenceWarmingUps(sequenceId);
         List<SequenceSunSalutation> sequenceSunSalutations = sunSalutationService.getSequenceSunSalutations(sequenceId);
+        List<WarmingUpMaster> warmingUpMasters = warmingUpService.getWarmingUpMasters();
         populateSequenceModel(model, sequence, sequenceId, sequenceBreathings, sequenceWarmingUps, sequenceSunSalutations);
         model.addAttribute("createMode", false);
         model.addAttribute("pageTitle", "シークエンス編集");
         model.addAttribute("breathingMasters", breathingService.getBreathingMasters());
         model.addAttribute("sequenceBreathings", sequenceBreathings);
-        model.addAttribute("warmingUpMasters", warmingUpService.getWarmingUpMasters());
+        model.addAttribute("warmingUpMasters", warmingUpMasters);
+        model.addAttribute("standingWarmingUpMasters", filterStandingWarmingUpMasters(warmingUpMasters));
         model.addAttribute("sequenceWarmingUps", sequenceWarmingUps);
         model.addAttribute("sunSalutationMasters", sunSalutationService.getSunSalutationMasters());
         model.addAttribute("sequenceSunSalutations", sequenceSunSalutations);
@@ -345,5 +350,11 @@ public class SequenceController {
     private void populateAsanaClassificationOptions(Model model) {
         model.addAttribute("asanaCategoryOptions", AsanaClassification.categoryOptions());
         model.addAttribute("standingSubcategoryOptions", AsanaClassification.standingSubcategoryOptions());
+    }
+
+    private List<WarmingUpMaster> filterStandingWarmingUpMasters(List<WarmingUpMaster> warmingUpMasters) {
+        return warmingUpMasters.stream()
+                .filter(master -> AsanaClassification.CATEGORY_STANDING.equals(master.category()))
+                .toList();
     }
 }

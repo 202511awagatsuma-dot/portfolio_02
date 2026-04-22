@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,15 +15,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.demo.model.Sequence;
 import com.example.demo.model.SequenceBreathing;
 import com.example.demo.model.SequenceConfirmationSection;
+import com.example.demo.model.SequenceWarmingUp;
 import com.example.demo.service.BreathingService;
+import com.example.demo.service.WarmingUpService;
 
 @Controller
 public class SequenceController {
 
-    private final BreathingService breathingService;
+    private static final String CREATE_SEQUENCE_ID_SESSION_KEY = "stikaCreateSequenceId";
 
-    public SequenceController(BreathingService breathingService) {
+    private final BreathingService breathingService;
+    private final WarmingUpService warmingUpService;
+
+    public SequenceController(BreathingService breathingService, WarmingUpService warmingUpService) {
         this.breathingService = breathingService;
+        this.warmingUpService = warmingUpService;
     }
 
     @GetMapping("/sequence/setup")
@@ -44,39 +52,75 @@ public class SequenceController {
         return "sequence-detail";
     }
 
-    @PostMapping("/sequence/create")
+    @PostMapping({ "/sequence/create", "/sequence/create/init" })
     public String createSequence(
             @RequestParam(defaultValue = "60") int duration,
             @RequestParam(defaultValue = "3") int level,
             @RequestParam(defaultValue = "false") boolean peakPoseEnabled,
-            @RequestParam(required = false) String peakPoseName) {
+            @RequestParam(required = false) String peakPoseName,
+            HttpSession session) {
         Long sequenceId = breathingService.createSequence(duration, level, peakPoseEnabled, peakPoseName);
-        return "redirect:/sequence/edit/" + sequenceId;
+        session.setAttribute(CREATE_SEQUENCE_ID_SESSION_KEY, sequenceId);
+        return "redirect:/sequence/create/edit";
+    }
+
+    @GetMapping("/sequence/create/edit")
+    public String createEdit(HttpSession session, Model model) {
+        Object rawSequenceId = session.getAttribute(CREATE_SEQUENCE_ID_SESSION_KEY);
+
+        if (!(rawSequenceId instanceof Long sequenceId)) {
+            return "redirect:/sequence/setup";
+        }
+
+        Sequence sequence = breathingService.getSequence(sequenceId);
+        List<SequenceBreathing> sequenceBreathings = breathingService.getSequenceBreathings(sequenceId);
+        List<SequenceWarmingUp> sequenceWarmingUps = warmingUpService.getSequenceWarmingUps(sequenceId);
+        populateSequenceModel(model, sequence, sequenceId, sequenceBreathings, sequenceWarmingUps);
+        model.addAttribute("createMode", true);
+        model.addAttribute("pageTitle", "シークエンス新規作成");
+        model.addAttribute("breathingMasters", breathingService.getBreathingMasters());
+        model.addAttribute("sequenceBreathings", sequenceBreathings);
+        model.addAttribute("warmingUpMasters", warmingUpService.getWarmingUpMasters());
+        model.addAttribute("sequenceWarmingUps", sequenceWarmingUps);
+        return "sequence-edit";
     }
 
     @GetMapping("/sequence/edit/{sequenceId}")
     public String edit(@PathVariable Long sequenceId, Model model) {
         Sequence sequence = breathingService.getSequence(sequenceId);
         List<SequenceBreathing> sequenceBreathings = breathingService.getSequenceBreathings(sequenceId);
-        populateSequenceModel(model, sequence, sequenceId, sequenceBreathings);
+        List<SequenceWarmingUp> sequenceWarmingUps = warmingUpService.getSequenceWarmingUps(sequenceId);
+        populateSequenceModel(model, sequence, sequenceId, sequenceBreathings, sequenceWarmingUps);
+        model.addAttribute("createMode", false);
+        model.addAttribute("pageTitle", "シークエンス編集");
         model.addAttribute("breathingMasters", breathingService.getBreathingMasters());
         model.addAttribute("sequenceBreathings", sequenceBreathings);
+        model.addAttribute("warmingUpMasters", warmingUpService.getWarmingUpMasters());
+        model.addAttribute("sequenceWarmingUps", sequenceWarmingUps);
         return "sequence-edit";
     }
 
     @GetMapping("/sequence/confirm/{sequenceId}")
-    public String confirm(@PathVariable Long sequenceId, Model model) {
+    public String confirm(@PathVariable Long sequenceId, Model model, HttpSession session) {
         Sequence sequence = breathingService.getSequence(sequenceId);
         List<SequenceBreathing> sequenceBreathings = breathingService.getSequenceBreathings(sequenceId);
-        populateSequenceModel(model, sequence, sequenceId, sequenceBreathings);
-        model.addAttribute("confirmationSections", buildConfirmationSections(sequence, sequenceBreathings));
+        List<SequenceWarmingUp> sequenceWarmingUps = warmingUpService.getSequenceWarmingUps(sequenceId);
+        populateSequenceModel(model, sequence, sequenceId, sequenceBreathings, sequenceWarmingUps);
+        boolean createMode = isCreateSessionSequence(session, sequenceId);
+        model.addAttribute("createMode", createMode);
+        model.addAttribute("confirmationSections",
+                buildConfirmationSections(sequence, sequenceBreathings, sequenceWarmingUps));
         return "sequence-confirm";
     }
 
     @PostMapping("/sequence/{sequenceId}/save")
     public String saveSequence(
             @PathVariable Long sequenceId,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
+        if (isCreateSessionSequence(session, sequenceId)) {
+            session.removeAttribute(CREATE_SEQUENCE_ID_SESSION_KEY);
+        }
         redirectAttributes.addFlashAttribute("saveNotice", "保存しました。次回は一覧から確認できます。");
         return "redirect:/sequence/confirm/" + sequenceId;
     }
@@ -85,9 +129,10 @@ public class SequenceController {
     public String addBreathing(
             @PathVariable Long sequenceId,
             @RequestParam Long breathingMasterId,
+            @RequestParam(required = false, defaultValue = "edit") String mode,
             @RequestParam(required = false) String memo) {
         breathingService.addBreathingToSequence(sequenceId, breathingMasterId, memo);
-        return "redirect:/sequence/edit/" + sequenceId;
+        return buildEditRedirect(sequenceId, mode);
     }
 
     @PostMapping("/sequence/{sequenceId}/breathing/{breathingId}/update")
@@ -95,36 +140,94 @@ public class SequenceController {
             @PathVariable Long sequenceId,
             @PathVariable Long breathingId,
             @RequestParam Long breathingMasterId,
+            @RequestParam(required = false, defaultValue = "edit") String mode,
             @RequestParam(required = false) String memo) {
         breathingService.updateSequenceBreathing(sequenceId, breathingId, breathingMasterId, memo);
-        return "redirect:/sequence/edit/" + sequenceId;
+        return buildEditRedirect(sequenceId, mode);
     }
 
     @PostMapping("/sequence/{sequenceId}/breathing/{breathingId}/delete")
     public String deleteBreathing(
             @PathVariable Long sequenceId,
-            @PathVariable Long breathingId) {
+            @PathVariable Long breathingId,
+            @RequestParam(required = false, defaultValue = "edit") String mode) {
         breathingService.deleteSequenceBreathing(sequenceId, breathingId);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
+    @PostMapping("/sequence/{sequenceId}/warming-up/master")
+    public String addWarmingUpFromMaster(
+            @PathVariable Long sequenceId,
+            @RequestParam Long warmingUpMasterId,
+            @RequestParam(required = false, defaultValue = "edit") String mode,
+            @RequestParam(required = false) String memo) {
+        warmingUpService.addMasterSelection(sequenceId, warmingUpMasterId, memo);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
+    @PostMapping("/sequence/{sequenceId}/warming-up/custom")
+    public String addCustomWarmingUp(
+            @PathVariable Long sequenceId,
+            @RequestParam String customName,
+            @RequestParam(required = false, defaultValue = "edit") String mode,
+            @RequestParam(required = false) String memo) {
+        warmingUpService.addCustom(sequenceId, customName, memo);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
+    @PostMapping("/sequence/{sequenceId}/warming-up/{warmingUpId}/delete")
+    public String deleteWarmingUp(
+            @PathVariable Long sequenceId,
+            @PathVariable Long warmingUpId,
+            @RequestParam(required = false, defaultValue = "edit") String mode) {
+        warmingUpService.delete(sequenceId, warmingUpId);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
+    @PostMapping("/sequence/{sequenceId}/warming-up/{warmingUpId}/move")
+    public String moveWarmingUp(
+            @PathVariable Long sequenceId,
+            @PathVariable Long warmingUpId,
+            @RequestParam(required = false, defaultValue = "edit") String mode,
+            @RequestParam String direction) {
+        warmingUpService.move(sequenceId, warmingUpId, direction);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
+    private String buildEditRedirect(Long sequenceId, String mode) {
+        if ("create".equalsIgnoreCase(mode)) {
+            return "redirect:/sequence/create/edit";
+        }
         return "redirect:/sequence/edit/" + sequenceId;
+    }
+
+    private boolean isCreateSessionSequence(HttpSession session, Long sequenceId) {
+        Object rawSequenceId = session.getAttribute(CREATE_SEQUENCE_ID_SESSION_KEY);
+        return rawSequenceId instanceof Long createSequenceId && createSequenceId.equals(sequenceId);
     }
 
     private void populateSequenceModel(
             Model model,
             Sequence sequence,
             Long sequenceId,
-            List<SequenceBreathing> sequenceBreathings) {
+            List<SequenceBreathing> sequenceBreathings,
+            List<SequenceWarmingUp> sequenceWarmingUps) {
         model.addAttribute("sequence", sequence);
         model.addAttribute("sequenceId", sequenceId);
         model.addAttribute("levelIndicator", "★".repeat(sequence.level()) + "☆".repeat(Math.max(0, 5 - sequence.level())));
         model.addAttribute("peakPoseLabel", resolvePeakPoseLabel(sequence));
-        model.addAttribute("hasSequenceItems", hasSequenceItems(sequence, sequenceBreathings));
+        model.addAttribute("hasSequenceItems", hasSequenceItems(sequence, sequenceBreathings, sequenceWarmingUps));
     }
 
     private List<SequenceConfirmationSection> buildConfirmationSections(
             Sequence sequence,
-            List<SequenceBreathing> sequenceBreathings) {
+            List<SequenceBreathing> sequenceBreathings,
+            List<SequenceWarmingUp> sequenceWarmingUps) {
         List<String> breathingNames = sequenceBreathings.stream()
                 .map(SequenceBreathing::breathingName)
+                .toList();
+        List<String> warmingUpNames = sequenceWarmingUps.stream()
+                .map(SequenceWarmingUp::displayName)
                 .toList();
         List<String> peakPoseNames = hasPeakPose(sequence)
                 ? List.of(sequence.peakPoseName().trim())
@@ -132,7 +235,7 @@ public class SequenceController {
 
         return List.of(
                 new SequenceConfirmationSection("breathing", "呼吸法", "5分", breathingNames),
-                new SequenceConfirmationSection("warming-up", "Warming UP", "10分", List.of()),
+                new SequenceConfirmationSection("warming-up", "Warming UP", "10分", warmingUpNames),
                 new SequenceConfirmationSection("sun-salutation", "太陽礼拝", "10分", List.of()),
                 new SequenceConfirmationSection("standing", "立位", "15分", List.of()),
                 new SequenceConfirmationSection("peak", "ピークポーズ", "5分", peakPoseNames),
@@ -140,8 +243,11 @@ public class SequenceController {
                 new SequenceConfirmationSection("relaxation", "リラクゼーション", "10分", List.of()));
     }
 
-    private boolean hasSequenceItems(Sequence sequence, List<SequenceBreathing> sequenceBreathings) {
-        return !sequenceBreathings.isEmpty() || hasPeakPose(sequence);
+    private boolean hasSequenceItems(
+            Sequence sequence,
+            List<SequenceBreathing> sequenceBreathings,
+            List<SequenceWarmingUp> sequenceWarmingUps) {
+        return !sequenceBreathings.isEmpty() || !sequenceWarmingUps.isEmpty() || hasPeakPose(sequence);
     }
 
     private boolean hasPeakPose(Sequence sequence) {

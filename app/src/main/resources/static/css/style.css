@@ -1335,6 +1335,51 @@ input {
     text-overflow: ellipsis;
 }
 
+.sequence-comp-added-item__meta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 0 8px;
+    border-radius: 999px;
+    background: rgba(80, 120, 155, 0.1);
+    color: #35567c;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.sequence-comp-added-item__tools {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+}
+
+.sequence-comp-sort-form {
+    margin: 0;
+}
+
+.sequence-comp-sort-button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(80, 101, 124, 0.22);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.84);
+    color: #35567c;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.sequence-comp-sort-button:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.sequence-comp-slot--warming-up {
+    justify-content: flex-start;
+    min-height: 58px;
+    padding: 0 16px;
+}
+
 .sequence-comp-added-item__delete-form {
     display: flex;
     align-items: center;
@@ -1448,11 +1493,23 @@ input {
     position: fixed;
     inset: 0;
     z-index: 1200;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     padding: 20px;
     background: rgba(23, 36, 51, 0.48);
+}
+
+.sequence-comp-modal[aria-hidden="false"] {
+    display: flex;
+}
+
+.sequence-comp-modal[hidden] {
+    display: none !important;
+}
+
+.sequence-comp-modal[aria-hidden="true"] {
+    display: none !important;
 }
 
 .sequence-comp-modal__dialog {
@@ -1517,6 +1574,76 @@ input {
     display: grid;
     gap: 8px;
     margin-top: 4px;
+}
+
+.warming-up-modal__dialog {
+    width: min(100%, 400px);
+}
+
+.warming-up-modal__content {
+    display: grid;
+    gap: 14px;
+}
+
+.warming-up-modal__master-list {
+    display: grid;
+    gap: 8px;
+    max-height: 340px;
+    overflow: auto;
+    padding-right: 2px;
+}
+
+.warming-up-modal__master-item,
+.warming-up-modal__custom-form {
+    margin: 0;
+}
+
+.warming-up-modal__master-button,
+.warming-up-modal__custom-toggle {
+    width: 100%;
+    border: 1px solid rgba(220, 169, 146, 0.68);
+    border-radius: 14px;
+    background: #fff;
+    color: #204775;
+}
+
+.warming-up-modal__master-button {
+    padding: 12px 14px;
+    display: grid;
+    gap: 4px;
+    text-align: left;
+}
+
+.warming-up-modal__master-name {
+    font-size: 0.98rem;
+    font-weight: 700;
+}
+
+.warming-up-modal__master-sub {
+    color: #6a7f93;
+    font-size: 0.82rem;
+}
+
+.warming-up-modal__custom {
+    display: grid;
+    gap: 10px;
+    padding-top: 6px;
+    border-top: 1px dashed rgba(220, 169, 146, 0.8);
+}
+
+.warming-up-modal__custom-toggle {
+    min-height: 48px;
+    padding: 0 14px;
+    font-weight: 700;
+}
+
+.warming-up-modal__custom-form {
+    display: grid;
+    gap: 10px;
+}
+
+.warming-up-modal__custom-form[hidden] {
+    display: none !important;
 }
 
 .stika-body.modal-open {

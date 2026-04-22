@@ -4,18 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stika | シークエンス作成</title>
+    <title th:text="'Stika | ' + ${pageTitle}">Stika | シークエンス作成</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body class="stika-body">
     <div class="app-shell">
-        <main class="screen sequence-comp-screen">
+        <main class="screen sequence-comp-screen" th:attr="data-sequence-id=${sequenceId}">
             <header class="topbar sequence-comp-header">
                 <a class="topbar__brand" th:href="@{/}" aria-label="トップへ戻る">
                     <img class="brand-mark" th:src="@{/assets/icon/img_home.svg}" src="/assets/icon/img_home.svg" alt="">
                 </a>
-                <h1 class="topbar__date sequence-comp-header__title">シークエンス作成</h1>
+                <h1 class="topbar__date sequence-comp-header__title" th:text="${pageTitle}">シークエンス作成</h1>
                 <div class="topbar__actions">
                     <span class="icon-badge icon-badge--notice" aria-label="お知らせ"></span>
                     <span class="icon-badge icon-badge--menu" aria-label="メニュー">
@@ -75,6 +75,7 @@
                                 <form class="sequence-comp-added-item__delete-form"
                                       th:action="@{/sequence/{sequenceId}/breathing/{breathingId}/delete(sequenceId=${sequenceId},breathingId=${item.id})}"
                                       method="post">
+                                    <input type="hidden" name="mode" th:if="${createMode}" value="create">
                                     <button class="sequence-comp-delete"
                                             type="submit"
                                             data-breathing-delete
@@ -96,6 +97,7 @@
                                   id="breathingPickerForm"
                                   th:action="@{/sequence/{sequenceId}/breathing(sequenceId=${sequenceId})}"
                                   method="post">
+                                <input type="hidden" name="mode" th:if="${createMode}" value="create">
                                 <p class="sequence-comp-picker__mode" id="breathingFormModeLabel">新規追加</p>
                                 <label class="sequence-comp-picker__field">
                                     <span>登録済み呼吸法</span>
@@ -127,23 +129,136 @@
                     <div class="sequence-comp-section__time">10分</div>
                     <div class="sequence-comp-section__content">
                         <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>Warming UP</h2>
+                        <div class="sequence-comp-added-list" th:if="${!#lists.isEmpty(sequenceWarmingUps)}">
+                            <div class="sequence-comp-added-item sequence-comp-added-item--warming-up"
+                                 th:each="item, itemStat : ${sequenceWarmingUps}"
+                                 th:attr="data-id=${item.id}">
+                                <span class="sequence-comp-added-item__order" th:text="${item.sortOrder}">1</span>
+                                <div class="sequence-comp-added-item__body">
+                                    <span class="sequence-comp-added-item__name" th:text="${item.displayName}">キャット＆カウ</span>
+                                    <span class="sequence-comp-added-item__description"
+                                          th:if="${item.nameSanskrit != null and !#strings.isEmpty(item.nameSanskrit)}"
+                                          th:text="${item.nameSanskrit}">Marjaryasana</span>
+                                    <span class="sequence-comp-added-item__memo"
+                                          th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
+                                          th:text="${item.memo}">メモ</span>
+                                    <span class="sequence-comp-added-item__meta" th:if="${item.custom}">自由入力</span>
+                                    <span class="sequence-comp-added-item__meta" th:if="${!item.custom}">候補から追加</span>
+                                </div>
+                                <div class="sequence-comp-added-item__tools">
+                                    <form class="sequence-comp-sort-form"
+                                          th:action="@{/sequence/{sequenceId}/warming-up/{warmingUpId}/move(sequenceId=${sequenceId},warmingUpId=${item.id})}"
+                                          method="post">
+                                        <input type="hidden" name="mode" th:if="${createMode}" value="create">
+                                        <input type="hidden" name="direction" value="up">
+                                        <button class="sequence-comp-sort-button"
+                                                type="submit"
+                                                th:disabled="${itemStat.first}"
+                                                th:attr="aria-label=${item.displayName + ' を上へ移動'}">▲</button>
+                                    </form>
+                                    <form class="sequence-comp-sort-form"
+                                          th:action="@{/sequence/{sequenceId}/warming-up/{warmingUpId}/move(sequenceId=${sequenceId},warmingUpId=${item.id})}"
+                                          method="post">
+                                        <input type="hidden" name="mode" th:if="${createMode}" value="create">
+                                        <input type="hidden" name="direction" value="down">
+                                        <button class="sequence-comp-sort-button"
+                                                type="submit"
+                                                th:disabled="${itemStat.last}"
+                                                th:attr="aria-label=${item.displayName + ' を下へ移動'}">▼</button>
+                                    </form>
+                                    <form class="sequence-comp-added-item__delete-form"
+                                          th:action="@{/sequence/{sequenceId}/warming-up/{warmingUpId}/delete(sequenceId=${sequenceId},warmingUpId=${item.id})}"
+                                          method="post">
+                                        <input type="hidden" name="mode" th:if="${createMode}" value="create">
+                                        <button class="sequence-comp-delete"
+                                                type="submit"
+                                                data-warming-up-delete
+                                                th:attr="data-name=${item.displayName},aria-label=${item.displayName + ' を削除'}">
+                                            <svg class="sequence-comp-delete__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                                <path d="M9 3.75h6a1 1 0 0 1 1 1V6h3a.75.75 0 0 1 0 1.5h-1.1l-.77 11.02A2.5 2.5 0 0 1 14.64 21h-5.28a2.5 2.5 0 0 1-2.49-2.48L6.1 7.5H5a.75.75 0 0 1 0-1.5h3V4.75a1 1 0 0 1 1-1Zm5.5 2.25V5.25H9.5V6h5Zm-5.88 1.5.74 10.91a1 1 0 0 0 1 .94h5.28a1 1 0 0 0 1-.94l.74-10.91H8.62Zm2.13 2.25c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Zm4.5 0c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Z"></path>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceWarmingUps)}">まだ Warming UP は追加されていません。</p>
                         <div class="sequence-comp-slot-list">
-                            <button class="sequence-comp-slot" type="button" aria-label="Warming UPを追加">
+                            <button class="sequence-comp-slot sequence-comp-slot--warming-up"
+                                    type="button"
+                                    id="warmingUpModalOpen"
+                                    data-warming-up-open
+                                    aria-label="Warming UPを追加"
+                                    aria-haspopup="dialog"
+                                    aria-controls="warmingUpModal">
                                 <span class="sequence-comp-slot__plus"></span>
-                            </button>
-                            <button class="sequence-comp-slot" type="button" aria-label="Warming UPを追加">
-                                <span class="sequence-comp-slot__plus"></span>
-                            </button>
-                            <button class="sequence-comp-slot" type="button" aria-label="Warming UPを追加">
-                                <span class="sequence-comp-slot__plus"></span>
-                            </button>
-                            <button class="sequence-comp-slot" type="button" aria-label="Warming UPを追加">
-                                <span class="sequence-comp-slot__plus"></span>
+                                <span class="sequence-comp-slot__label">候補から Warming UP を追加</span>
                             </button>
                         </div>
                         <p class="sequence-comp-section__label">おすすめ</p>
                         <p class="sequence-comp-section__recommend">キャット&amp;カウ 虎のポーズ</p>
-                        <button class="sequence-comp-add" type="button">セクションを追加する</button>
+                        <button class="sequence-comp-add sequence-comp-add--warming-up" type="button">セクションを追加する</button>
+
+                        <div class="sequence-comp-modal sequence-comp-modal--warming-up"
+                             id="warmingUpModal"
+                             hidden
+                             aria-hidden="true">
+                            <div class="sequence-comp-modal__dialog warming-up-modal__dialog"
+                                 role="dialog"
+                                 aria-modal="true"
+                                 aria-labelledby="warmingUpModalTitle">
+                                <button class="sequence-comp-modal__close"
+                                        type="button"
+                                        id="warmingUpModalClose"
+                                        aria-label="モーダルを閉じる">×</button>
+                                <div class="sequence-comp-modal__header">
+                                    <p class="sequence-comp-modal__eyebrow">Warming UP</p>
+                                    <h3 class="sequence-comp-modal__title" id="warmingUpModalTitle">候補から選んで追加</h3>
+                                </div>
+                                <div class="warming-up-modal__content">
+                                    <div class="warming-up-modal__master-list" th:if="${!#lists.isEmpty(warmingUpMasters)}">
+                                        <form class="warming-up-modal__master-item"
+                                              th:each="master : ${warmingUpMasters}"
+                                              th:action="@{/sequence/{sequenceId}/warming-up/master(sequenceId=${sequenceId})}"
+                                              method="post">
+                                            <input type="hidden" name="mode" th:if="${createMode}" value="create">
+                                            <input type="hidden" name="warmingUpMasterId" th:value="${master.id}">
+                                            <button class="warming-up-modal__master-button" type="submit">
+                                                <span class="warming-up-modal__master-name" th:text="${master.nameJa}">キャット＆カウ</span>
+                                                <span class="warming-up-modal__master-sub"
+                                                      th:if="${master.nameSanskrit != null and !#strings.isEmpty(master.nameSanskrit)}"
+                                                      th:text="${master.nameSanskrit}">Marjaryasana</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class="warming-up-modal__custom">
+                                        <button class="warming-up-modal__custom-toggle"
+                                                type="button"
+                                                id="warmingUpCustomToggle"
+                                                aria-expanded="false"
+                                                aria-controls="warmingUpCustomForm">候補にないものを自由入力で追加</button>
+                                        <form class="warming-up-modal__custom-form"
+                                              id="warmingUpCustomForm"
+                                              th:action="@{/sequence/{sequenceId}/warming-up/custom(sequenceId=${sequenceId})}"
+                                              method="post"
+                                              hidden>
+                                            <input type="hidden" name="mode" th:if="${createMode}" value="create">
+                                            <label class="sequence-comp-picker__field">
+                                                <span>項目名</span>
+                                                <input type="text" name="customName" maxlength="255" placeholder="例：肩回し" required>
+                                            </label>
+                                            <label class="sequence-comp-picker__field">
+                                                <span>メモ（任意）</span>
+                                                <input type="text" name="memo" maxlength="255" placeholder="必要に応じてメモを追加">
+                                            </label>
+                                            <div class="sequence-comp-modal__actions">
+                                                <button class="sequence-comp-add sequence-comp-add--inline" type="submit">自由入力で追加</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </article>
 

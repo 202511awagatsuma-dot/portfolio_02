@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initGrowthCalendar);
     runInitializer(initSequenceTabs);
     runInitializer(initBreathingEditor);
+    runInitializer(initWarmingUpModal);
     runInitializer(initSequenceConfirmNavigation);
     runInitializer(initSequenceListNavigation);
     runInitializer(initSequenceSetupDraft);
@@ -310,6 +311,84 @@ function initBreathingEditor() {
     syncDescription();
 }
 
+function initWarmingUpModal() {
+    const section = document.querySelector(".sequence-comp-section[data-category='warming-up']");
+    const modal = document.getElementById("warmingUpModal");
+    const dialog = modal?.querySelector(".warming-up-modal__dialog");
+    const triggerButton = section?.querySelector("#warmingUpModalOpen");
+    const closeButton = document.getElementById("warmingUpModalClose");
+    const customToggle = document.getElementById("warmingUpCustomToggle");
+    const customForm = document.getElementById("warmingUpCustomForm");
+    const deleteButtons = document.querySelectorAll("[data-warming-up-delete]");
+
+    deleteButtons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+            event.stopPropagation();
+
+            const name = button.dataset.name || "この Warming UP";
+            if (!window.confirm(`${name}を削除しますか？`)) {
+                event.preventDefault();
+            }
+        });
+    });
+
+    if (!section || !modal || !dialog || !closeButton || !triggerButton) {
+        return;
+    }
+
+    // Force closed state on initial render (create/edit both)
+    const forceClosedState = () => {
+        modal.hidden = true;
+        modal.setAttribute("aria-hidden", "true");
+        modal.classList.remove("open", "is-open", "active", "show");
+        document.body.classList.remove("modal-open");
+    };
+
+    const openModal = () => {
+        modal.hidden = false;
+        modal.setAttribute("aria-hidden", "false");
+        modal.classList.remove("open", "is-open", "active", "show");
+        document.body.classList.add("modal-open");
+    };
+
+    const closeModal = () => {
+        forceClosedState();
+    };
+
+    forceClosedState();
+
+    triggerButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        openModal();
+    });
+
+    closeButton.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    dialog.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.hidden) {
+            closeModal();
+        }
+    });
+
+    if (customToggle && customForm) {
+        customToggle.addEventListener("click", () => {
+            const shouldExpand = customForm.hidden;
+            customForm.hidden = !shouldExpand ? true : false;
+            customToggle.setAttribute("aria-expanded", String(shouldExpand));
+        });
+    }
+}
+
 function initSequenceConfirmNavigation() {
     const saveButton = document.querySelector(".sequence-comp-footer__action--save");
 
@@ -318,7 +397,8 @@ function initSequenceConfirmNavigation() {
     }
 
     const pathMatch = window.location.pathname.match(/\/sequence\/edit\/(\d+)$/);
-    const sequenceId = pathMatch ? pathMatch[1] : null;
+    const pageRoot = document.querySelector(".sequence-comp-screen");
+    const sequenceId = pathMatch ? pathMatch[1] : pageRoot?.dataset.sequenceId || null;
 
     if (!sequenceId) {
         return;

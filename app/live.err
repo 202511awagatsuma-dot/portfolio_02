@@ -1,0 +1,8 @@
+icm : null 配列にインデックスを付けることはできません。
+発生場所 行:1 文字:72
++ ... 'mvnw.cmd'; icm -ScriptBlock ([Scriptblock]::Create((Get-Content -Raw ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [Invoke-Command]、RuntimeException
+    + FullyQualifiedErrorId : NullArray,Microsoft.PowerShell.Commands.InvokeCommandCommand
+ 
+Cannot start maven from wrapper  

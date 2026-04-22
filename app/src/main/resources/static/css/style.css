@@ -1917,8 +1917,8 @@ input {
 .sequence-list-card {
     position: relative;
     display: grid;
-    gap: 16px;
-    padding: 16px;
+    gap: 12px;
+    padding: 13px 14px;
     border-radius: 18px;
     background: rgba(255, 250, 247, 0.94);
     border: 1px solid rgba(220, 169, 146, 0.68);
@@ -1957,8 +1957,8 @@ input {
 
 .sequence-list-card__header {
     display: grid;
-    gap: 6px;
-    margin-bottom: 14px;
+    gap: 4px;
+    margin-bottom: 10px;
 }
 
 .sequence-list-card__title {
@@ -1978,7 +1978,7 @@ input {
     margin: 0;
     display: grid;
     grid-template-columns: 92px minmax(0, 1fr);
-    gap: 10px 12px;
+    gap: 8px 12px;
 }
 
 .sequence-list-card__meta dt {
@@ -1993,21 +1993,6 @@ input {
     font-size: 0.92rem;
     line-height: 1.6;
     word-break: break-word;
-}
-
-.sequence-list-card__affordance {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 16px;
-    padding: 4px 2px 0;
-    color: #204775;
-}
-
-.sequence-list-card__affordance-icon {
-    font-size: 1.4rem;
-    line-height: 1;
 }
 
 .sequence-list-card__actions {

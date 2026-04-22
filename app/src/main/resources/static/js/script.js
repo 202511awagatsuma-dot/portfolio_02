@@ -719,16 +719,6 @@ function createSequenceListCard(sequence) {
         body.appendChild(createMetaRow("メモ", sequence.memo));
     }
 
-    const affordance = document.createElement("div");
-    affordance.className = "sequence-list-card__affordance";
-
-    const affordanceIcon = document.createElement("span");
-    affordanceIcon.className = "sequence-list-card__affordance-icon";
-    affordanceIcon.setAttribute("aria-hidden", "true");
-    affordanceIcon.textContent = ">";
-
-    affordance.appendChild(affordanceIcon);
-
     const footer = document.createElement("div");
     footer.className = "sequence-list-card__actions";
 
@@ -751,7 +741,6 @@ function createSequenceListCard(sequence) {
 
     content.appendChild(header);
     content.appendChild(body);
-    content.appendChild(affordance);
 
     article.appendChild(link);
     article.appendChild(content);

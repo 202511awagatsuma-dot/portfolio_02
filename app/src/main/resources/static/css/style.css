@@ -1380,6 +1380,12 @@ input {
     padding: 0 16px;
 }
 
+.sequence-comp-slot--sun-salutation {
+    justify-content: flex-start;
+    min-height: 58px;
+    padding: 0 16px;
+}
+
 .sequence-comp-added-item__delete-form {
     display: flex;
     align-items: center;

@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initSequenceTabs);
     runInitializer(initBreathingEditor);
     runInitializer(initWarmingUpModal);
+    runInitializer(initSunSalutationModal);
     runInitializer(initSequenceConfirmNavigation);
     runInitializer(initSequenceListNavigation);
     runInitializer(initSequenceSetupDraft);
@@ -319,6 +320,9 @@ function initWarmingUpModal() {
     const closeButton = document.getElementById("warmingUpModalClose");
     const customToggle = document.getElementById("warmingUpCustomToggle");
     const customForm = document.getElementById("warmingUpCustomForm");
+    const categorySelect = document.getElementById("warmingUpCategory");
+    const standingSubcategoryField = document.getElementById("warmingUpStandingSubcategoryField");
+    const standingSubcategorySelect = document.getElementById("warmingUpStandingSubcategory");
     const deleteButtons = document.querySelectorAll("[data-warming-up-delete]");
 
     deleteButtons.forEach((button) => {
@@ -384,6 +388,95 @@ function initWarmingUpModal() {
         customToggle.addEventListener("click", () => {
             const shouldExpand = customForm.hidden;
             customForm.hidden = !shouldExpand ? true : false;
+            customToggle.setAttribute("aria-expanded", String(shouldExpand));
+        });
+    }
+
+    if (categorySelect && standingSubcategoryField && standingSubcategorySelect) {
+        const syncStandingSubcategoryVisibility = () => {
+            const shouldShow = categorySelect.value === "standing";
+            standingSubcategoryField.hidden = !shouldShow;
+            standingSubcategorySelect.disabled = !shouldShow;
+            standingSubcategorySelect.required = shouldShow;
+
+            if (!shouldShow) {
+                standingSubcategorySelect.value = "";
+            }
+        };
+
+        categorySelect.addEventListener("change", syncStandingSubcategoryVisibility);
+        syncStandingSubcategoryVisibility();
+    }
+}
+
+function initSunSalutationModal() {
+    const section = document.querySelector(".sequence-comp-section[data-category='sun-salutation']");
+    const modal = document.getElementById("sunSalutationModal");
+    const dialog = modal?.querySelector(".sequence-comp-modal__dialog");
+    const triggerButton = section?.querySelector("#sunSalutationModalOpen");
+    const closeButton = document.getElementById("sunSalutationModalClose");
+    const customToggle = document.getElementById("sunSalutationCustomToggle");
+    const customForm = document.getElementById("sunSalutationCustomForm");
+    const deleteButtons = document.querySelectorAll("[data-sun-salutation-delete]");
+
+    deleteButtons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+            event.stopPropagation();
+
+            const name = button.dataset.name || "この太陽礼拝";
+            if (!window.confirm(`${name}を削除しますか？`)) {
+                event.preventDefault();
+            }
+        });
+    });
+
+    if (!section || !modal || !dialog || !closeButton || !triggerButton) {
+        return;
+    }
+
+    const closeModal = () => {
+        modal.hidden = true;
+        modal.setAttribute("aria-hidden", "true");
+        modal.classList.remove("open", "is-open", "active", "show");
+        document.body.classList.remove("modal-open");
+    };
+
+    const openModal = () => {
+        modal.hidden = false;
+        modal.setAttribute("aria-hidden", "false");
+        modal.classList.remove("open", "is-open", "active", "show");
+        document.body.classList.add("modal-open");
+    };
+
+    closeModal();
+
+    triggerButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        openModal();
+    });
+
+    closeButton.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    dialog.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.hidden) {
+            closeModal();
+        }
+    });
+
+    if (customToggle && customForm) {
+        customToggle.addEventListener("click", () => {
+            const shouldExpand = customForm.hidden;
+            customForm.hidden = !shouldExpand;
             customToggle.setAttribute("aria-expanded", String(shouldExpand));
         });
     }

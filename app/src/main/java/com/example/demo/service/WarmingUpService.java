@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.model.AsanaClassification;
 import com.example.demo.model.SequenceWarmingUp;
 import com.example.demo.model.WarmingUpMaster;
 import com.example.demo.repository.SequenceRepository;
@@ -51,6 +52,44 @@ public class WarmingUpService {
             return;
         }
         sequenceWarmingUpRepository.addCustom(sequenceId, normalizedName, normalizeOptionalText(memo));
+    }
+
+    @Transactional
+    public void registerMasterAndAdd(
+            Long sequenceId,
+            String nameJa,
+            String nameSanskrit,
+            String category,
+            String standingSubcategory,
+            String memo) {
+        requireSequence(sequenceId);
+
+        String normalizedNameJa = normalizeOptionalText(nameJa);
+        String normalizedSanskrit = normalizeOptionalText(nameSanskrit);
+        String normalizedCategory = normalizeOptionalText(category);
+        String normalizedStandingSubcategory = normalizeOptionalText(standingSubcategory);
+
+        if (normalizedNameJa == null || !AsanaClassification.isValidCategory(normalizedCategory)) {
+            return;
+        }
+
+        if (AsanaClassification.requiresStandingSubcategory(normalizedCategory)) {
+            if (!AsanaClassification.isValidStandingSubcategory(normalizedStandingSubcategory)) {
+                return;
+            }
+        } else {
+            normalizedStandingSubcategory = null;
+        }
+
+        Long masterId = warmingUpMasterRepository.findActiveIdByNameJa(normalizedNameJa)
+                .orElseGet(() -> warmingUpMasterRepository.save(
+                        normalizedNameJa,
+                        normalizedSanskrit,
+                        normalizedCategory,
+                        normalizedStandingSubcategory,
+                        warmingUpMasterRepository.nextDisplayOrder()));
+
+        sequenceWarmingUpRepository.addMasterSelection(sequenceId, masterId, normalizeOptionalText(memo));
     }
 
     public void delete(Long sequenceId, Long warmingUpId) {

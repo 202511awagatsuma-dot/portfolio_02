@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initWarmingUpModal);
     runInitializer(initSunSalutationModal);
     runInitializer(initPeakPoseModal);
+    runInitializer(initBackbendModal);
     runInitializer(initSeatedModal);
     runInitializer(initStandingAsanaPicker);
     runInitializer(initSequenceConfirmNavigation);
@@ -500,6 +501,79 @@ function initPeakPoseModal() {
             event.stopPropagation();
 
             const name = button.dataset.name || "このピークポーズ";
+            if (!window.confirm(`${name}を削除しますか？`)) {
+                event.preventDefault();
+            }
+        });
+    });
+
+    if (!section || !modal || !dialog || !closeButton || !triggerButton) {
+        return;
+    }
+
+    const closeModal = () => {
+        modal.hidden = true;
+        modal.setAttribute("aria-hidden", "true");
+        modal.classList.remove("open", "is-open", "active", "show");
+        document.body.classList.remove("modal-open");
+    };
+
+    const openModal = () => {
+        modal.hidden = false;
+        modal.setAttribute("aria-hidden", "false");
+        modal.classList.remove("open", "is-open", "active", "show");
+        document.body.classList.add("modal-open");
+    };
+
+    closeModal();
+
+    triggerButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        openModal();
+    });
+
+    closeButton.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    dialog.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.hidden) {
+            closeModal();
+        }
+    });
+
+    if (customToggle && customForm) {
+        customToggle.addEventListener("click", () => {
+            const shouldExpand = customForm.hidden;
+            customForm.hidden = !shouldExpand;
+            customToggle.setAttribute("aria-expanded", String(shouldExpand));
+        });
+    }
+}
+
+function initBackbendModal() {
+    const section = document.querySelector(".sequence-comp-section[data-category='backbend']");
+    const modal = document.getElementById("backbendModal");
+    const dialog = modal?.querySelector(".sequence-comp-modal__dialog");
+    const triggerButton = section?.querySelector("#backbendModalOpen");
+    const closeButton = document.getElementById("backbendModalClose");
+    const customToggle = document.getElementById("backbendCustomToggle");
+    const customForm = document.getElementById("backbendCustomForm");
+    const deleteButtons = document.querySelectorAll("[data-backbend-delete]");
+
+    deleteButtons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+            event.stopPropagation();
+
+            const name = button.dataset.name || "この後屈";
             if (!window.confirm(`${name}を削除しますか？`)) {
                 event.preventDefault();
             }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 
 <head>
@@ -568,15 +568,108 @@
                     <div class="sequence-comp-section__time">5分</div>
                     <div class="sequence-comp-section__content">
                         <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>後屈</h2>
+                        <div class="sequence-comp-added-list" th:if="${!#lists.isEmpty(sequenceBackbends)}">
+                            <div class="sequence-comp-added-item sequence-comp-added-item--backbend"
+                                 th:each="item : ${sequenceBackbends}"
+                                 th:attr="data-id=${item.id}">
+                                <span class="sequence-comp-added-item__order" th:text="${item.sortOrder}">1</span>
+                                <div class="sequence-comp-added-item__body">
+                                    <span class="sequence-comp-added-item__name" th:text="${item.displayName}">スフィンクス</span>
+                                    <span class="sequence-comp-added-item__memo"
+                                          th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
+                                          th:text="${item.memo}">メモ</span>
+                                    <span class="sequence-comp-added-item__meta" th:if="${item.custom}">自由入力</span>
+                                    <span class="sequence-comp-added-item__meta" th:if="${!item.custom}">候補から追加</span>
+                                </div>
+                                <form class="sequence-comp-added-item__delete-form"
+                                      th:action="@{/sequence/{sequenceId}/backbend/{backbendId}/delete(sequenceId=${sequenceId},backbendId=${item.id})}"
+                                      method="post">
+                                    <input type="hidden" name="mode" th:if="${createMode}" value="create">
+                                    <button class="sequence-comp-delete"
+                                            type="submit"
+                                            data-backbend-delete
+                                            th:attr="data-name=${item.displayName},aria-label=${item.displayName + ' を削除'}">
+                                        <svg class="sequence-comp-delete__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                            <path d="M9 3.75h6a1 1 0 0 1 1 1V6h3a.75.75 0 0 1 0 1.5h-1.1l-.77 11.02A2.5 2.5 0 0 1 14.64 21h-5.28a2.5 2.5 0 0 1-2.49-2.48L6.1 7.5H5a.75.75 0 0 1 0-1.5h3V4.75a1 1 0 0 1 1-1Zm5.5 2.25V5.25H9.5V6h5Zm-5.88 1.5.74 10.91a1 1 0 0 0 1 .94h5.28a1 1 0 0 0 1-.94l.74-10.91H8.62Zm2.13 2.25c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Zm4.5 0c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Z"></path>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceBackbends)}">まだ後屈は追加されていません。</p>
                         <div class="sequence-comp-slot-list">
-                            <button class="sequence-comp-slot" type="button" aria-label="後屈を追加">
+                            <button class="sequence-comp-slot sequence-comp-slot--backbend"
+                                    type="button"
+                                    id="backbendModalOpen"
+                                    data-backbend-open
+                                    aria-label="後屈を追加"
+                                    aria-haspopup="dialog"
+                                    aria-controls="backbendModal">
                                 <span class="sequence-comp-slot__plus"></span>
-                                <span class="sequence-comp-slot__label">後屈を追加</span>
+                                <span class="sequence-comp-slot__label">候補か自由入力で追加</span>
                             </button>
                         </div>
                         <p class="sequence-comp-section__label">おすすめ</p>
-                        <p class="sequence-comp-section__recommend">候補はまだ登録されていません</p>
+                        <p class="sequence-comp-section__recommend">胸を開く動きが体を活性化させていきます</p>
                         <button class="sequence-comp-add" type="button">セクションを追加する</button>
+
+                        <div class="sequence-comp-modal sequence-comp-modal--backbend"
+                             id="backbendModal"
+                             hidden
+                             aria-hidden="true">
+                            <div class="sequence-comp-modal__dialog warming-up-modal__dialog"
+                                 role="dialog"
+                                 aria-modal="true"
+                                 aria-labelledby="backbendModalTitle">
+                                <button class="sequence-comp-modal__close"
+                                        type="button"
+                                        id="backbendModalClose"
+                                        aria-label="モーダルを閉じる">×</button>
+                                <div class="sequence-comp-modal__header">
+                                    <p class="sequence-comp-modal__eyebrow">後屈</p>
+                                    <h3 class="sequence-comp-modal__title" id="backbendModalTitle">候補か自由入力で追加</h3>
+                                </div>
+                                <div class="warming-up-modal__content">
+                                    <div class="warming-up-modal__master-list" th:if="${!#lists.isEmpty(backbendMasters)}">
+                                        <form class="warming-up-modal__master-item"
+                                              th:each="master : ${backbendMasters}"
+                                              th:action="@{/sequence/{sequenceId}/backbend/master(sequenceId=${sequenceId})}"
+                                              method="post">
+                                            <input type="hidden" name="mode" th:if="${createMode}" value="create">
+                                            <input type="hidden" name="backbendMasterId" th:value="${master.id}">
+                                            <button class="warming-up-modal__master-button" type="submit">
+                                                <span class="warming-up-modal__master-name" th:text="${master.nameJa}">スフィンクス</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class="warming-up-modal__custom">
+                                        <button class="warming-up-modal__custom-toggle"
+                                                type="button"
+                                                id="backbendCustomToggle"
+                                                aria-expanded="false"
+                                                aria-controls="backbendCustomForm">自由入力で追加</button>
+                                        <form class="warming-up-modal__custom-form"
+                                              id="backbendCustomForm"
+                                              th:action="@{/sequence/{sequenceId}/backbend/custom(sequenceId=${sequenceId})}"
+                                              method="post"
+                                              hidden>
+                                            <input type="hidden" name="mode" th:if="${createMode}" value="create">
+                                            <label class="sequence-comp-picker__field">
+                                                <span>名称</span>
+                                                <input type="text" name="customName" maxlength="255" placeholder="例: 後屈の名称" required>
+                                            </label>
+                                            <label class="sequence-comp-picker__field">
+                                                <span>メモ（任意）</span>
+                                                <input type="text" name="memo" maxlength="255" placeholder="必要に応じてメモを追加">
+                                            </label>
+                                            <div class="sequence-comp-modal__actions">
+                                                <button class="sequence-comp-add sequence-comp-add--inline" type="submit">自由入力で追加</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </article>
 
@@ -724,3 +817,4 @@
 </body>
 
 </html>
+

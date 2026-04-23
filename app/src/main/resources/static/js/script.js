@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initPeakPoseField);
     runInitializer(initGrowthCalendar);
     runInitializer(initSequenceTabs);
+    runInitializer(initSectionDurationPicker);
     runInitializer(initBreathingEditor);
     runInitializer(initWarmingUpModal);
     runInitializer(initSunSalutationModal);
@@ -315,6 +316,132 @@ function initBreathingEditor() {
     });
 
     syncDescription();
+}
+
+function initSectionDurationPicker() {
+    const sectionTimes = document.querySelectorAll(".sequence-comp-screen .sequence-comp-section__time");
+
+    if (sectionTimes.length === 0) {
+        return;
+    }
+
+    const durationOptions = [3, 5, 8, 10, 12, 15, 20, 25, 30];
+    const modal = document.createElement("div");
+    modal.className = "sequence-comp-modal sequence-duration-modal";
+    modal.id = "sectionDurationModal";
+    modal.hidden = true;
+    modal.setAttribute("aria-hidden", "true");
+    modal.innerHTML = `
+        <div class="sequence-comp-modal__dialog warming-up-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="sectionDurationModalTitle">
+            <button class="sequence-comp-modal__close" type="button" aria-label="モーダルを閉じる">×</button>
+            <div class="sequence-comp-modal__header">
+                <h3 class="sequence-comp-modal__title" id="sectionDurationModalTitle">時間を選択</h3>
+            </div>
+            <div class="warming-up-modal__content">
+                <div class="warming-up-modal__master-list" id="sectionDurationOptionList"></div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    const closeButton = modal.querySelector(".sequence-comp-modal__close");
+    const optionList = modal.querySelector("#sectionDurationOptionList");
+    let activeTimeElement = null;
+
+    const parseMinutes = (text) => {
+        const match = String(text || "").match(/\d+/);
+        return match ? Number.parseInt(match[0], 10) : null;
+    };
+
+    const getDurationLabel = (minutes) => (Number.isFinite(minutes) ? `${minutes}分` : "時間を選択");
+
+    const closeModal = () => {
+        modal.hidden = true;
+        modal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+        activeTimeElement = null;
+    };
+
+    const renderOptions = (selectedMinutes) => {
+        optionList.innerHTML = "";
+
+        durationOptions.forEach((minutes) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "warming-up-modal__master-button sequence-duration-option";
+            button.textContent = `${minutes}分`;
+
+            const isSelected = selectedMinutes === minutes;
+            button.classList.toggle("is-selected", isSelected);
+            button.setAttribute("aria-pressed", String(isSelected));
+
+            button.addEventListener("click", () => {
+                if (!activeTimeElement) {
+                    closeModal();
+                    return;
+                }
+
+                activeTimeElement.textContent = getDurationLabel(minutes);
+                activeTimeElement.dataset.durationMinutes = String(minutes);
+                closeModal();
+            });
+
+            optionList.appendChild(button);
+        });
+    };
+
+    const openModal = (timeElement) => {
+        activeTimeElement = timeElement;
+        const selectedMinutes = parseMinutes(timeElement.dataset.durationMinutes || timeElement.textContent);
+        renderOptions(selectedMinutes);
+        modal.hidden = false;
+        modal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+    };
+
+    sectionTimes.forEach((timeElement) => {
+        const currentMinutes = parseMinutes(timeElement.textContent);
+        if (currentMinutes) {
+            timeElement.dataset.durationMinutes = String(currentMinutes);
+            timeElement.textContent = getDurationLabel(currentMinutes);
+        } else {
+            timeElement.textContent = "時間を選択";
+        }
+
+        timeElement.classList.add("sequence-comp-section__time--selectable");
+        timeElement.setAttribute("role", "button");
+        timeElement.setAttribute("tabindex", "0");
+        timeElement.setAttribute("aria-haspopup", "dialog");
+        timeElement.setAttribute("aria-controls", "sectionDurationModal");
+        timeElement.setAttribute("aria-label", "時間を選択");
+
+        timeElement.addEventListener("click", () => {
+            openModal(timeElement);
+        });
+
+        timeElement.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") {
+                return;
+            }
+
+            event.preventDefault();
+            openModal(timeElement);
+        });
+    });
+
+    closeButton?.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.hidden) {
+            closeModal();
+        }
+    });
 }
 
 function initWarmingUpModal() {

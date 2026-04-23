@@ -330,7 +330,7 @@ public class SequenceController {
         model.addAttribute("sequence", sequence);
         model.addAttribute("sequenceId", sequenceId);
         populateAsanaClassificationOptions(model);
-        model.addAttribute("levelIndicator", "●".repeat(sequence.level()) + "○".repeat(Math.max(0, 5 - sequence.level())));
+        model.addAttribute("levelIndicator", "★".repeat(sequence.level()) + "☆".repeat(Math.max(0, 5 - sequence.level())));
         model.addAttribute("peakPoseLabel", resolvePeakPoseLabel(sequence, sequencePeakPoses));
         model.addAttribute("hasSequenceItems",
                 hasSequenceItems(sequence, sequenceBreathings, sequenceWarmingUps, sequenceSunSalutations,

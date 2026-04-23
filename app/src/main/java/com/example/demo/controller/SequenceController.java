@@ -1,4 +1,4 @@
-﻿package com.example.demo.controller;
+package com.example.demo.controller;
 
 import java.util.List;
 
@@ -14,11 +14,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.model.AsanaClassification;
 import com.example.demo.model.BackbendMaster;
+import com.example.demo.model.RelaxationMaster;
 import com.example.demo.model.SequencePeakPose;
 import com.example.demo.model.Sequence;
 import com.example.demo.model.SequenceBackbend;
 import com.example.demo.model.SequenceBreathing;
 import com.example.demo.model.SequenceConfirmationSection;
+import com.example.demo.model.SequenceRelaxation;
 import com.example.demo.model.SequenceSeated;
 import com.example.demo.model.SequenceSunSalutation;
 import com.example.demo.model.SequenceWarmingUp;
@@ -27,6 +29,7 @@ import com.example.demo.model.WarmingUpMaster;
 import com.example.demo.service.BackbendService;
 import com.example.demo.service.BreathingService;
 import com.example.demo.service.PeakPoseService;
+import com.example.demo.service.RelaxationService;
 import com.example.demo.service.SeatedService;
 import com.example.demo.service.SunSalutationService;
 import com.example.demo.service.WarmingUpService;
@@ -42,6 +45,7 @@ public class SequenceController {
     private final PeakPoseService peakPoseService;
     private final BackbendService backbendService;
     private final SeatedService seatedService;
+    private final RelaxationService relaxationService;
 
     public SequenceController(
             BreathingService breathingService,
@@ -49,13 +53,15 @@ public class SequenceController {
             SunSalutationService sunSalutationService,
             PeakPoseService peakPoseService,
             BackbendService backbendService,
-            SeatedService seatedService) {
+            SeatedService seatedService,
+            RelaxationService relaxationService) {
         this.breathingService = breathingService;
         this.warmingUpService = warmingUpService;
         this.sunSalutationService = sunSalutationService;
         this.peakPoseService = peakPoseService;
         this.backbendService = backbendService;
         this.seatedService = seatedService;
+        this.relaxationService = relaxationService;
     }
 
     @GetMapping("/sequence/setup")
@@ -105,11 +111,13 @@ public class SequenceController {
         List<SequencePeakPose> sequencePeakPoses = peakPoseService.getSequencePeakPoses(sequenceId);
         List<SequenceBackbend> sequenceBackbends = backbendService.getSequenceBackbends(sequenceId);
         List<SequenceSeated> sequenceSeateds = seatedService.getSequenceSeateds(sequenceId);
+        List<SequenceRelaxation> sequenceRelaxations = relaxationService.getSequenceRelaxations(sequenceId);
         List<WarmingUpMaster> warmingUpMasters = warmingUpService.getWarmingUpMasters();
         List<BackbendMaster> backbendMasters = backbendService.getBackbendMasters();
         List<SeatedMaster> seatedMasters = seatedService.getSeatedMasters();
+        List<RelaxationMaster> relaxationMasters = relaxationService.getRelaxationMasters();
         populateSequenceModel(model, sequence, sequenceId, sequenceBreathings, sequenceWarmingUps, sequenceSunSalutations,
-                sequencePeakPoses, sequenceBackbends, sequenceSeateds);
+                sequencePeakPoses, sequenceBackbends, sequenceSeateds, sequenceRelaxations);
         model.addAttribute("createMode", true);
         model.addAttribute("pageTitle", "シークエンス新規作成");
         model.addAttribute("breathingMasters", breathingService.getBreathingMasters());
@@ -126,6 +134,8 @@ public class SequenceController {
         model.addAttribute("sequenceBackbends", sequenceBackbends);
         model.addAttribute("seatedMasters", seatedMasters);
         model.addAttribute("sequenceSeateds", sequenceSeateds);
+        model.addAttribute("relaxationMasters", relaxationMasters);
+        model.addAttribute("sequenceRelaxations", sequenceRelaxations);
         return "sequence-edit";
     }
 
@@ -138,11 +148,13 @@ public class SequenceController {
         List<SequencePeakPose> sequencePeakPoses = peakPoseService.getSequencePeakPoses(sequenceId);
         List<SequenceBackbend> sequenceBackbends = backbendService.getSequenceBackbends(sequenceId);
         List<SequenceSeated> sequenceSeateds = seatedService.getSequenceSeateds(sequenceId);
+        List<SequenceRelaxation> sequenceRelaxations = relaxationService.getSequenceRelaxations(sequenceId);
         List<WarmingUpMaster> warmingUpMasters = warmingUpService.getWarmingUpMasters();
         List<BackbendMaster> backbendMasters = backbendService.getBackbendMasters();
         List<SeatedMaster> seatedMasters = seatedService.getSeatedMasters();
+        List<RelaxationMaster> relaxationMasters = relaxationService.getRelaxationMasters();
         populateSequenceModel(model, sequence, sequenceId, sequenceBreathings, sequenceWarmingUps, sequenceSunSalutations,
-                sequencePeakPoses, sequenceBackbends, sequenceSeateds);
+                sequencePeakPoses, sequenceBackbends, sequenceSeateds, sequenceRelaxations);
         model.addAttribute("createMode", false);
         model.addAttribute("pageTitle", "シークエンス編集");
         model.addAttribute("breathingMasters", breathingService.getBreathingMasters());
@@ -159,6 +171,8 @@ public class SequenceController {
         model.addAttribute("sequenceBackbends", sequenceBackbends);
         model.addAttribute("seatedMasters", seatedMasters);
         model.addAttribute("sequenceSeateds", sequenceSeateds);
+        model.addAttribute("relaxationMasters", relaxationMasters);
+        model.addAttribute("sequenceRelaxations", sequenceRelaxations);
         return "sequence-edit";
     }
 
@@ -171,13 +185,14 @@ public class SequenceController {
         List<SequencePeakPose> sequencePeakPoses = peakPoseService.getSequencePeakPoses(sequenceId);
         List<SequenceBackbend> sequenceBackbends = backbendService.getSequenceBackbends(sequenceId);
         List<SequenceSeated> sequenceSeateds = seatedService.getSequenceSeateds(sequenceId);
+        List<SequenceRelaxation> sequenceRelaxations = relaxationService.getSequenceRelaxations(sequenceId);
         populateSequenceModel(model, sequence, sequenceId, sequenceBreathings, sequenceWarmingUps, sequenceSunSalutations,
-                sequencePeakPoses, sequenceBackbends, sequenceSeateds);
+                sequencePeakPoses, sequenceBackbends, sequenceSeateds, sequenceRelaxations);
         boolean createMode = isCreateSessionSequence(session, sequenceId);
         model.addAttribute("createMode", createMode);
         model.addAttribute("confirmationSections",
                 buildConfirmationSections(sequence, sequenceBreathings, sequenceWarmingUps, sequenceSunSalutations,
-                        sequencePeakPoses, sequenceBackbends, sequenceSeateds));
+                        sequencePeakPoses, sequenceBackbends, sequenceSeateds, sequenceRelaxations));
         return "sequence-confirm";
     }
 
@@ -395,6 +410,35 @@ public class SequenceController {
         return buildEditRedirect(sequenceId, mode);
     }
 
+    @PostMapping("/sequence/{sequenceId}/relaxation/master")
+    public String addRelaxationFromMaster(
+            @PathVariable Long sequenceId,
+            @RequestParam Long relaxationMasterId,
+            @RequestParam(required = false, defaultValue = "edit") String mode,
+            @RequestParam(required = false) String memo) {
+        relaxationService.addMasterSelection(sequenceId, relaxationMasterId, memo);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
+    @PostMapping("/sequence/{sequenceId}/relaxation/custom")
+    public String addCustomRelaxation(
+            @PathVariable Long sequenceId,
+            @RequestParam String customName,
+            @RequestParam(required = false, defaultValue = "edit") String mode,
+            @RequestParam(required = false) String memo) {
+        relaxationService.addCustom(sequenceId, customName, memo);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
+    @PostMapping("/sequence/{sequenceId}/relaxation/{relaxationId}/delete")
+    public String deleteRelaxation(
+            @PathVariable Long sequenceId,
+            @PathVariable Long relaxationId,
+            @RequestParam(required = false, defaultValue = "edit") String mode) {
+        relaxationService.delete(sequenceId, relaxationId);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
     private String buildEditRedirect(Long sequenceId, String mode) {
         if ("create".equalsIgnoreCase(mode)) {
             return "redirect:/sequence/create/edit";
@@ -416,7 +460,8 @@ public class SequenceController {
             List<SequenceSunSalutation> sequenceSunSalutations,
             List<SequencePeakPose> sequencePeakPoses,
             List<SequenceBackbend> sequenceBackbends,
-            List<SequenceSeated> sequenceSeateds) {
+            List<SequenceSeated> sequenceSeateds,
+            List<SequenceRelaxation> sequenceRelaxations) {
         model.addAttribute("sequence", sequence);
         model.addAttribute("sequenceId", sequenceId);
         populateAsanaClassificationOptions(model);
@@ -424,7 +469,7 @@ public class SequenceController {
         model.addAttribute("peakPoseLabel", resolvePeakPoseLabel(sequence, sequencePeakPoses));
         model.addAttribute("hasSequenceItems",
                 hasSequenceItems(sequence, sequenceBreathings, sequenceWarmingUps, sequenceSunSalutations,
-                        sequencePeakPoses, sequenceBackbends, sequenceSeateds));
+                        sequencePeakPoses, sequenceBackbends, sequenceSeateds, sequenceRelaxations));
     }
 
     private List<SequenceConfirmationSection> buildConfirmationSections(
@@ -434,7 +479,8 @@ public class SequenceController {
             List<SequenceSunSalutation> sequenceSunSalutations,
             List<SequencePeakPose> sequencePeakPoses,
             List<SequenceBackbend> sequenceBackbends,
-            List<SequenceSeated> sequenceSeateds) {
+            List<SequenceSeated> sequenceSeateds,
+            List<SequenceRelaxation> sequenceRelaxations) {
         List<String> breathingNames = sequenceBreathings.stream()
                 .map(SequenceBreathing::breathingName)
                 .toList();
@@ -453,6 +499,9 @@ public class SequenceController {
         List<String> seatedNames = sequenceSeateds.stream()
                 .map(SequenceSeated::displayName)
                 .toList();
+        List<String> relaxationNames = sequenceRelaxations.stream()
+                .map(SequenceRelaxation::displayName)
+                .toList();
         if (peakPoseNames.isEmpty() && hasPeakPose(sequence)) {
             peakPoseNames = List.of(sequence.peakPoseName().trim());
         }
@@ -465,7 +514,7 @@ public class SequenceController {
                 new SequenceConfirmationSection("peak", "ピークポーズ", "5分", peakPoseNames),
                 new SequenceConfirmationSection("backbend", "後屈", "5分", backbendNames),
                 new SequenceConfirmationSection("seated", "座位", "5分", seatedNames),
-                new SequenceConfirmationSection("relaxation", "リラクゼーション", "10分", List.of()));
+                new SequenceConfirmationSection("relaxation", "リラクゼーション", "10分", relaxationNames));
     }
 
     private boolean hasSequenceItems(
@@ -475,13 +524,15 @@ public class SequenceController {
             List<SequenceSunSalutation> sequenceSunSalutations,
             List<SequencePeakPose> sequencePeakPoses,
             List<SequenceBackbend> sequenceBackbends,
-            List<SequenceSeated> sequenceSeateds) {
+            List<SequenceSeated> sequenceSeateds,
+            List<SequenceRelaxation> sequenceRelaxations) {
         return !sequenceBreathings.isEmpty()
                 || !sequenceWarmingUps.isEmpty()
                 || !sequenceSunSalutations.isEmpty()
                 || !sequencePeakPoses.isEmpty()
                 || !sequenceBackbends.isEmpty()
                 || !sequenceSeateds.isEmpty()
+                || !sequenceRelaxations.isEmpty()
                 || hasPeakPose(sequence);
     }
 

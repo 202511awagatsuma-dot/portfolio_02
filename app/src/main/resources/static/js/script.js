@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initPeakPoseModal);
     runInitializer(initBackbendModal);
     runInitializer(initSeatedModal);
+    runInitializer(initRelaxationModal);
     runInitializer(initStandingAsanaPicker);
     runInitializer(initSequenceConfirmNavigation);
     runInitializer(initSequenceListNavigation);
@@ -647,6 +648,79 @@ function initSeatedModal() {
             event.stopPropagation();
 
             const name = button.dataset.name || "この座位";
+            if (!window.confirm(`${name}を削除しますか？`)) {
+                event.preventDefault();
+            }
+        });
+    });
+
+    if (!section || !modal || !dialog || !closeButton || !triggerButton) {
+        return;
+    }
+
+    const closeModal = () => {
+        modal.hidden = true;
+        modal.setAttribute("aria-hidden", "true");
+        modal.classList.remove("open", "is-open", "active", "show");
+        document.body.classList.remove("modal-open");
+    };
+
+    const openModal = () => {
+        modal.hidden = false;
+        modal.setAttribute("aria-hidden", "false");
+        modal.classList.remove("open", "is-open", "active", "show");
+        document.body.classList.add("modal-open");
+    };
+
+    closeModal();
+
+    triggerButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        openModal();
+    });
+
+    closeButton.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    dialog.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.hidden) {
+            closeModal();
+        }
+    });
+
+    if (customToggle && customForm) {
+        customToggle.addEventListener("click", () => {
+            const shouldExpand = customForm.hidden;
+            customForm.hidden = !shouldExpand;
+            customToggle.setAttribute("aria-expanded", String(shouldExpand));
+        });
+    }
+}
+
+function initRelaxationModal() {
+    const section = document.querySelector(".sequence-comp-section[data-category='relaxation']");
+    const modal = document.getElementById("relaxationModal");
+    const dialog = modal?.querySelector(".sequence-comp-modal__dialog");
+    const triggerButton = section?.querySelector("#relaxationModalOpen");
+    const closeButton = document.getElementById("relaxationModalClose");
+    const customToggle = document.getElementById("relaxationCustomToggle");
+    const customForm = document.getElementById("relaxationCustomForm");
+    const deleteButtons = document.querySelectorAll("[data-relaxation-delete]");
+
+    deleteButtons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+            event.stopPropagation();
+
+            const name = button.dataset.name || "このリラクゼーション";
             if (!window.confirm(`${name}を削除しますか？`)) {
                 event.preventDefault();
             }

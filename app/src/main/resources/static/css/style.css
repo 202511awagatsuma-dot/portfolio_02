@@ -412,7 +412,7 @@ input {
 
 .play-card__button {
     width: 40px;
-    height: 40px;
+    height: 36px;
     border-radius: 50%;
     display: grid;
     place-items: center;
@@ -1702,7 +1702,14 @@ input {
 
 /* Sequence edit: place "セクションを追加する" on the horizontal divider center line */
 .sequence-comp-screen .sequence-comp-add--section-divider {
-    display: block;
+    width: min(100%, 240px);
+    min-width: 0;
+    height: 40px;
+    padding: 0 20px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
     z-index: 1;
     margin: 20px auto -34px;

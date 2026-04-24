@@ -1756,6 +1756,21 @@ input {
     transform: scale(0.98);
 }
 
+.sequence-comp-modal--section-add .sequence-comp-modal__actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.sequence-comp-modal--section-add .sequence-comp-modal__actions > button {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0 12px;
+    white-space: nowrap;
+    text-align: center;
+}
+
 .warming-up-modal__master-name {
     font-size: 0.98rem;
     font-weight: 700;
@@ -2472,6 +2487,11 @@ input {
     .sequence-comp-add {
         min-width: 250px;
         width: 100%;
+    }
+
+    .sequence-comp-modal--section-add .sequence-comp-modal__actions > button {
+        font-size: 0.86rem;
+        padding: 0 8px;
     }
 
     .sequence-comp-footer__tools {

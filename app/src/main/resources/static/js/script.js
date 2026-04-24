@@ -6,6 +6,7 @@ const STIKA_SEQUENCE_SETUP_PATH = "/sequence/setup";
 const STIKA_DYNAMIC_SECTIONS_STORAGE_PREFIX = "stika_dynamic_sections_";
 const STIKA_REMOVED_SECTIONS_STORAGE_PREFIX = "stika_removed_sections_";
 const STIKA_SECTION_ORDER_STORAGE_PREFIX = "stika_section_order_";
+const STIKA_SECTION_DURATIONS_STORAGE_PREFIX = "stika_section_durations_";
 const STIKA_SECTION_DURATION_OPTIONS = [3, 5, 8, 10, 12, 15, 20, 25, 30];
 const STIKA_ALLOWED_SECTION_CATEGORIES = ["breathing", "warming-up", "sun-salutation", "standing", "peak", "backbend", "seated", "relaxation"];
 const STIKA_SECTION_LABELS = {
@@ -336,9 +337,13 @@ function initBreathingEditor() {
 }
 
 function initSectionDurationPicker() {
+    const screen = document.querySelector(".sequence-comp-screen");
     const sectionTimes = document.querySelectorAll(".sequence-comp-screen .sequence-comp-section__time");
+    const sequenceId = resolveEditSequenceId();
+    const sectionDurations = loadSectionDurationsState(sequenceId);
+    const sectionsRoot = screen?.querySelector(".sequence-comp-sections");
 
-    if (sectionTimes.length === 0) {
+    if (!screen || sectionTimes.length === 0) {
         return;
     }
 
@@ -363,6 +368,7 @@ function initSectionDurationPicker() {
     const closeButton = modal.querySelector(".sequence-comp-modal__close");
     const optionList = modal.querySelector("#sectionDurationOptionList");
     let activeTimeElement = null;
+    let activeSectionId = "";
 
     const parseMinutes = (text) => {
         const match = String(text || "").match(/\d+/);
@@ -376,6 +382,30 @@ function initSectionDurationPicker() {
         modal.setAttribute("aria-hidden", "true");
         document.body.classList.remove("modal-open");
         activeTimeElement = null;
+        activeSectionId = "";
+    };
+
+    const applyDurationToSection = (timeElement, minutes) => {
+        if (!timeElement || !Number.isFinite(minutes)) {
+            return;
+        }
+
+        const section = timeElement.closest(".sequence-comp-section");
+        const sectionId = ensureSectionIdentity(section);
+
+        timeElement.textContent = getDurationLabel(minutes);
+        timeElement.dataset.durationMinutes = String(minutes);
+
+        if (sectionId) {
+            timeElement.dataset.sectionId = sectionId;
+            sectionDurations[sectionId] = minutes;
+            saveSectionDurationsState(sequenceId, sectionDurations);
+        }
+
+        if (section?.dataset.dynamicSection === "true" && sequenceId && sectionsRoot) {
+            saveDynamicSectionsState(sequenceId, sectionsRoot);
+            saveSectionOrderState(sequenceId, sectionsRoot);
+        }
     };
 
     const renderOptions = (selectedMinutes) => {
@@ -392,13 +422,12 @@ function initSectionDurationPicker() {
             button.setAttribute("aria-pressed", String(isSelected));
 
             button.addEventListener("click", () => {
-                if (!activeTimeElement) {
+                if (!activeTimeElement || !activeSectionId) {
                     closeModal();
                     return;
                 }
 
-                activeTimeElement.textContent = getDurationLabel(minutes);
-                activeTimeElement.dataset.durationMinutes = String(minutes);
+                applyDurationToSection(activeTimeElement, minutes);
                 closeModal();
             });
 
@@ -407,7 +436,13 @@ function initSectionDurationPicker() {
     };
 
     const openModal = (timeElement) => {
+        const sectionId = normalizeText(timeElement?.dataset.sectionId);
+        if (!sectionId) {
+            return;
+        }
+
         activeTimeElement = timeElement;
+        activeSectionId = sectionId;
         const selectedMinutes = parseMinutes(timeElement.dataset.durationMinutes || timeElement.textContent);
         renderOptions(selectedMinutes);
         modal.hidden = false;
@@ -420,10 +455,17 @@ function initSectionDurationPicker() {
             return;
         }
 
-        const currentMinutes = parseMinutes(timeElement.textContent);
-        if (currentMinutes) {
-            timeElement.dataset.durationMinutes = String(currentMinutes);
-            timeElement.textContent = getDurationLabel(currentMinutes);
+        const section = timeElement.closest(".sequence-comp-section");
+        const sectionId = ensureSectionIdentity(section);
+        timeElement.dataset.sectionId = sectionId;
+
+        const currentMinutes = parseMinutes(timeElement.dataset.durationMinutes || timeElement.textContent);
+        const storedMinutes = Number.parseInt(sectionDurations[sectionId], 10);
+        const initialMinutes = Number.isFinite(storedMinutes) ? storedMinutes : currentMinutes;
+
+        if (initialMinutes) {
+            timeElement.dataset.durationMinutes = String(initialMinutes);
+            timeElement.textContent = getDurationLabel(initialMinutes);
         } else {
             timeElement.textContent = "時間を選択";
         }
@@ -434,19 +476,6 @@ function initSectionDurationPicker() {
         timeElement.setAttribute("aria-haspopup", "dialog");
         timeElement.setAttribute("aria-controls", "sectionDurationModal");
         timeElement.setAttribute("aria-label", "時間を選択");
-
-        timeElement.addEventListener("click", () => {
-            openModal(timeElement);
-        });
-
-        timeElement.addEventListener("keydown", (event) => {
-            if (event.key !== "Enter" && event.key !== " ") {
-                return;
-            }
-
-            event.preventDefault();
-            openModal(timeElement);
-        });
         timeElement.dataset.durationPickerBound = "true";
     };
 
@@ -454,6 +483,30 @@ function initSectionDurationPicker() {
     window.__stikaBindDurationPickerToTimeElement = bindDurationPickerToTimeElement;
 
     closeButton?.addEventListener("click", closeModal);
+
+    screen.addEventListener("click", (event) => {
+        const timeElement = event.target.closest(".sequence-comp-section__time--selectable");
+        if (!timeElement || !screen.contains(timeElement)) {
+            return;
+        }
+
+        event.preventDefault();
+        openModal(timeElement);
+    });
+
+    screen.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") {
+            return;
+        }
+
+        const timeElement = event.target.closest(".sequence-comp-section__time--selectable");
+        if (!timeElement || !screen.contains(timeElement)) {
+            return;
+        }
+
+        event.preventDefault();
+        openModal(timeElement);
+    });
 
     modal.addEventListener("click", (event) => {
         if (event.target === modal) {
@@ -1207,6 +1260,7 @@ function initDynamicSectionsOnConfirmPage() {
     const confirmPathMatch = window.location.pathname.match(/^\/sequence\/confirm\/(\d+)$/);
     const sequenceId = confirmPathMatch?.[1] || "";
     const list = document.querySelector(".sequence-confirm-list");
+    const sectionDurations = loadSectionDurationsState(sequenceId);
 
     if (!sequenceId || !list) {
         return;
@@ -1217,6 +1271,12 @@ function initDynamicSectionsOnConfirmPage() {
         if (!card.dataset.sectionId) {
             const category = normalizeText(card.dataset.category) || "section";
             card.dataset.sectionId = `base_${category}`;
+        }
+
+        const durationLabel = card.querySelector(".sequence-confirm-card__time");
+        const minutes = Number.parseInt(sectionDurations[card.dataset.sectionId], 10);
+        if (durationLabel && Number.isFinite(minutes)) {
+            durationLabel.textContent = `${minutes}分`;
         }
 
         if (removedSectionIds.has(card.dataset.sectionId)) {
@@ -1232,7 +1292,13 @@ function initDynamicSectionsOnConfirmPage() {
         if (removedSectionIds.has(section.id)) {
             return;
         }
-        list.appendChild(createConfirmCardFromDynamicSection(section));
+        const card = createConfirmCardFromDynamicSection(section);
+        const durationLabel = card.querySelector(".sequence-confirm-card__time");
+        const minutes = Number.parseInt(sectionDurations[section.id], 10);
+        if (durationLabel && Number.isFinite(minutes)) {
+            durationLabel.textContent = `${minutes}分`;
+        }
+        list.appendChild(card);
     });
 
     const sectionOrderIds = loadSectionOrderState(sequenceId);
@@ -1969,6 +2035,15 @@ function saveSectionOrderState(sequenceId, sectionsRoot) {
     writeWebStorage(window.sessionStorage, `${STIKA_SECTION_ORDER_STORAGE_PREFIX}${normalizedId}`, JSON.stringify(order));
 }
 
+function saveSectionDurationsState(sequenceId, sectionDurations) {
+    const normalizedId = normalizeText(sequenceId);
+    if (!normalizedId || !sectionDurations || typeof sectionDurations !== "object") {
+        return;
+    }
+
+    writeWebStorage(window.sessionStorage, `${STIKA_SECTION_DURATIONS_STORAGE_PREFIX}${normalizedId}`, JSON.stringify(sectionDurations));
+}
+
 function loadDynamicSectionsState(sequenceId) {
     const raw = readWebStorage(window.sessionStorage, `${STIKA_DYNAMIC_SECTIONS_STORAGE_PREFIX}${sequenceId}`);
 
@@ -2014,6 +2089,36 @@ function loadSectionOrderState(sequenceId) {
     }
 }
 
+function loadSectionDurationsState(sequenceId) {
+    const normalizedId = normalizeText(sequenceId);
+    if (!normalizedId) {
+        return {};
+    }
+
+    const raw = readWebStorage(window.sessionStorage, `${STIKA_SECTION_DURATIONS_STORAGE_PREFIX}${normalizedId}`);
+    if (!raw) {
+        return {};
+    }
+
+    try {
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object") {
+            return {};
+        }
+
+        return Object.entries(parsed).reduce((accumulator, [sectionId, value]) => {
+            const normalizedSectionId = normalizeText(sectionId);
+            const minutes = Number.parseInt(value, 10);
+            if (normalizedSectionId && Number.isFinite(minutes)) {
+                accumulator[normalizedSectionId] = minutes;
+            }
+            return accumulator;
+        }, {});
+    } catch (_error) {
+        return {};
+    }
+}
+
 function clearDynamicSectionsState(sequenceId) {
     const normalizedId = normalizeText(sequenceId);
     if (!normalizedId) {
@@ -2048,6 +2153,19 @@ function clearSectionOrderState(sequenceId) {
 
     try {
         window.sessionStorage.removeItem(`${STIKA_SECTION_ORDER_STORAGE_PREFIX}${normalizedId}`);
+    } catch (_error) {
+        return;
+    }
+}
+
+function clearSectionDurationsState(sequenceId) {
+    const normalizedId = normalizeText(sequenceId);
+    if (!normalizedId) {
+        return;
+    }
+
+    try {
+        window.sessionStorage.removeItem(`${STIKA_SECTION_DURATIONS_STORAGE_PREFIX}${normalizedId}`);
     } catch (_error) {
         return;
     }
@@ -2478,6 +2596,7 @@ function initSequenceLocalSave() {
         clearDynamicSectionsState(resolveConfirmSequenceIdFromPath() || draft?.editId || "");
         clearRemovedSectionsState(resolveConfirmSequenceIdFromPath() || draft?.editId || "");
         clearSectionOrderState(resolveConfirmSequenceIdFromPath() || draft?.editId || "");
+        clearSectionDurationsState(resolveConfirmSequenceIdFromPath() || draft?.editId || "");
         window.location.href = STIKA_SEQUENCE_LIST_PATH;
     });
 }

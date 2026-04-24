@@ -5,6 +5,7 @@ const STIKA_SEQUENCE_DETAIL_PATH = "/sequence-detail.html";
 const STIKA_SEQUENCE_SETUP_PATH = "/sequence/setup";
 const STIKA_DYNAMIC_SECTIONS_STORAGE_PREFIX = "stika_dynamic_sections_";
 const STIKA_REMOVED_SECTIONS_STORAGE_PREFIX = "stika_removed_sections_";
+const STIKA_SECTION_ORDER_STORAGE_PREFIX = "stika_section_order_";
 const STIKA_SECTION_DURATION_OPTIONS = [3, 5, 8, 10, 12, 15, 20, 25, 30];
 const STIKA_ALLOWED_SECTION_CATEGORIES = ["breathing", "warming-up", "sun-salutation", "standing", "peak", "backbend", "seated", "relaxation"];
 const STIKA_SECTION_LABELS = {
@@ -1024,15 +1025,20 @@ function initDynamicSectionManager() {
     const persistState = () => {
         saveDynamicSectionsState(sequenceId, sectionsRoot);
         saveRemovedSectionsState(sequenceId, removedSectionIds);
+        saveSectionOrderState(sequenceId, sectionsRoot);
     };
 
-    const syncSectionDeleteButtons = () => {
+    const syncSectionActionButtons = () => {
         const sections = Array.from(sectionsRoot.querySelectorAll(".sequence-comp-section"));
         const canDelete = sections.length > 1;
 
-        sections.forEach((section) => {
+        sections.forEach((section, index) => {
             ensureSectionIdentity(section);
-            const removeButton = ensureSectionRemoveButton(section);
+            const controls = ensureSectionControlButtons(section);
+            const removeButton = controls?.removeButton;
+            const moveUpButton = controls?.moveUpButton;
+            const moveDownButton = controls?.moveDownButton;
+
             if (!removeButton) {
                 return;
             }
@@ -1040,6 +1046,18 @@ function initDynamicSectionManager() {
             removeButton.disabled = !canDelete;
             removeButton.setAttribute("aria-disabled", String(!canDelete));
             removeButton.title = canDelete ? "" : "セクションは1つ以上必要です";
+
+            if (moveUpButton) {
+                const disableUp = index === 0;
+                moveUpButton.disabled = disableUp;
+                moveUpButton.setAttribute("aria-disabled", String(disableUp));
+            }
+
+            if (moveDownButton) {
+                const disableDown = index === sections.length - 1;
+                moveDownButton.disabled = disableDown;
+                moveDownButton.setAttribute("aria-disabled", String(disableDown));
+            }
         });
     };
 
@@ -1070,7 +1088,7 @@ function initDynamicSectionManager() {
             }
 
             if (sectionsRoot.querySelectorAll(".sequence-comp-section").length <= 1) {
-                syncSectionDeleteButtons();
+                syncSectionActionButtons();
                 return;
             }
 
@@ -1078,17 +1096,25 @@ function initDynamicSectionManager() {
             targetSection.remove();
             removedSectionIds.add(sectionId);
             persistState();
-            syncSectionDeleteButtons();
+            syncSectionActionButtons();
         }
     });
 
     sectionsRoot.querySelectorAll(".sequence-comp-section").forEach((section) => {
         ensureSectionIdentity(section);
-        ensureSectionRemoveButton(section);
+        ensureSectionControlButtons(section);
     });
 
     applyRemovedSections();
-    syncSectionDeleteButtons();
+    restoreDynamicSections(sequenceId, sectionsRoot, templateCache);
+
+    sectionsRoot.querySelectorAll(".sequence-comp-section").forEach((section) => {
+        ensureSectionIdentity(section);
+        ensureSectionControlButtons(section);
+    });
+
+    applySectionOrderState(sequenceId, sectionsRoot);
+    syncSectionActionButtons();
 
     const addModal = createSectionAddModal(candidates, {
         onCancel: () => {
@@ -1113,17 +1139,45 @@ function initDynamicSectionManager() {
             }
 
             ensureSectionIdentity(insertedSection);
-            ensureSectionRemoveButton(insertedSection);
+            ensureSectionControlButtons(insertedSection);
             persistState();
-            syncSectionDeleteButtons();
+            syncSectionActionButtons();
             activeInsertButton = null;
         }
     });
 
-    restoreDynamicSections(sequenceId, sectionsRoot, templateCache);
-    syncSectionDeleteButtons();
-
     sectionsRoot.addEventListener("click", (event) => {
+        const moveButton = event.target.closest("[data-section-move]");
+
+        if (moveButton && sectionsRoot.contains(moveButton)) {
+            const section = moveButton.closest(".sequence-comp-section");
+            const direction = moveButton.dataset.sectionMove;
+
+            if (!section || (direction !== "up" && direction !== "down") || moveButton.disabled) {
+                return;
+            }
+
+            event.preventDefault();
+            const sections = Array.from(sectionsRoot.querySelectorAll(".sequence-comp-section"));
+            const currentIndex = sections.indexOf(section);
+
+            if (currentIndex < 0) {
+                return;
+            }
+
+            if (direction === "up" && currentIndex > 0) {
+                sectionsRoot.insertBefore(section, sections[currentIndex - 1]);
+            }
+
+            if (direction === "down" && currentIndex < sections.length - 1) {
+                sectionsRoot.insertBefore(sections[currentIndex + 1], section);
+            }
+
+            persistState();
+            syncSectionActionButtons();
+            return;
+        }
+
         const removeButton = event.target.closest("[data-section-remove]");
 
         if (removeButton && sectionsRoot.contains(removeButton)) {
@@ -1180,6 +1234,29 @@ function initDynamicSectionsOnConfirmPage() {
         }
         list.appendChild(createConfirmCardFromDynamicSection(section));
     });
+
+    const sectionOrderIds = loadSectionOrderState(sequenceId);
+    if (sectionOrderIds.length > 0) {
+        const cards = Array.from(list.querySelectorAll(".sequence-confirm-card"));
+        const cardMap = new Map(cards.map((card) => [card.dataset.sectionId || "", card]));
+        const appended = new Set();
+
+        sectionOrderIds.forEach((sectionId) => {
+            const card = cardMap.get(sectionId);
+            if (!card || appended.has(card)) {
+                return;
+            }
+            list.appendChild(card);
+            appended.add(card);
+        });
+
+        cards.forEach((card) => {
+            if (appended.has(card)) {
+                return;
+            }
+            list.appendChild(card);
+        });
+    }
 
     const emptyNotice = document.querySelector(".sequence-confirm-empty");
     if (emptyNotice) {
@@ -1329,6 +1406,19 @@ function insertDynamicSection({ sectionsRoot, insertButton, category, sectionSta
     dynamicSection.dataset.dynamicSection = "true";
     dynamicSection.dataset.sectionId = sectionId;
     dynamicSection.dataset.category = category;
+
+    if (!dynamicSection.querySelector(".sequence-comp-section__time")) {
+        const fallbackTime = document.createElement("div");
+        fallbackTime.className = "sequence-comp-section__time";
+        fallbackTime.textContent = "5分";
+        dynamicSection.insertAdjacentElement("afterbegin", fallbackTime);
+    }
+
+    if (!dynamicSection.querySelector(".sequence-comp-section__content")) {
+        const fallbackContent = document.createElement("div");
+        fallbackContent.className = "sequence-comp-section__content";
+        dynamicSection.appendChild(fallbackContent);
+    }
 
     uniquifySectionIds(dynamicSection, sectionId);
     resetDynamicSection(dynamicSection, category, sectionState);
@@ -1866,6 +1956,19 @@ function saveRemovedSectionsState(sequenceId, removedSectionIds) {
     writeWebStorage(window.sessionStorage, `${STIKA_REMOVED_SECTIONS_STORAGE_PREFIX}${normalizedId}`, JSON.stringify(removedList));
 }
 
+function saveSectionOrderState(sequenceId, sectionsRoot) {
+    const normalizedId = normalizeText(sequenceId);
+    if (!normalizedId || !sectionsRoot) {
+        return;
+    }
+
+    const order = Array.from(sectionsRoot.querySelectorAll(".sequence-comp-section"))
+        .map((section) => ensureSectionIdentity(section))
+        .filter(Boolean);
+
+    writeWebStorage(window.sessionStorage, `${STIKA_SECTION_ORDER_STORAGE_PREFIX}${normalizedId}`, JSON.stringify(order));
+}
+
 function loadDynamicSectionsState(sequenceId) {
     const raw = readWebStorage(window.sessionStorage, `${STIKA_DYNAMIC_SECTIONS_STORAGE_PREFIX}${sequenceId}`);
 
@@ -1883,6 +1986,21 @@ function loadDynamicSectionsState(sequenceId) {
 
 function loadRemovedSectionsState(sequenceId) {
     const raw = readWebStorage(window.sessionStorage, `${STIKA_REMOVED_SECTIONS_STORAGE_PREFIX}${sequenceId}`);
+
+    if (!raw) {
+        return [];
+    }
+
+    try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed.map((id) => normalizeText(id)).filter(Boolean) : [];
+    } catch (_error) {
+        return [];
+    }
+}
+
+function loadSectionOrderState(sequenceId) {
+    const raw = readWebStorage(window.sessionStorage, `${STIKA_SECTION_ORDER_STORAGE_PREFIX}${sequenceId}`);
 
     if (!raw) {
         return [];
@@ -1922,6 +2040,47 @@ function clearRemovedSectionsState(sequenceId) {
     }
 }
 
+function clearSectionOrderState(sequenceId) {
+    const normalizedId = normalizeText(sequenceId);
+    if (!normalizedId) {
+        return;
+    }
+
+    try {
+        window.sessionStorage.removeItem(`${STIKA_SECTION_ORDER_STORAGE_PREFIX}${normalizedId}`);
+    } catch (_error) {
+        return;
+    }
+}
+
+function applySectionOrderState(sequenceId, sectionsRoot) {
+    const order = loadSectionOrderState(sequenceId);
+    if (order.length === 0 || !sectionsRoot) {
+        return;
+    }
+
+    const sections = Array.from(sectionsRoot.querySelectorAll(".sequence-comp-section"));
+    const sectionMap = new Map(sections.map((section) => [ensureSectionIdentity(section), section]));
+    const appended = new Set();
+
+    order.forEach((sectionId) => {
+        const section = sectionMap.get(sectionId);
+        if (!section || appended.has(section)) {
+            return;
+        }
+
+        sectionsRoot.appendChild(section);
+        appended.add(section);
+    });
+
+    sections.forEach((section) => {
+        if (appended.has(section)) {
+            return;
+        }
+        sectionsRoot.appendChild(section);
+    });
+}
+
 function buildSectionTemplateCache(sectionsRoot) {
     const templates = new Map();
 
@@ -1956,28 +2115,61 @@ function ensureSectionIdentity(section) {
     return sectionId;
 }
 
-function ensureSectionRemoveButton(section) {
+function ensureSectionControlButtons(section) {
     const content = section?.querySelector(".sequence-comp-section__content");
     if (!content) {
         return null;
     }
 
-    let button = content.querySelector("[data-section-remove]");
-    if (button) {
-        return button;
+    let actionRoot = content.querySelector(".sequence-comp-section__actions");
+    if (!actionRoot) {
+        actionRoot = document.createElement("div");
+        actionRoot.className = "sequence-comp-section__actions";
+        content.appendChild(actionRoot);
     }
 
-    button = document.createElement("button");
-    button.type = "button";
-    button.className = "sequence-comp-section__remove";
-    button.dataset.sectionRemove = "true";
-    button.setAttribute("aria-label", "このセクションを削除");
-    button.innerHTML = `
-        <span class="sequence-comp-section__remove-icon" aria-hidden="true">×</span>
-        <span>削除</span>
-    `;
-    content.appendChild(button);
-    return button;
+    let moveUpButton = actionRoot.querySelector("[data-section-move='up']");
+    if (!moveUpButton) {
+        moveUpButton = document.createElement("button");
+        moveUpButton.type = "button";
+        moveUpButton.className = "sequence-comp-section__move";
+        moveUpButton.dataset.sectionMove = "up";
+        moveUpButton.setAttribute("aria-label", "セクションを上へ移動");
+        moveUpButton.textContent = "↑";
+        actionRoot.appendChild(moveUpButton);
+    }
+
+    let moveDownButton = actionRoot.querySelector("[data-section-move='down']");
+    if (!moveDownButton) {
+        moveDownButton = document.createElement("button");
+        moveDownButton.type = "button";
+        moveDownButton.className = "sequence-comp-section__move";
+        moveDownButton.dataset.sectionMove = "down";
+        moveDownButton.setAttribute("aria-label", "セクションを下へ移動");
+        moveDownButton.textContent = "↓";
+        actionRoot.appendChild(moveDownButton);
+    }
+
+    let removeButton = actionRoot.querySelector("[data-section-remove]");
+    if (!removeButton) {
+        removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "sequence-comp-section__remove";
+        removeButton.dataset.sectionRemove = "true";
+        removeButton.setAttribute("aria-label", "このセクションを削除");
+        removeButton.innerHTML = `
+            <span class="sequence-comp-section__remove-icon" aria-hidden="true">×</span>
+            <span>削除</span>
+        `;
+        actionRoot.appendChild(removeButton);
+    }
+
+    return {
+        actionRoot,
+        moveUpButton,
+        moveDownButton,
+        removeButton
+    };
 }
 
 function createSectionDeleteModal(handlers) {
@@ -2285,6 +2477,7 @@ function initSequenceLocalSave() {
         clearSequenceDraft();
         clearDynamicSectionsState(resolveConfirmSequenceIdFromPath() || draft?.editId || "");
         clearRemovedSectionsState(resolveConfirmSequenceIdFromPath() || draft?.editId || "");
+        clearSectionOrderState(resolveConfirmSequenceIdFromPath() || draft?.editId || "");
         window.location.href = STIKA_SEQUENCE_LIST_PATH;
     });
 }

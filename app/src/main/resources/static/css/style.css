@@ -1700,6 +1700,19 @@ input {
     font-weight: 700;
 }
 
+/* Sequence edit: place "セクションを追加する" on the horizontal divider center line */
+.sequence-comp-screen .sequence-comp-add--section-divider {
+    display: block;
+    position: relative;
+    z-index: 1;
+    margin: 20px auto -34px;
+}
+
+/* Keep spacing after sections that have the divider button overlap */
+.sequence-comp-screen .sequence-comp-section:has(.sequence-comp-add--section-divider) + .sequence-comp-section {
+    margin-top: 34px;
+}
+
 .sequence-comp-add--inline {
     min-width: 0;
     width: 100%;

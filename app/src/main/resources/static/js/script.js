@@ -3,6 +3,19 @@ const STIKA_SEQUENCE_DRAFT_KEY = "stika_sequence_draft";
 const STIKA_SEQUENCE_LIST_PATH = "/sequence-list.html";
 const STIKA_SEQUENCE_DETAIL_PATH = "/sequence-detail.html";
 const STIKA_SEQUENCE_SETUP_PATH = "/sequence/setup";
+const STIKA_DYNAMIC_SECTIONS_STORAGE_PREFIX = "stika_dynamic_sections_";
+const STIKA_SECTION_DURATION_OPTIONS = [3, 5, 8, 10, 12, 15, 20, 25, 30];
+const STIKA_ALLOWED_SECTION_CATEGORIES = ["breathing", "warming-up", "sun-salutation", "standing", "peak", "backbend", "seated", "relaxation"];
+const STIKA_SECTION_LABELS = {
+    breathing: "呼吸法",
+    "warming-up": "Warming UP",
+    "sun-salutation": "太陽礼拝",
+    standing: "立位",
+    peak: "ピークポーズ",
+    backbend: "後屈",
+    seated: "座位",
+    relaxation: "リラクゼーション"
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initPeakPoseField);
@@ -17,6 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initSeatedModal);
     runInitializer(initRelaxationModal);
     runInitializer(initStandingAsanaPicker);
+    runInitializer(initDynamicSectionManager);
+    runInitializer(initDynamicSectionsOnConfirmPage);
     runInitializer(initSequenceConfirmNavigation);
     runInitializer(initSequenceListNavigation);
     runInitializer(initSequenceSetupDraft);
@@ -325,7 +340,6 @@ function initSectionDurationPicker() {
         return;
     }
 
-    const durationOptions = [3, 5, 8, 10, 12, 15, 20, 25, 30];
     const modal = document.createElement("div");
     modal.className = "sequence-comp-modal sequence-duration-modal";
     modal.id = "sectionDurationModal";
@@ -365,7 +379,7 @@ function initSectionDurationPicker() {
     const renderOptions = (selectedMinutes) => {
         optionList.innerHTML = "";
 
-        durationOptions.forEach((minutes) => {
+        STIKA_SECTION_DURATION_OPTIONS.forEach((minutes) => {
             const button = document.createElement("button");
             button.type = "button";
             button.className = "warming-up-modal__master-button sequence-duration-option";
@@ -399,7 +413,11 @@ function initSectionDurationPicker() {
         document.body.classList.add("modal-open");
     };
 
-    sectionTimes.forEach((timeElement) => {
+    const bindDurationPickerToTimeElement = (timeElement) => {
+        if (!timeElement || timeElement.dataset.durationPickerBound === "true") {
+            return;
+        }
+
         const currentMinutes = parseMinutes(timeElement.textContent);
         if (currentMinutes) {
             timeElement.dataset.durationMinutes = String(currentMinutes);
@@ -427,7 +445,11 @@ function initSectionDurationPicker() {
             event.preventDefault();
             openModal(timeElement);
         });
-    });
+        timeElement.dataset.durationPickerBound = "true";
+    };
+
+    sectionTimes.forEach(bindDurationPickerToTimeElement);
+    window.__stikaBindDurationPickerToTimeElement = bindDurationPickerToTimeElement;
 
     closeButton?.addEventListener("click", closeModal);
 
@@ -982,6 +1004,881 @@ function initStandingAsanaPicker() {
     });
 }
 
+function initDynamicSectionManager() {
+    const screen = document.querySelector(".sequence-comp-screen");
+    const sectionsRoot = screen?.querySelector(".sequence-comp-sections");
+    const sequenceId = resolveEditSequenceId();
+
+    if (!screen || !sectionsRoot || !sequenceId) {
+        return;
+    }
+
+    const candidates = getSectionCandidatesFromTabs(screen);
+    if (candidates.length === 0) {
+        return;
+    }
+
+    let activeInsertButton = null;
+    const addModal = createSectionAddModal(candidates, {
+        onCancel: () => {
+            activeInsertButton = null;
+        },
+        onSubmit: (selectedCategory) => {
+            if (!selectedCategory || !activeInsertButton) {
+                return;
+            }
+
+            const insertedSection = insertDynamicSection({
+                sectionsRoot,
+                insertButton: activeInsertButton,
+                category: selectedCategory,
+                sectionState: null
+            });
+
+            if (!insertedSection) {
+                activeInsertButton = null;
+                return;
+            }
+
+            saveDynamicSectionsState(sequenceId, sectionsRoot);
+            activeInsertButton = null;
+        }
+    });
+
+    restoreDynamicSections(sequenceId, sectionsRoot);
+
+    sectionsRoot.addEventListener("click", (event) => {
+        const addButton = event.target.closest(".sequence-comp-add--section-divider");
+
+        if (!addButton || !sectionsRoot.contains(addButton)) {
+            return;
+        }
+
+        event.preventDefault();
+        activeInsertButton = addButton;
+        addModal.open();
+    });
+}
+
+function initDynamicSectionsOnConfirmPage() {
+    const confirmPathMatch = window.location.pathname.match(/^\/sequence\/confirm\/(\d+)$/);
+    const sequenceId = confirmPathMatch?.[1] || "";
+    const list = document.querySelector(".sequence-confirm-list");
+
+    if (!sequenceId || !list) {
+        return;
+    }
+
+    const dynamicSections = loadDynamicSectionsState(sequenceId)
+        .slice()
+        .sort((a, b) => (a.orderIndex ?? Number.MAX_SAFE_INTEGER) - (b.orderIndex ?? Number.MAX_SAFE_INTEGER));
+
+    if (dynamicSections.length === 0) {
+        return;
+    }
+
+    dynamicSections.forEach((section) => {
+        list.appendChild(createConfirmCardFromDynamicSection(section));
+    });
+
+    const emptyNotice = document.querySelector(".sequence-confirm-empty");
+    if (emptyNotice) {
+        emptyNotice.hidden = list.querySelectorAll(".sequence-confirm-card").length > 0;
+    }
+}
+
+function createSectionAddModal(candidates, handlers) {
+    const existingModal = document.getElementById("sequenceSectionAddModal");
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    const modal = document.createElement("div");
+    modal.className = "sequence-comp-modal sequence-comp-modal--section-add";
+    modal.id = "sequenceSectionAddModal";
+    modal.hidden = true;
+    modal.setAttribute("aria-hidden", "true");
+    modal.innerHTML = `
+        <div class="sequence-comp-modal__dialog warming-up-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="sequenceSectionAddModalTitle">
+            <button class="sequence-comp-modal__close" type="button" aria-label="モーダルを閉じる">×</button>
+            <div class="sequence-comp-modal__header">
+                <h3 class="sequence-comp-modal__title" id="sequenceSectionAddModalTitle">追加するセクションを選択</h3>
+            </div>
+            <div class="warming-up-modal__content">
+                <div class="warming-up-modal__master-list" data-section-add-options></div>
+                <div class="sequence-comp-modal__actions">
+                    <button class="sequence-comp-cancel" type="button" data-section-add-cancel>キャンセル</button>
+                    <button class="sequence-comp-add sequence-comp-add--inline" type="button" data-section-add-submit disabled>追加する</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    const dialog = modal.querySelector(".sequence-comp-modal__dialog");
+    const closeButton = modal.querySelector(".sequence-comp-modal__close");
+    const cancelButton = modal.querySelector("[data-section-add-cancel]");
+    const submitButton = modal.querySelector("[data-section-add-submit]");
+    const optionsRoot = modal.querySelector("[data-section-add-options]");
+    let selectedCategory = "";
+
+    const close = () => {
+        modal.hidden = true;
+        modal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+        selectedCategory = "";
+        updateOptionState();
+        handlers?.onCancel?.();
+    };
+
+    const open = () => {
+        modal.hidden = false;
+        modal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+        selectedCategory = "";
+        updateOptionState();
+    };
+
+    const updateOptionState = () => {
+        const optionButtons = optionsRoot?.querySelectorAll("[data-section-category]") || [];
+        optionButtons.forEach((button) => {
+            const isSelected = button.dataset.sectionCategory === selectedCategory;
+            button.classList.toggle("is-selected", isSelected);
+            button.setAttribute("aria-pressed", String(isSelected));
+        });
+
+        if (submitButton) {
+            submitButton.disabled = selectedCategory.length === 0;
+        }
+    };
+
+    candidates.forEach((candidate) => {
+        const optionButton = document.createElement("button");
+        optionButton.type = "button";
+        optionButton.className = "warming-up-modal__master-button";
+        optionButton.dataset.sectionCategory = candidate.category;
+        optionButton.setAttribute("aria-pressed", "false");
+        optionButton.textContent = candidate.label;
+
+        optionButton.addEventListener("click", () => {
+            selectedCategory = candidate.category;
+            updateOptionState();
+        });
+
+        optionsRoot?.appendChild(optionButton);
+    });
+
+    submitButton?.addEventListener("click", () => {
+        if (!selectedCategory) {
+            return;
+        }
+        handlers?.onSubmit?.(selectedCategory);
+        close();
+    });
+
+    closeButton?.addEventListener("click", close);
+    cancelButton?.addEventListener("click", close);
+
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            close();
+        }
+    });
+
+    dialog?.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.hidden) {
+            close();
+        }
+    });
+
+    return { open, close };
+}
+
+function getSectionCandidatesFromTabs(screen) {
+    const tabs = screen.querySelectorAll(".sequence-comp-tab[data-tab]");
+    const availableCategories = new Set(
+        Array.from(tabs)
+            .map((tab) => tab.dataset.tab || "")
+            .filter((category) => STIKA_ALLOWED_SECTION_CATEGORIES.includes(category))
+    );
+
+    return STIKA_ALLOWED_SECTION_CATEGORIES
+        .filter((category) => availableCategories.has(category))
+        .map((category) => ({
+            category,
+            label: STIKA_SECTION_LABELS[category] || category
+        }));
+}
+
+function insertDynamicSection({ sectionsRoot, insertButton, category, sectionState }) {
+    const anchorSection = insertButton?.closest(".sequence-comp-section");
+    const templateSection = sectionsRoot.querySelector(`.sequence-comp-section[data-category='${category}']:not([data-dynamic-section='true'])`);
+
+    if (!anchorSection || !templateSection) {
+        return null;
+    }
+
+    const sectionId = sectionState?.id || createDynamicSectionId();
+    const dynamicSection = templateSection.cloneNode(true);
+    dynamicSection.dataset.dynamicSection = "true";
+    dynamicSection.dataset.sectionId = sectionId;
+    dynamicSection.dataset.category = category;
+
+    uniquifySectionIds(dynamicSection, sectionId);
+    resetDynamicSection(dynamicSection, category, sectionState);
+    setupDynamicSectionInteractions(dynamicSection);
+
+    const allSections = Array.from(sectionsRoot.querySelectorAll(".sequence-comp-section"));
+    const desiredIndex = Number.isFinite(sectionState?.orderIndex) ? sectionState.orderIndex : allSections.indexOf(anchorSection) + 1;
+    const currentSections = Array.from(sectionsRoot.querySelectorAll(".sequence-comp-section"));
+    const insertBeforeTarget = currentSections[desiredIndex] || null;
+    sectionsRoot.insertBefore(dynamicSection, insertBeforeTarget);
+
+    return dynamicSection;
+}
+
+function restoreDynamicSections(sequenceId, sectionsRoot) {
+    const savedSections = loadDynamicSectionsState(sequenceId)
+        .slice()
+        .sort((a, b) => (a.orderIndex ?? Number.MAX_SAFE_INTEGER) - (b.orderIndex ?? Number.MAX_SAFE_INTEGER));
+
+    if (savedSections.length === 0) {
+        return;
+    }
+
+    const firstButton = sectionsRoot.querySelector(".sequence-comp-add--section-divider");
+    if (!firstButton) {
+        return;
+    }
+
+    savedSections.forEach((sectionState) => {
+        insertDynamicSection({
+            sectionsRoot,
+            insertButton: firstButton,
+            category: sectionState.category,
+            sectionState
+        });
+    });
+}
+
+function resetDynamicSection(section, category, sectionState) {
+    const sectionTitle = section.querySelector(".sequence-comp-section__title");
+    const timeElement = section.querySelector(".sequence-comp-section__time");
+    const emptyLabel = section.querySelector(".sequence-comp-added-empty");
+    const recommendLabel = section.querySelector(".sequence-comp-section__label");
+    const recommendText = section.querySelector(".sequence-comp-section__recommend");
+    const addedList = section.querySelector(".sequence-comp-added-list");
+    const selectedLabel = STIKA_SECTION_LABELS[category] || normalizeText(sectionTitle?.textContent) || "セクション";
+    const initialDuration = Number.isFinite(sectionState?.durationMinutes) ? sectionState.durationMinutes : 5;
+
+    if (sectionTitle) {
+        const dot = sectionTitle.querySelector(".sequence-comp-section__dot");
+        sectionTitle.innerHTML = "";
+        if (dot) {
+            sectionTitle.appendChild(dot);
+        } else {
+            const newDot = document.createElement("span");
+            newDot.className = "sequence-comp-section__dot";
+            sectionTitle.appendChild(newDot);
+        }
+        sectionTitle.append(selectedLabel);
+    }
+
+    if (timeElement) {
+        timeElement.textContent = `${initialDuration}分`;
+        timeElement.dataset.durationMinutes = String(initialDuration);
+        window.__stikaBindDurationPickerToTimeElement?.(timeElement);
+    }
+
+    if (recommendLabel) {
+        recommendLabel.hidden = true;
+    }
+
+    if (recommendText) {
+        recommendText.hidden = true;
+        recommendText.textContent = "";
+    }
+
+    if (addedList) {
+        addedList.hidden = false;
+        addedList.innerHTML = "";
+    }
+
+    if (emptyLabel) {
+        emptyLabel.hidden = false;
+        emptyLabel.textContent = `まだ${selectedLabel}は追加されていません。`;
+    }
+
+    if (category === "standing") {
+        const slots = section.querySelectorAll("[data-standing-slot]");
+        slots.forEach((slot, index) => {
+            const slotLabel = slot.querySelector("[data-standing-slot-label]");
+            const selectedName = sectionState?.slotSelections?.[index] || "";
+
+            if (slotLabel) {
+                slotLabel.textContent = selectedName || "立位を追加";
+            }
+
+            slot.dataset.selectedName = selectedName;
+            slot.setAttribute("aria-label", selectedName ? `${selectedName}を選択済み。タップで変更` : "立位を追加");
+        });
+    } else {
+        const items = Array.isArray(sectionState?.items) ? sectionState.items : [];
+        items.forEach((item) => appendDynamicSectionItem(section, item, false));
+        syncDynamicSectionEmptyState(section);
+    }
+}
+
+function setupDynamicSectionInteractions(section) {
+    const category = section.dataset.category || "";
+    const sequenceId = resolveEditSequenceId();
+    const sectionsRoot = section.closest(".sequence-comp-sections");
+
+    const persist = () => {
+        if (!sequenceId || !sectionsRoot) {
+            return;
+        }
+        saveDynamicSectionsState(sequenceId, sectionsRoot);
+    };
+
+    section.addEventListener("click", (event) => {
+        const deleteButton = event.target.closest("[data-dynamic-delete]");
+        if (!deleteButton || !section.contains(deleteButton)) {
+            return;
+        }
+
+        const item = deleteButton.closest(".sequence-comp-added-item");
+        item?.remove();
+        syncDynamicSectionItemOrder(section);
+        syncDynamicSectionEmptyState(section);
+        persist();
+    });
+
+    if (category === "breathing") {
+        const form = section.querySelector(".sequence-comp-picker__form");
+        const picker = section.querySelector(".sequence-comp-picker");
+        const masterSelect = form?.querySelector("select[name='breathingMasterId']");
+        const memoInput = form?.querySelector("input[name='memo']");
+        const description = section.querySelector(".sequence-comp-picker__description");
+        const cancelButton = section.querySelector(".sequence-comp-cancel");
+        const modeLabel = section.querySelector(".sequence-comp-picker__mode");
+
+        const syncDescription = () => {
+            const selectedOption = masterSelect?.options[masterSelect.selectedIndex];
+            const text = selectedOption?.dataset.description?.trim() || "";
+            if (description) {
+                description.textContent = text;
+                description.hidden = text.length === 0;
+            }
+        };
+
+        masterSelect?.addEventListener("change", syncDescription);
+        cancelButton?.addEventListener("click", () => {
+            form?.reset();
+            if (modeLabel) {
+                modeLabel.textContent = "新規追加";
+            }
+            if (picker) {
+                picker.open = false;
+            }
+            syncDescription();
+        });
+
+        form?.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const selectedOption = masterSelect?.options[masterSelect.selectedIndex];
+            const name = normalizeText(selectedOption?.textContent);
+            const descriptionText = normalizeText(selectedOption?.dataset.description);
+            const memo = normalizeText(memoInput?.value);
+
+            if (!name || selectedOption?.value === "") {
+                return;
+            }
+
+            appendDynamicSectionItem(section, {
+                id: createDynamicSectionItemId(),
+                name,
+                memo,
+                description: descriptionText,
+                source: "candidate"
+            }, true);
+
+            form.reset();
+            if (picker) {
+                picker.open = false;
+            }
+            syncDescription();
+            persist();
+        });
+
+        syncDescription();
+        return;
+    }
+
+    if (category === "standing") {
+        setupDynamicStandingSection(section, persist);
+        return;
+    }
+
+    setupDynamicModalSection(section, persist);
+}
+
+function setupDynamicModalSection(section, persist) {
+    const modal = section.querySelector(".sequence-comp-modal");
+    const dialog = modal?.querySelector(".sequence-comp-modal__dialog");
+    const openButton = section.querySelector("[aria-haspopup='dialog']");
+    const closeButton = modal?.querySelector(".sequence-comp-modal__close");
+    const customToggle = modal?.querySelector(".warming-up-modal__custom-toggle");
+    const customForm = modal?.querySelector(".warming-up-modal__custom-form");
+    const candidateForms = modal?.querySelectorAll(".warming-up-modal__master-item");
+
+    if (!modal || !dialog || !openButton || !closeButton) {
+        return;
+    }
+
+    const closeModal = () => {
+        modal.hidden = true;
+        modal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+    };
+
+    const openModal = () => {
+        modal.hidden = false;
+        modal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+    };
+
+    closeModal();
+
+    openButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        openModal();
+    });
+
+    closeButton.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    dialog.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+
+    if (customToggle && customForm) {
+        customToggle.addEventListener("click", () => {
+            const shouldExpand = customForm.hidden;
+            customForm.hidden = !shouldExpand;
+            customToggle.setAttribute("aria-expanded", String(shouldExpand));
+        });
+
+        customForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const nameInput = customForm.querySelector("input[name='nameJa'], input[name='customName']");
+            const memoInput = customForm.querySelector("input[name='memo']");
+            const name = normalizeText(nameInput?.value);
+            const memo = normalizeText(memoInput?.value);
+
+            if (!name) {
+                return;
+            }
+
+            appendDynamicSectionItem(section, {
+                id: createDynamicSectionItemId(),
+                name,
+                memo,
+                source: "custom"
+            }, true);
+
+            customForm.reset();
+            customForm.hidden = true;
+            customToggle.setAttribute("aria-expanded", "false");
+            closeModal();
+            persist();
+        });
+    }
+
+    candidateForms?.forEach((form) => {
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const name = normalizeText(form.querySelector(".warming-up-modal__master-name")?.textContent);
+            const description = normalizeText(form.querySelector(".warming-up-modal__master-sub")?.textContent);
+
+            if (!name) {
+                return;
+            }
+
+            appendDynamicSectionItem(section, {
+                id: createDynamicSectionItemId(),
+                name,
+                description,
+                source: "candidate"
+            }, true);
+
+            closeModal();
+            persist();
+        });
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.hidden) {
+            closeModal();
+        }
+    });
+}
+
+function setupDynamicStandingSection(section, persist) {
+    const slots = section.querySelectorAll("[data-standing-slot]");
+    const modal = section.querySelector(".sequence-comp-modal");
+    const dialog = modal?.querySelector(".sequence-comp-modal__dialog");
+    const closeButton = modal?.querySelector(".sequence-comp-modal__close");
+    const candidateButtons = modal?.querySelectorAll("[data-standing-candidate-button]");
+
+    if (!modal || !dialog || !closeButton || slots.length === 0) {
+        return;
+    }
+
+    let activeSlot = null;
+
+    const closeModal = () => {
+        modal.hidden = true;
+        modal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+    };
+
+    const openModal = (slot) => {
+        activeSlot = slot;
+        modal.hidden = false;
+        modal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+    };
+
+    closeModal();
+
+    slots.forEach((slot) => {
+        slot.addEventListener("click", (event) => {
+            event.preventDefault();
+            openModal(slot);
+        });
+    });
+
+    closeButton.addEventListener("click", closeModal);
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+    dialog.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+
+    candidateButtons?.forEach((button) => {
+        button.addEventListener("click", () => {
+            const selectedName = normalizeText(button.dataset.asanaName);
+            if (!selectedName || !activeSlot) {
+                closeModal();
+                return;
+            }
+
+            const slotLabel = activeSlot.querySelector("[data-standing-slot-label]");
+            if (slotLabel) {
+                slotLabel.textContent = selectedName;
+            }
+
+            activeSlot.dataset.selectedName = selectedName;
+            activeSlot.setAttribute("aria-label", `${selectedName}を選択済み。タップで変更`);
+            closeModal();
+            persist();
+        });
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.hidden) {
+            closeModal();
+        }
+    });
+}
+
+function appendDynamicSectionItem(section, itemData, syncOrder) {
+    const list = ensureDynamicSectionList(section);
+    if (!list) {
+        return;
+    }
+
+    const item = document.createElement("div");
+    item.className = "sequence-comp-added-item";
+    item.dataset.dynamicItem = "true";
+    item.dataset.itemId = itemData?.id || createDynamicSectionItemId();
+
+    const order = document.createElement("span");
+    order.className = "sequence-comp-added-item__order";
+    order.textContent = String(list.children.length + 1);
+
+    const body = document.createElement("div");
+    body.className = "sequence-comp-added-item__body";
+
+    const name = document.createElement("span");
+    name.className = "sequence-comp-added-item__name";
+    name.textContent = itemData?.name || "名称未設定";
+    body.appendChild(name);
+
+    if (itemData?.memo) {
+        const memo = document.createElement("span");
+        memo.className = "sequence-comp-added-item__memo";
+        memo.textContent = itemData.memo;
+        body.appendChild(memo);
+    }
+
+    if (itemData?.description) {
+        const description = document.createElement("span");
+        description.className = "sequence-comp-added-item__description";
+        description.textContent = itemData.description;
+        body.appendChild(description);
+    }
+
+    const source = document.createElement("span");
+    source.className = "sequence-comp-added-item__meta";
+    source.textContent = itemData?.source === "custom" ? "自由入力" : "候補から追加";
+    body.appendChild(source);
+
+    const tools = document.createElement("div");
+    tools.className = "sequence-comp-added-item__tools";
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "sequence-comp-delete";
+    deleteButton.type = "button";
+    deleteButton.dataset.dynamicDelete = "true";
+    deleteButton.setAttribute("aria-label", `${name.textContent} を削除`);
+    deleteButton.innerHTML = `
+        <svg class="sequence-comp-delete__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M9 3.75h6a1 1 0 0 1 1 1V6h3a.75.75 0 0 1 0 1.5h-1.1l-.77 11.02A2.5 2.5 0 0 1 14.64 21h-5.28a2.5 2.5 0 0 1-2.49-2.48L6.1 7.5H5a.75.75 0 0 1 0-1.5h3V4.75a1 1 0 0 1 1-1Zm5.5 2.25V5.25H9.5V6h5Zm-5.88 1.5.74 10.91a1 1 0 0 0 1 .94h5.28a1 1 0 0 0 1-.94l.74-10.91H8.62Zm2.13 2.25c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Zm4.5 0c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Z"></path>
+        </svg>
+    `;
+
+    tools.appendChild(deleteButton);
+    item.appendChild(order);
+    item.appendChild(body);
+    item.appendChild(tools);
+    list.appendChild(item);
+
+    if (syncOrder) {
+        syncDynamicSectionItemOrder(section);
+    }
+    syncDynamicSectionEmptyState(section);
+}
+
+function ensureDynamicSectionList(section) {
+    let list = section.querySelector(".sequence-comp-added-list");
+
+    if (!list) {
+        list = document.createElement("div");
+        list.className = "sequence-comp-added-list";
+        const title = section.querySelector(".sequence-comp-section__title");
+        if (title) {
+            title.insertAdjacentElement("afterend", list);
+        } else {
+            section.querySelector(".sequence-comp-section__content")?.prepend(list);
+        }
+    }
+
+    list.hidden = false;
+    return list;
+}
+
+function syncDynamicSectionItemOrder(section) {
+    const items = section.querySelectorAll(".sequence-comp-added-list .sequence-comp-added-item");
+    items.forEach((item, index) => {
+        const order = item.querySelector(".sequence-comp-added-item__order");
+        if (order) {
+            order.textContent = String(index + 1);
+        }
+    });
+}
+
+function syncDynamicSectionEmptyState(section) {
+    const empty = section.querySelector(".sequence-comp-added-empty");
+    const list = section.querySelector(".sequence-comp-added-list");
+    const hasItems = Boolean(list && list.children.length > 0);
+
+    if (empty) {
+        empty.hidden = hasItems;
+    }
+}
+
+function saveDynamicSectionsState(sequenceId, sectionsRoot) {
+    const sections = Array.from(sectionsRoot.querySelectorAll(".sequence-comp-section"));
+    const dynamicSections = sections
+        .filter((section) => section.dataset.dynamicSection === "true")
+        .map((section) => {
+            const category = section.dataset.category || "";
+            const title = normalizeText(section.querySelector(".sequence-comp-section__title")?.textContent) || (STIKA_SECTION_LABELS[category] || "セクション");
+            const durationMinutes = Number.parseInt(section.querySelector(".sequence-comp-section__time")?.dataset.durationMinutes || "5", 10) || 5;
+            const orderIndex = sections.indexOf(section);
+            const slotSelections = category === "standing"
+                ? Array.from(section.querySelectorAll("[data-standing-slot]")).map((slot) => normalizeText(slot.dataset.selectedName))
+                : [];
+            const items = category === "standing"
+                ? slotSelections.filter(Boolean).map((name) => ({
+                    id: createDynamicSectionItemId(),
+                    name,
+                    source: "candidate"
+                }))
+                : Array.from(section.querySelectorAll(".sequence-comp-added-list .sequence-comp-added-item")).map((item) => ({
+                    id: item.dataset.itemId || createDynamicSectionItemId(),
+                    name: normalizeText(item.querySelector(".sequence-comp-added-item__name")?.textContent),
+                    memo: normalizeText(item.querySelector(".sequence-comp-added-item__memo")?.textContent),
+                    description: normalizeText(item.querySelector(".sequence-comp-added-item__description")?.textContent),
+                    source: normalizeText(item.querySelector(".sequence-comp-added-item__meta")?.textContent) === "自由入力" ? "custom" : "candidate"
+                })).filter((item) => item.name);
+
+            return {
+                id: section.dataset.sectionId || createDynamicSectionId(),
+                category,
+                title,
+                durationMinutes,
+                orderIndex,
+                slotSelections,
+                items
+            };
+        });
+
+    writeWebStorage(window.sessionStorage, `${STIKA_DYNAMIC_SECTIONS_STORAGE_PREFIX}${sequenceId}`, JSON.stringify(dynamicSections));
+}
+
+function loadDynamicSectionsState(sequenceId) {
+    const raw = readWebStorage(window.sessionStorage, `${STIKA_DYNAMIC_SECTIONS_STORAGE_PREFIX}${sequenceId}`);
+
+    if (!raw) {
+        return [];
+    }
+
+    try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed.filter((item) => item && typeof item === "object" && typeof item.category === "string") : [];
+    } catch (_error) {
+        return [];
+    }
+}
+
+function clearDynamicSectionsState(sequenceId) {
+    const normalizedId = normalizeText(sequenceId);
+    if (!normalizedId) {
+        return;
+    }
+
+    try {
+        window.sessionStorage.removeItem(`${STIKA_DYNAMIC_SECTIONS_STORAGE_PREFIX}${normalizedId}`);
+    } catch (_error) {
+        return;
+    }
+}
+
+function createConfirmCardFromDynamicSection(section) {
+    const article = document.createElement("article");
+    article.className = "sequence-confirm-card";
+    article.dataset.category = section?.category || "";
+
+    if (section?.id) {
+        article.dataset.sectionId = section.id;
+    }
+
+    const header = document.createElement("div");
+    header.className = "sequence-confirm-card__header";
+
+    const time = document.createElement("span");
+    time.className = "sequence-confirm-card__time";
+    time.textContent = `${Number.parseInt(section?.durationMinutes || 5, 10) || 5}分`;
+
+    const title = document.createElement("h2");
+    title.className = "sequence-confirm-card__title";
+    title.textContent = normalizeText(section?.title) || STIKA_SECTION_LABELS[section?.category] || "セクション";
+
+    header.appendChild(time);
+    header.appendChild(title);
+    article.appendChild(header);
+
+    const items = Array.isArray(section?.items)
+        ? section.items.map((item) => normalizeText(item?.name)).filter(Boolean)
+        : [];
+
+    if (items.length > 0) {
+        const list = document.createElement("ul");
+        list.className = "sequence-confirm-card__items";
+
+        items.forEach((itemName) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = itemName;
+            list.appendChild(listItem);
+        });
+
+        article.appendChild(list);
+    }
+
+    return article;
+}
+
+function resolveEditSequenceId() {
+    const screen = document.querySelector(".sequence-comp-screen");
+    const fromDataset = normalizeText(screen?.dataset.sequenceId);
+    if (fromDataset) {
+        return fromDataset;
+    }
+
+    const match = window.location.pathname.match(/\/sequence\/edit\/(\d+)$/);
+    return match?.[1] || "";
+}
+
+function resolveConfirmSequenceIdFromPath() {
+    return window.location.pathname.match(/^\/sequence\/confirm\/(\d+)$/)?.[1] || "";
+}
+
+function createDynamicSectionId() {
+    return `dynamic_section_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function createDynamicSectionItemId() {
+    return `dynamic_item_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function uniquifySectionIds(section, suffix) {
+    const idMap = new Map();
+    const elementsWithId = section.querySelectorAll("[id]");
+
+    elementsWithId.forEach((element) => {
+        const oldId = element.id;
+        const newId = `${oldId}_${suffix}`;
+        idMap.set(oldId, newId);
+        element.id = newId;
+    });
+
+    const refAttributes = ["for", "aria-controls", "aria-labelledby"];
+    const elements = section.querySelectorAll("*");
+
+    elements.forEach((element) => {
+        refAttributes.forEach((attribute) => {
+            const value = element.getAttribute(attribute);
+            if (!value) {
+                return;
+            }
+
+            const nextValue = value
+                .split(/\s+/)
+                .map((token) => idMap.get(token) || token)
+                .join(" ");
+
+            element.setAttribute(attribute, nextValue);
+        });
+    });
+}
+
 function initSequenceConfirmNavigation() {
     const saveButton = document.querySelector(".sequence-comp-footer__action--save");
 
@@ -1113,6 +2010,7 @@ function initSequenceLocalSave() {
         }
 
         clearSequenceDraft();
+        clearDynamicSectionsState(resolveConfirmSequenceIdFromPath() || draft?.editId || "");
         window.location.href = STIKA_SEQUENCE_LIST_PATH;
     });
 }
@@ -1313,7 +2211,7 @@ function syncConfirmDraftMeta(draft) {
 
 function buildSequenceFromConfirmPage(draft) {
     const duration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "未設定";
-    const sections = Array.from(document.querySelectorAll(".sequence-confirm-card")).map((card) => {
+    const sections = Array.from(document.querySelectorAll(".sequence-confirm-card")).map((card, index) => {
         const title = normalizeText(card.querySelector(".sequence-confirm-card__title")?.textContent) || "未設定";
         const durationLabel = normalizeText(card.querySelector(".sequence-confirm-card__time")?.textContent) || "";
         const items = Array.from(card.querySelectorAll(".sequence-confirm-card__items li"))
@@ -1321,6 +2219,8 @@ function buildSequenceFromConfirmPage(draft) {
             .filter(Boolean);
 
         return {
+            sectionId: card.dataset.sectionId || "",
+            orderIndex: index,
             category: card.dataset.category || "",
             title,
             duration: durationLabel,

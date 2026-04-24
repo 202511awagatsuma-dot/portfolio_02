@@ -1121,7 +1121,7 @@ input {
 }
 
 .sequence-comp-sections {
-    padding-bottom: 112px;
+    padding-bottom: 128px;
 }
 
 .sequence-comp-section {
@@ -1820,7 +1820,7 @@ input {
     align-items: center;
     justify-content: center;
     position: relative;
-    z-index: 1;
+    z-index: 0;
     margin: 20px auto -34px;
 }
 
@@ -1857,6 +1857,7 @@ input {
     bottom: 14px;
     transform: translateX(-50%);
     width: min(430px, calc(100% - 28px));
+    z-index: 160;
     pointer-events: none;
 }
 

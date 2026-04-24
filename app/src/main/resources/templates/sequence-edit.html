@@ -86,7 +86,6 @@
                                 </form>
                             </div>
                         </div>
-                        <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceBreathings)}">まだ呼吸法は追加されていません。</p>
                         <div class="sequence-comp-slot-list">
                             <button class="sequence-comp-slot"
                                     type="button"
@@ -99,8 +98,6 @@
                                 <span class="sequence-comp-slot__label">呼吸法を追加</span>
                             </button>
                         </div>
-                        <p class="sequence-comp-section__label">おすすめ</p>
-                        <p class="sequence-comp-section__recommend">完全呼吸 片鼻呼吸（ナディーショーダナー）</p>
                         <button class="sequence-comp-add sequence-comp-add--section-divider" type="button">セクションを追加する</button>
 
                         <div class="sequence-comp-modal sequence-comp-modal--breathing"
@@ -197,7 +194,6 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceWarmingUps)}">まだ Warming UP は追加されていません。</p>
                         <div class="sequence-comp-slot-list">
                             <button class="sequence-comp-slot"
                                     type="button"
@@ -210,8 +206,6 @@
                                 <span class="sequence-comp-slot__label">Warming UPを追加</span>
                             </button>
                         </div>
-                        <p class="sequence-comp-section__label">おすすめ</p>
-                        <p class="sequence-comp-section__recommend">キャット&amp;カウ 虎のポーズ</p>
                         <button class="sequence-comp-add sequence-comp-add--warming-up sequence-comp-add--section-divider" type="button">セクションを追加する</button>
 
                         <div class="sequence-comp-modal sequence-comp-modal--warming-up"
@@ -332,7 +326,6 @@
                                 </form>
                             </div>
                         </div>
-                        <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceSunSalutations)}">まだ太陽礼拝は追加されていません。</p>
                         <div class="sequence-comp-slot-list">
                             <button class="sequence-comp-slot"
                                     type="button"
@@ -345,8 +338,6 @@
                                 <span class="sequence-comp-slot__label">太陽礼拝を追加</span>
                             </button>
                         </div>
-                        <p class="sequence-comp-section__label">おすすめ</p>
-                        <p class="sequence-comp-section__recommend">太陽礼拝A 太陽礼拝B</p>
                         <button class="sequence-comp-add sequence-comp-add--section-divider" type="button">セクションを追加する</button>
 
                         <div class="sequence-comp-modal sequence-comp-modal--sun-salutation"
@@ -414,15 +405,12 @@
                     <div class="sequence-comp-section__content">
                         <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>立位</h2>
                         <div class="sequence-comp-added-list"></div>
-                        <p class="sequence-comp-added-empty">まだ立位は追加されていません。</p>
                         <div class="sequence-comp-slot-list">
                             <button class="sequence-comp-slot" type="button" aria-label="立位を追加" data-standing-slot>
                                 <span class="sequence-comp-slot__plus"></span>
                                 <span class="sequence-comp-slot__label">立位を追加</span>
                             </button>
                         </div>
-                        <p class="sequence-comp-section__label">おすすめ</p>
-                        <p class="sequence-comp-section__recommend">戦士のポーズII リバースウォーリア</p>
                         <button class="sequence-comp-add sequence-comp-add--section-divider" type="button">セクションを追加する</button>
 
                         <div class="sequence-comp-modal"
@@ -492,7 +480,6 @@
                                 </form>
                             </div>
                         </div>
-                        <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequencePeakPoses)}">まだピークポーズは追加されていません。</p>
                         <div class="sequence-comp-slot-list">
                             <button class="sequence-comp-slot"
                                     type="button"
@@ -505,8 +492,6 @@
                                 <span class="sequence-comp-slot__label">ピークポーズを追加</span>
                             </button>
                         </div>
-                        <p class="sequence-comp-section__label">おすすめ</p>
-                        <p class="sequence-comp-section__recommend">アルダ チャンドラーサナ</p>
                         <button class="sequence-comp-add sequence-comp-add--section-divider" type="button">セクションを追加する</button>
 
                         <div class="sequence-comp-modal sequence-comp-modal--peak-pose"
@@ -595,7 +580,6 @@
                                 </form>
                             </div>
                         </div>
-                        <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceBackbends)}">まだ後屈は追加されていません。</p>
                         <div class="sequence-comp-slot-list">
                             <button class="sequence-comp-slot"
                                     type="button"
@@ -608,8 +592,6 @@
                                 <span class="sequence-comp-slot__label">後屈を追加</span>
                             </button>
                         </div>
-                        <p class="sequence-comp-section__label">おすすめ</p>
-                        <p class="sequence-comp-section__recommend">胸を開く動きが体を活性化させていきます</p>
                         <button class="sequence-comp-add sequence-comp-add--section-divider" type="button">セクションを追加する</button>
 
                         <div class="sequence-comp-modal sequence-comp-modal--backbend"
@@ -702,7 +684,6 @@
                                 </form>
                             </div>
                         </div>
-                        <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceSeateds)}">まだ座位は追加されていません。</p>
                         <div class="sequence-comp-slot-list">
                             <button class="sequence-comp-slot"
                                     type="button"
@@ -715,8 +696,6 @@
                                 <span class="sequence-comp-slot__label">座位を追加</span>
                             </button>
                         </div>
-                        <p class="sequence-comp-section__label">おすすめ</p>
-                        <p class="sequence-comp-section__recommend">ジャーヌシールシャーサナ 仰向けのツイスト</p>
                         <button class="sequence-comp-add sequence-comp-add--section-divider" type="button">セクションを追加する</button>
 
                         <div class="sequence-comp-modal sequence-comp-modal--seated"
@@ -809,7 +788,6 @@
                                 </form>
                             </div>
                         </div>
-                        <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceRelaxations)}">まだリラクゼーションは追加されていません。</p>
                         <div class="sequence-comp-slot-list">
                             <button class="sequence-comp-slot"
                                     type="button"
@@ -822,8 +800,6 @@
                                 <span class="sequence-comp-slot__label">リラクゼーションを追加</span>
                             </button>
                         </div>
-                        <p class="sequence-comp-section__label">おすすめ</p>
-                        <p class="sequence-comp-section__recommend">シャヴァーサナ ボディスキャン</p>
                         <button class="sequence-comp-add sequence-comp-add--section-divider" type="button">セクションを追加する</button>
 
                         <div class="sequence-comp-modal sequence-comp-modal--relaxation"

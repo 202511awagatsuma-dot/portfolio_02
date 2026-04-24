@@ -1509,9 +1509,6 @@ function restoreDynamicSections(sequenceId, sectionsRoot, templateCache) {
 function resetDynamicSection(section, category, sectionState) {
     const sectionTitle = section.querySelector(".sequence-comp-section__title");
     const timeElement = section.querySelector(".sequence-comp-section__time");
-    const emptyLabel = section.querySelector(".sequence-comp-added-empty");
-    const recommendLabel = section.querySelector(".sequence-comp-section__label");
-    const recommendText = section.querySelector(".sequence-comp-section__recommend");
     const addedList = section.querySelector(".sequence-comp-added-list");
     const selectedLabel = STIKA_SECTION_LABELS[category] || normalizeText(sectionTitle?.textContent) || "セクション";
     const initialDuration = Number.isFinite(sectionState?.durationMinutes) ? sectionState.durationMinutes : 5;
@@ -1535,23 +1532,9 @@ function resetDynamicSection(section, category, sectionState) {
         window.__stikaBindDurationPickerToTimeElement?.(timeElement);
     }
 
-    if (recommendLabel) {
-        recommendLabel.hidden = true;
-    }
-
-    if (recommendText) {
-        recommendText.hidden = true;
-        recommendText.textContent = "";
-    }
-
     if (addedList) {
         addedList.hidden = false;
         addedList.innerHTML = "";
-    }
-
-    if (emptyLabel) {
-        emptyLabel.hidden = false;
-        emptyLabel.textContent = `まだ${selectedLabel}は追加されていません。`;
     }
 
     const items = Array.isArray(sectionState?.items) ? sectionState.items : [];
@@ -1868,16 +1851,11 @@ function syncDynamicSectionItemOrder(section) {
 }
 
 function syncDynamicSectionEmptyState(section) {
-    const empty = section.querySelector(".sequence-comp-added-empty");
     const list = section.querySelector(".sequence-comp-added-list");
     const hasItems = Boolean(list && list.children.length > 0);
 
     if (list) {
         list.hidden = !hasItems;
-    }
-
-    if (empty) {
-        empty.hidden = hasItems;
     }
 }
 

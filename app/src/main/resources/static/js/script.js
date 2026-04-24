@@ -1785,6 +1785,7 @@ function appendDynamicSectionItem(section, itemData, syncOrder) {
     item.className = "sequence-comp-added-item";
     item.dataset.dynamicItem = "true";
     item.dataset.itemId = itemData?.id || createDynamicSectionItemId();
+    item.dataset.source = itemData?.source === "custom" ? "custom" : "candidate";
 
     const order = document.createElement("span");
     order.className = "sequence-comp-added-item__order";
@@ -1811,11 +1812,6 @@ function appendDynamicSectionItem(section, itemData, syncOrder) {
         description.textContent = itemData.description;
         body.appendChild(description);
     }
-
-    const source = document.createElement("span");
-    source.className = "sequence-comp-added-item__meta";
-    source.textContent = itemData?.source === "custom" ? "自由入力" : "候補から追加";
-    body.appendChild(source);
 
     const tools = document.createElement("div");
     tools.className = "sequence-comp-added-item__tools";
@@ -1899,7 +1895,7 @@ function saveDynamicSectionsState(sequenceId, sectionsRoot) {
                 name: normalizeText(item.querySelector(".sequence-comp-added-item__name")?.textContent),
                 memo: normalizeText(item.querySelector(".sequence-comp-added-item__memo")?.textContent),
                 description: normalizeText(item.querySelector(".sequence-comp-added-item__description")?.textContent),
-                source: normalizeText(item.querySelector(".sequence-comp-added-item__meta")?.textContent) === "自由入力" ? "custom" : "candidate"
+                source: item.dataset.source === "custom" ? "custom" : "candidate"
             })).filter((item) => item.name);
 
             return {

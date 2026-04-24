@@ -70,7 +70,6 @@
                                     <span class="sequence-comp-added-item__description"
                                           th:if="${item.breathingDescription != null and !#strings.isEmpty(item.breathingDescription)}"
                                           th:text="${item.breathingDescription}">説明</span>
-                                    <span class="sequence-comp-added-item__meta">候補から追加</span>
                                 </div>
                                 <form class="sequence-comp-added-item__delete-form"
                                       th:action="@{/sequence/{sequenceId}/breathing/{breathingId}/delete(sequenceId=${sequenceId},breathingId=${item.id})}"
@@ -160,11 +159,6 @@
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
                                           th:text="${item.memo}">メモ</span>
-                                    <span class="sequence-comp-added-item__meta"
-                                          th:if="${!item.custom and item.categoryLabel() != null and !#strings.isEmpty(item.categoryLabel())}"
-                                          th:text="${item.classificationLabel()}">立位 / 左右対称立位</span>
-                                    <span class="sequence-comp-added-item__meta" th:if="${item.custom}">自由入力</span>
-                                    <span class="sequence-comp-added-item__meta" th:if="${!item.custom}">候補から追加</span>
                                 </div>
                                 <div class="sequence-comp-added-item__tools">
                                     <form class="sequence-comp-sort-form"
@@ -322,8 +316,6 @@
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
                                           th:text="${item.memo}">メモ</span>
-                                    <span class="sequence-comp-added-item__meta" th:if="${item.custom}">自由入力</span>
-                                    <span class="sequence-comp-added-item__meta" th:if="${!item.custom}">候補から追加</span>
                                 </div>
                                 <form class="sequence-comp-added-item__delete-form"
                                       th:action="@{/sequence/{sequenceId}/sun-salutation/{sunSalutationId}/delete(sequenceId=${sequenceId},sunSalutationId=${item.id})}"
@@ -484,8 +476,6 @@
                                 <span class="sequence-comp-added-item__order" th:text="${item.sortOrder}">1</span>
                                 <div class="sequence-comp-added-item__body">
                                     <span class="sequence-comp-added-item__name" th:text="${item.displayName}">アルダ チャンドラーサナ</span>
-                                    <span class="sequence-comp-added-item__meta" th:if="${item.custom}">自由入力</span>
-                                    <span class="sequence-comp-added-item__meta" th:if="${!item.custom}">候補から追加</span>
                                 </div>
                                 <form class="sequence-comp-added-item__delete-form"
                                       th:action="@{/sequence/{sequenceId}/peak/{peakPoseId}/delete(sequenceId=${sequenceId},peakPoseId=${item.id})}"
@@ -589,8 +579,6 @@
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
                                           th:text="${item.memo}">メモ</span>
-                                    <span class="sequence-comp-added-item__meta" th:if="${item.custom}">自由入力</span>
-                                    <span class="sequence-comp-added-item__meta" th:if="${!item.custom}">候補から追加</span>
                                 </div>
                                 <form class="sequence-comp-added-item__delete-form"
                                       th:action="@{/sequence/{sequenceId}/backbend/{backbendId}/delete(sequenceId=${sequenceId},backbendId=${item.id})}"
@@ -698,8 +686,6 @@
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
                                           th:text="${item.memo}">メモ</span>
-                                    <span class="sequence-comp-added-item__meta" th:if="${item.custom}">自由入力</span>
-                                    <span class="sequence-comp-added-item__meta" th:if="${!item.custom}">候補から追加</span>
                                 </div>
                                 <form class="sequence-comp-added-item__delete-form"
                                       th:action="@{/sequence/{sequenceId}/seated/{seatedId}/delete(sequenceId=${sequenceId},seatedId=${item.id})}"
@@ -807,8 +793,6 @@
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
                                           th:text="${item.memo}">メモ</span>
-                                    <span class="sequence-comp-added-item__meta" th:if="${item.custom}">自由入力</span>
-                                    <span class="sequence-comp-added-item__meta" th:if="${!item.custom}">候補から追加</span>
                                 </div>
                                 <form class="sequence-comp-added-item__delete-form"
                                       th:action="@{/sequence/{sequenceId}/relaxation/{relaxationId}/delete(sequenceId=${sequenceId},relaxationId=${item.id})}"
@@ -919,6 +903,7 @@
 </body>
 
 </html>
+
 
 
 

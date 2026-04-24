@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initGrowthCalendar);
     runInitializer(initSequenceTabs);
     runInitializer(initSectionDurationPicker);
-    runInitializer(initBreathingEditor);
+    runInitializer(initBreathingModal);
     runInitializer(initWarmingUpModal);
     runInitializer(initSunSalutationModal);
     runInitializer(initPeakPoseModal);
@@ -246,72 +246,13 @@ function initSequenceTabs() {
     });
 }
 
-function initBreathingEditor() {
-    const picker = document.getElementById("breathingPicker");
-    const form = document.getElementById("breathingPickerForm");
-    const label = document.getElementById("breathingPickerLabel");
-    const modeLabel = document.getElementById("breathingFormModeLabel");
-    const submitButton = document.getElementById("breathingSubmitButton");
-    const cancelButton = document.getElementById("breathingCancelButton");
-    const masterSelect = document.getElementById("breathingMasterId");
-    const memoInput = document.getElementById("breathingMemo");
-    const description = document.getElementById("breathingDescription");
-    const editButtons = document.querySelectorAll(".sequence-comp-added-item__edit");
+function initBreathingModal() {
+    const section = document.querySelector(".sequence-comp-section[data-category='breathing']");
+    const modal = document.getElementById("breathingModal");
+    const dialog = modal?.querySelector(".sequence-comp-modal__dialog");
+    const triggerButton = section?.querySelector("#breathingModalOpen");
+    const closeButton = document.getElementById("breathingModalClose");
     const deleteButtons = document.querySelectorAll("[data-breathing-delete]");
-
-    if (!picker || !form || !label || !modeLabel || !submitButton || !cancelButton || !masterSelect || !memoInput || !description) {
-        return;
-    }
-
-    const createAction = form.getAttribute("action") || "";
-    const createState = {
-        pickerLabel: "呼吸法を追加",
-        modeLabel: "新規追加",
-        submitLabel: "選択した呼吸法を追加"
-    };
-    const editState = {
-        pickerLabel: "呼吸法を編集",
-        modeLabel: "編集中",
-        submitLabel: "この内容で更新"
-    };
-
-    const syncDescription = () => {
-        const selectedOption = masterSelect.options[masterSelect.selectedIndex];
-        const text = selectedOption?.dataset.description?.trim() || "";
-        description.textContent = text;
-        description.hidden = text.length === 0;
-    };
-
-    const applyCreateState = () => {
-        form.setAttribute("action", createAction);
-        form.reset();
-        label.textContent = createState.pickerLabel;
-        modeLabel.textContent = createState.modeLabel;
-        submitButton.textContent = createState.submitLabel;
-        cancelButton.hidden = true;
-        picker.open = false;
-        syncDescription();
-    };
-
-    editButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            const id = button.dataset.id;
-            if (!id) {
-                return;
-            }
-
-            form.setAttribute("action", `${createAction}/${id}/update`);
-            masterSelect.value = button.dataset.breathingMasterId || "";
-            memoInput.value = button.dataset.memo || "";
-            label.textContent = editState.pickerLabel;
-            modeLabel.textContent = editState.modeLabel;
-            submitButton.textContent = editState.submitLabel;
-            cancelButton.hidden = false;
-            picker.open = true;
-            syncDescription();
-            form.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        });
-    });
 
     deleteButtons.forEach((button) => {
         button.addEventListener("click", (event) => {
@@ -325,15 +266,48 @@ function initBreathingEditor() {
         });
     });
 
-    cancelButton.addEventListener("click", applyCreateState);
-    masterSelect.addEventListener("change", syncDescription);
-    picker.addEventListener("toggle", () => {
-        if (!picker.open && !cancelButton.hidden) {
-            applyCreateState();
+    if (!section || !modal || !dialog || !closeButton || !triggerButton) {
+        return;
+    }
+
+    const closeModal = () => {
+        modal.hidden = true;
+        modal.setAttribute("aria-hidden", "true");
+        modal.classList.remove("open", "is-open", "active", "show");
+        document.body.classList.remove("modal-open");
+    };
+
+    const openModal = () => {
+        modal.hidden = false;
+        modal.setAttribute("aria-hidden", "false");
+        modal.classList.remove("open", "is-open", "active", "show");
+        document.body.classList.add("modal-open");
+    };
+
+    closeModal();
+
+    triggerButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        openModal();
+    });
+
+    closeButton.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            closeModal();
         }
     });
 
-    syncDescription();
+    dialog.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.hidden) {
+            closeModal();
+        }
+    });
 }
 
 function initSectionDurationPicker() {
@@ -1620,68 +1594,6 @@ function setupDynamicSectionInteractions(section) {
         syncDynamicSectionEmptyState(section);
         persist();
     });
-
-    if (category === "breathing") {
-        const form = section.querySelector(".sequence-comp-picker__form");
-        const picker = section.querySelector(".sequence-comp-picker");
-        const masterSelect = form?.querySelector("select[name='breathingMasterId']");
-        const memoInput = form?.querySelector("input[name='memo']");
-        const description = section.querySelector(".sequence-comp-picker__description");
-        const cancelButton = section.querySelector(".sequence-comp-cancel");
-        const modeLabel = section.querySelector(".sequence-comp-picker__mode");
-
-        const syncDescription = () => {
-            const selectedOption = masterSelect?.options[masterSelect.selectedIndex];
-            const text = selectedOption?.dataset.description?.trim() || "";
-            if (description) {
-                description.textContent = text;
-                description.hidden = text.length === 0;
-            }
-        };
-
-        masterSelect?.addEventListener("change", syncDescription);
-        cancelButton?.addEventListener("click", () => {
-            form?.reset();
-            if (modeLabel) {
-                modeLabel.textContent = "新規追加";
-            }
-            if (picker) {
-                picker.open = false;
-            }
-            syncDescription();
-        });
-
-        form?.addEventListener("submit", (event) => {
-            event.preventDefault();
-
-            const selectedOption = masterSelect?.options[masterSelect.selectedIndex];
-            const name = normalizeText(selectedOption?.textContent);
-            const descriptionText = normalizeText(selectedOption?.dataset.description);
-            const memo = normalizeText(memoInput?.value);
-
-            if (!name || selectedOption?.value === "") {
-                return;
-            }
-
-            appendDynamicSectionItem(section, {
-                id: createDynamicSectionItemId(),
-                name,
-                memo,
-                description: descriptionText,
-                source: "candidate"
-            }, true);
-
-            form.reset();
-            if (picker) {
-                picker.open = false;
-            }
-            syncDescription();
-            persist();
-        });
-
-        syncDescription();
-        return;
-    }
 
     if (category === "standing") {
         setupDynamicStandingSection(section, persist);

@@ -58,21 +58,20 @@
                     <div class="sequence-comp-section__content">
                         <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>呼吸法</h2>
                         <div class="sequence-comp-added-list" th:if="${!#lists.isEmpty(sequenceBreathings)}">
-                            <div class="sequence-comp-added-item" th:each="item : ${sequenceBreathings}" th:attr="data-id=${item.id}">
+                            <div class="sequence-comp-added-item sequence-comp-added-item--breathing"
+                                 th:each="item : ${sequenceBreathings}"
+                                 th:attr="data-id=${item.id}">
                                 <span class="sequence-comp-added-item__order" th:text="${item.displayOrder}">1</span>
-                                <button class="sequence-comp-added-item__edit"
-                                        type="button"
-                                        th:attr="data-id=${item.id},data-breathing-master-id=${item.breathingMasterId},data-name=${item.breathingName},data-description=${item.breathingDescription},data-memo=${item.memo}">
-                                    <span class="sequence-comp-added-item__body">
-                                        <span class="sequence-comp-added-item__name" th:text="${item.breathingName}">腹式呼吸</span>
-                                        <span class="sequence-comp-added-item__memo"
-                                              th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
-                                              th:text="${item.memo}">メモ</span>
-                                        <span class="sequence-comp-added-item__description"
-                                              th:if="${item.breathingDescription != null and !#strings.isEmpty(item.breathingDescription)}"
-                                              th:text="${item.breathingDescription}">説明</span>
-                                    </span>
-                                </button>
+                                <div class="sequence-comp-added-item__body">
+                                    <span class="sequence-comp-added-item__name" th:text="${item.breathingName}">腹式呼吸</span>
+                                    <span class="sequence-comp-added-item__memo"
+                                          th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
+                                          th:text="${item.memo}">メモ</span>
+                                    <span class="sequence-comp-added-item__description"
+                                          th:if="${item.breathingDescription != null and !#strings.isEmpty(item.breathingDescription)}"
+                                          th:text="${item.breathingDescription}">説明</span>
+                                    <span class="sequence-comp-added-item__meta">候補から追加</span>
+                                </div>
                                 <form class="sequence-comp-added-item__delete-form"
                                       th:action="@{/sequence/{sequenceId}/breathing/{breathingId}/delete(sequenceId=${sequenceId},breathingId=${item.id})}"
                                       method="post">
@@ -89,41 +88,58 @@
                             </div>
                         </div>
                         <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceBreathings)}">まだ呼吸法は追加されていません。</p>
-                        <details class="sequence-comp-picker" id="breathingPicker">
-                            <summary class="sequence-comp-slot" aria-label="呼吸法を追加">
+                        <div class="sequence-comp-slot-list">
+                            <button class="sequence-comp-slot"
+                                    type="button"
+                                    id="breathingModalOpen"
+                                    data-breathing-open
+                                    aria-label="呼吸法を追加"
+                                    aria-haspopup="dialog"
+                                    aria-controls="breathingModal">
                                 <span class="sequence-comp-slot__plus"></span>
-                                <span class="sequence-comp-slot__label" id="breathingPickerLabel">呼吸法を追加</span>
-                            </summary>
-                            <form class="sequence-comp-picker__form"
-                                  id="breathingPickerForm"
-                                  th:action="@{/sequence/{sequenceId}/breathing(sequenceId=${sequenceId})}"
-                                  method="post">
-                                <input type="hidden" name="mode" th:if="${createMode}" value="create">
-                                <p class="sequence-comp-picker__mode" id="breathingFormModeLabel">新規追加</p>
-                                <label class="sequence-comp-picker__field">
-                                    <span>登録済み呼吸法</span>
-                                    <select name="breathingMasterId" required id="breathingMasterId">
-                                        <option value="">選択してください</option>
-                                        <option th:each="breathing : ${breathingMasters}"
-                                                th:value="${breathing.id}"
-                                                th:attr="data-description=${breathing.description}"
-                                                th:text="${breathing.name}">腹式呼吸</option>
-                                    </select>
-                                </label>
-                                <p class="sequence-comp-picker__description" id="breathingDescription" hidden></p>
-                                <label class="sequence-comp-picker__field">
-                                    <span>メモ（任意）</span>
-                                    <input type="text" name="memo" maxlength="255" placeholder="必要があればメモを追加" id="breathingMemo">
-                                </label>
-                                <div class="sequence-comp-picker__actions">
-                                    <button class="sequence-comp-add sequence-comp-add--inline" type="submit" id="breathingSubmitButton">選択した呼吸法を追加</button>
-                                    <button class="sequence-comp-cancel" type="button" id="breathingCancelButton" hidden>キャンセル</button>
-                                </div>
-                            </form>
-                        </details>
+                                <span class="sequence-comp-slot__label">呼吸法を追加</span>
+                            </button>
+                        </div>
                         <p class="sequence-comp-section__label">おすすめ</p>
                         <p class="sequence-comp-section__recommend">完全呼吸 片鼻呼吸（ナディーショーダナー）</p>
                         <button class="sequence-comp-add sequence-comp-add--section-divider" type="button">セクションを追加する</button>
+
+                        <div class="sequence-comp-modal sequence-comp-modal--breathing"
+                             id="breathingModal"
+                             hidden
+                             aria-hidden="true">
+                            <div class="sequence-comp-modal__dialog warming-up-modal__dialog"
+                                 role="dialog"
+                                 aria-modal="true"
+                                 aria-labelledby="breathingModalTitle">
+                                <button class="sequence-comp-modal__close"
+                                        type="button"
+                                        id="breathingModalClose"
+                                        aria-label="モーダルを閉じる">×</button>
+                                <div class="sequence-comp-modal__header">
+                                    <p class="sequence-comp-modal__eyebrow">呼吸法</p>
+                                    <h3 class="sequence-comp-modal__title" id="breathingModalTitle">候補から選んで追加</h3>
+                                </div>
+                                <div class="warming-up-modal__content">
+                                    <div class="warming-up-modal__master-list" th:if="${!#lists.isEmpty(breathingMasters)}">
+                                        <form class="warming-up-modal__master-item"
+                                              th:each="breathing : ${breathingMasters}"
+                                              th:action="@{/sequence/{sequenceId}/breathing(sequenceId=${sequenceId})}"
+                                              method="post">
+                                            <input type="hidden" name="mode" th:if="${createMode}" value="create">
+                                            <input type="hidden" name="breathingMasterId" th:value="${breathing.id}">
+                                            <button class="warming-up-modal__master-button" type="submit">
+                                                <span class="warming-up-modal__master-name" th:text="${breathing.name}">完全呼吸法</span>
+                                                <span class="warming-up-modal__master-sub"
+                                                      th:if="${breathing.description != null and !#strings.isEmpty(breathing.description)}"
+                                                      th:text="${breathing.description}">説明</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(breathingMasters)}">呼吸法候補がありません。</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </article>
 

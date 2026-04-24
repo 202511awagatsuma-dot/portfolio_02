@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stika | レポート</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="stika-body">
+    <div class="app-shell">
+        <main class="screen report-screen">
+            <header class="topbar report-topbar">
+                <span class="icon-badge icon-badge--notice" aria-label="通知"></span>
+                <div class="report-topbar__center">
+                    <p class="report-topbar__date">2025.10.1(水)</p>
+                    <h1 class="report-topbar__title">レポート</h1>
+                </div>
+                <span class="icon-badge icon-badge--menu" aria-label="メニュー">
+                    <span></span><span></span><span></span>
+                    <span></span><span></span><span></span>
+                    <span></span><span></span><span></span>
+                </span>
+            </header>
+
+            <section class="report-section" aria-label="月間カレンダー">
+                <div class="report-month-card">
+                    <div class="report-month-card__header">
+                        <button type="button" class="report-month-card__arrow" aria-label="前月">◀</button>
+                        <p class="report-month-card__label">2025年10月</p>
+                        <button type="button" class="report-month-card__arrow" aria-label="次月">▶</button>
+                    </div>
+                    <div class="report-month-card__dots" aria-hidden="true">
+                        <span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span>
+                        <span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span>
+                        <span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot"></span>
+                        <span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span>
+                        <span class="report-month-card__dot"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot"></span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="report-section" aria-label="こころのリズム">
+                <h2 class="report-title">こころのリズム</h2>
+                <p class="report-comment">今月は“ふつう”の日が多く、安定して過ごせました</p>
+                <div class="report-chart-row">
+                    <div class="report-donut report-donut--mood" role="img" aria-label="こころのリズム 円グラフ"></div>
+                    <ul class="report-legend">
+                        <li><span class="report-legend__dot report-legend__dot--good"></span>調子良い</li>
+                        <li><span class="report-legend__dot report-legend__dot--normal"></span>ふつう</li>
+                        <li><span class="report-legend__dot report-legend__dot--low"></span>よくない</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="report-section" aria-label="実践バランス">
+                <h2 class="report-title">実践バランス</h2>
+                <div class="report-chart-row">
+                    <div class="report-donut report-donut--practice" role="img" aria-label="実践バランス 円グラフ"></div>
+                    <ul class="report-legend">
+                        <li><span class="report-legend__dot report-legend__dot--seq"></span>シークエンス作成</li>
+                        <li><span class="report-legend__dot report-legend__dot--learn"></span>学び</li>
+                        <li><span class="report-legend__dot report-legend__dot--care"></span>セルフケア</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="report-section" aria-label="月間サマリー">
+                <div class="report-summary">
+                    <p>シークエンス作成: 3本</p>
+                    <p>勉強: 動画 5本 / 記事 7個</p>
+                    <p>セルフケア: 瞑想 4回 / ブレスワーク 6回</p>
+                </div>
+            </section>
+
+            <section class="report-section" aria-label="今月のできたこと">
+                <h2 class="report-title">今月のできたこと</h2>
+                <div class="report-achievement">
+                    <p><span class="report-achievement__star">★</span>今月は計10時間実践しました</p>
+                    <p><span class="report-achievement__star">★</span>学びの動画 累計20本</p>
+                </div>
+            </section>
+
+            <section class="report-section" aria-label="今月の気づき">
+                <h2 class="report-title">今月の気づき</h2>
+                <p class="report-insight">感じたことや、来月のテーマを書き留めましょう</p>
+            </section>
+        </main>
+
+        <nav class="bottom-nav" aria-label="メインナビゲーション">
+            <a class="bottom-nav__item" href="/sequence-list.html">
+                <img class="bottom-nav__icon" src="/assets/icon/g_sq.svg" alt="">
+                <small>シークエンス</small>
+            </a>
+            <a class="bottom-nav__item" href="#">
+                <img class="bottom-nav__icon" src="/assets/icon/g_knowlege.svg" alt="">
+                <small>ナレッジ</small>
+            </a>
+            <a class="bottom-nav__item" href="#">
+                <img class="bottom-nav__icon" src="/assets/icon/g_selfcare.svg" alt="">
+                <small>セルフケア</small>
+            </a>
+            <a class="bottom-nav__item is-active" href="/report.html" aria-current="page">
+                <img class="bottom-nav__icon" src="/assets/icon/g_report.svg" alt="">
+                <small>レポート</small>
+            </a>
+        </nav>
+    </div>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>

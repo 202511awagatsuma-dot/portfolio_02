@@ -1185,6 +1185,43 @@ input {
     font-weight: 700;
 }
 
+.sequence-comp-section__remove {
+    position: absolute;
+    top: -4px;
+    right: 0;
+    min-width: 52px;
+    height: 34px;
+    padding: 0 10px;
+    border: 1px solid #e6d3d3;
+    border-radius: 999px;
+    background: #f9f3f3;
+    color: #805a5a;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1;
+    z-index: 1;
+}
+
+.sequence-comp-section__remove:hover,
+.sequence-comp-section__remove:focus-visible {
+    background: #f5eaea;
+    border-color: #d9c2c2;
+}
+
+.sequence-comp-section__remove:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.sequence-comp-section__remove-icon {
+    font-size: 0.88rem;
+    line-height: 1;
+}
+
 .sequence-comp-section__dot {
     width: 12px;
     height: 12px;

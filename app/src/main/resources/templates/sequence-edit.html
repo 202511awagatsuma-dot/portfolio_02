@@ -90,7 +90,7 @@
                         </div>
                         <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceBreathings)}">まだ呼吸法は追加されていません。</p>
                         <details class="sequence-comp-picker" id="breathingPicker">
-                            <summary class="sequence-comp-slot" aria-label="呼吸法を追加または編集">
+                            <summary class="sequence-comp-slot" aria-label="呼吸法を追加">
                                 <span class="sequence-comp-slot__plus"></span>
                                 <span class="sequence-comp-slot__label" id="breathingPickerLabel">呼吸法を追加</span>
                             </summary>
@@ -189,7 +189,7 @@
                         </div>
                         <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceWarmingUps)}">まだ Warming UP は追加されていません。</p>
                         <div class="sequence-comp-slot-list">
-                            <button class="sequence-comp-slot sequence-comp-slot--warming-up"
+                            <button class="sequence-comp-slot"
                                     type="button"
                                     id="warmingUpModalOpen"
                                     data-warming-up-open
@@ -197,7 +197,7 @@
                                     aria-haspopup="dialog"
                                     aria-controls="warmingUpModal">
                                 <span class="sequence-comp-slot__plus"></span>
-                                <span class="sequence-comp-slot__label">候補から Warming UP を追加</span>
+                                <span class="sequence-comp-slot__label">Warming UPを追加</span>
                             </button>
                         </div>
                         <p class="sequence-comp-section__label">おすすめ</p>
@@ -326,7 +326,7 @@
                         </div>
                         <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceSunSalutations)}">まだ太陽礼拝は追加されていません。</p>
                         <div class="sequence-comp-slot-list">
-                            <button class="sequence-comp-slot sequence-comp-slot--sun-salutation"
+                            <button class="sequence-comp-slot"
                                     type="button"
                                     id="sunSalutationModalOpen"
                                     data-sun-salutation-open
@@ -334,7 +334,7 @@
                                     aria-haspopup="dialog"
                                     aria-controls="sunSalutationModal">
                                 <span class="sequence-comp-slot__plus"></span>
-                                <span class="sequence-comp-slot__label">候補か自由入力で追加</span>
+                                <span class="sequence-comp-slot__label">太陽礼拝を追加</span>
                             </button>
                         </div>
                         <p class="sequence-comp-section__label">おすすめ</p>
@@ -494,7 +494,7 @@
                         </div>
                         <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequencePeakPoses)}">まだピークポーズは追加されていません。</p>
                         <div class="sequence-comp-slot-list">
-                            <button class="sequence-comp-slot sequence-comp-slot--peak"
+                            <button class="sequence-comp-slot"
                                     type="button"
                                     id="peakPoseModalOpen"
                                     data-peak-pose-open
@@ -502,7 +502,7 @@
                                     aria-haspopup="dialog"
                                     aria-controls="peakPoseModal">
                                 <span class="sequence-comp-slot__plus"></span>
-                                <span class="sequence-comp-slot__label">候補か自由入力で追加</span>
+                                <span class="sequence-comp-slot__label">ピークポーズを追加</span>
                             </button>
                         </div>
                         <p class="sequence-comp-section__label">おすすめ</p>
@@ -599,7 +599,7 @@
                         </div>
                         <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceBackbends)}">まだ後屈は追加されていません。</p>
                         <div class="sequence-comp-slot-list">
-                            <button class="sequence-comp-slot sequence-comp-slot--backbend"
+                            <button class="sequence-comp-slot"
                                     type="button"
                                     id="backbendModalOpen"
                                     data-backbend-open
@@ -607,7 +607,7 @@
                                     aria-haspopup="dialog"
                                     aria-controls="backbendModal">
                                 <span class="sequence-comp-slot__plus"></span>
-                                <span class="sequence-comp-slot__label">候補か自由入力で追加</span>
+                                <span class="sequence-comp-slot__label">後屈を追加</span>
                             </button>
                         </div>
                         <p class="sequence-comp-section__label">おすすめ</p>
@@ -708,7 +708,7 @@
                         </div>
                         <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceSeateds)}">まだ座位は追加されていません。</p>
                         <div class="sequence-comp-slot-list">
-                            <button class="sequence-comp-slot sequence-comp-slot--seated"
+                            <button class="sequence-comp-slot"
                                     type="button"
                                     id="seatedModalOpen"
                                     data-seated-open
@@ -716,7 +716,7 @@
                                     aria-haspopup="dialog"
                                     aria-controls="seatedModal">
                                 <span class="sequence-comp-slot__plus"></span>
-                                <span class="sequence-comp-slot__label">候補か自由入力で追加</span>
+                                <span class="sequence-comp-slot__label">座位を追加</span>
                             </button>
                         </div>
                         <p class="sequence-comp-section__label">おすすめ</p>
@@ -817,7 +817,7 @@
                         </div>
                         <p class="sequence-comp-added-empty" th:if="${#lists.isEmpty(sequenceRelaxations)}">まだリラクゼーションは追加されていません。</p>
                         <div class="sequence-comp-slot-list">
-                            <button class="sequence-comp-slot sequence-comp-slot--relaxation"
+                            <button class="sequence-comp-slot"
                                     type="button"
                                     id="relaxationModalOpen"
                                     data-relaxation-open
@@ -825,7 +825,7 @@
                                     aria-haspopup="dialog"
                                     aria-controls="relaxationModal">
                                 <span class="sequence-comp-slot__plus"></span>
-                                <span class="sequence-comp-slot__label">候補か自由入力で追加</span>
+                                <span class="sequence-comp-slot__label">リラクゼーションを追加</span>
                             </button>
                         </div>
                         <p class="sequence-comp-section__label">おすすめ</p>
@@ -909,4 +909,6 @@
 </body>
 
 </html>
+
+
 

@@ -1270,7 +1270,9 @@ input {
     background: transparent;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 14px;
+    text-align: left;
 }
 
 .sequence-comp-slot__plus {
@@ -1307,6 +1309,12 @@ input {
     line-height: 1.4;
     color: #50657c;
     font-weight: 500;
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .sequence-comp-added-list {
@@ -1445,18 +1453,6 @@ input {
 .sequence-comp-sort-button:disabled {
     opacity: 0.45;
     cursor: default;
-}
-
-.sequence-comp-slot--warming-up {
-    justify-content: flex-start;
-    min-height: 58px;
-    padding: 0 16px;
-}
-
-.sequence-comp-slot--sun-salutation {
-    justify-content: flex-start;
-    min-height: 58px;
-    padding: 0 16px;
 }
 
 .sequence-comp-added-item__delete-form {

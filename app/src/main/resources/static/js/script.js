@@ -2309,8 +2309,8 @@ function createSectionDeleteModal(handlers) {
             </div>
             <div class="warming-up-modal__content">
                 <div class="sequence-comp-modal__actions">
-                    <button class="sequence-comp-delete" type="button" data-section-delete-confirm>削除する</button>
-                    <button class="sequence-comp-cancel" type="button" data-section-delete-cancel>キャンセル</button>
+                    <button class="sequence-comp-cancel sequence-comp-modal__cancel" type="button" data-section-delete-cancel>キャンセル</button>
+                    <button class="sequence-comp-modal__delete" type="button" data-section-delete-confirm>削除する</button>
                 </div>
             </div>
         </div>

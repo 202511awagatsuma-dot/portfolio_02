@@ -1655,6 +1655,52 @@ input {
     margin-top: 4px;
 }
 
+.sequence-comp-modal--section-delete .sequence-comp-modal__actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px;
+    margin-top: 8px;
+}
+
+.sequence-comp-modal--section-delete .sequence-comp-modal__actions > button {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0 12px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.1;
+    box-sizing: border-box;
+}
+
+.sequence-comp-modal--section-delete .sequence-comp-modal__cancel {
+    border: 1px solid rgba(80, 101, 124, 0.2);
+    background: rgba(255, 255, 255, 0.78);
+    color: #35567c;
+}
+
+.sequence-comp-modal--section-delete .sequence-comp-modal__delete {
+    border: 1px solid #bf6c78;
+    background: #d98692;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.sequence-comp-modal--section-delete .sequence-comp-modal__delete:hover,
+.sequence-comp-modal--section-delete .sequence-comp-modal__delete:focus-visible {
+    background: #c97a86;
+    outline: none;
+}
+
+.sequence-comp-modal--section-delete .sequence-comp-modal__delete:active {
+    background: #be6f7b;
+    transform: translateY(1px);
+}
+
 .warming-up-modal__dialog {
     width: min(100%, 400px);
 }

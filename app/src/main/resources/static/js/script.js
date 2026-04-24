@@ -985,17 +985,15 @@ function initRelaxationModal() {
 
 function initStandingAsanaPicker() {
     const section = document.querySelector(".sequence-comp-section[data-category='standing']");
-    const slots = section?.querySelectorAll("[data-standing-slot]");
+    const addButton = section?.querySelector("[data-standing-slot]");
     const modal = document.getElementById("standingAsanaModal");
     const dialog = modal?.querySelector(".sequence-comp-modal__dialog");
     const closeButton = document.getElementById("standingAsanaModalClose");
     const candidateButtons = modal?.querySelectorAll("[data-standing-candidate-button]");
 
-    if (!section || !slots || slots.length === 0 || !modal || !dialog || !closeButton) {
+    if (!section || !addButton || !modal || !dialog || !closeButton) {
         return;
     }
-
-    let activeSlot = null;
 
     const closeModal = () => {
         modal.hidden = true;
@@ -1004,8 +1002,7 @@ function initStandingAsanaPicker() {
         document.body.classList.remove("modal-open");
     };
 
-    const openModal = (slot) => {
-        activeSlot = slot;
+    const openModal = () => {
         modal.hidden = false;
         modal.setAttribute("aria-hidden", "false");
         modal.classList.remove("open", "is-open", "active", "show");
@@ -1014,11 +1011,9 @@ function initStandingAsanaPicker() {
 
     closeModal();
 
-    slots.forEach((slot) => {
-        slot.addEventListener("click", (event) => {
-            event.preventDefault();
-            openModal(slot);
-        });
+    addButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        openModal();
     });
 
     closeButton.addEventListener("click", closeModal);
@@ -1042,21 +1037,33 @@ function initStandingAsanaPicker() {
     candidateButtons?.forEach((button) => {
         button.addEventListener("click", () => {
             const selectedName = button.dataset.asanaName?.trim() || "";
-            if (!selectedName || !activeSlot) {
+            if (!selectedName) {
                 closeModal();
                 return;
             }
 
-            const slotLabel = activeSlot.querySelector("[data-standing-slot-label]");
-            if (slotLabel) {
-                slotLabel.textContent = selectedName;
-            }
-
-            activeSlot.dataset.selectedName = selectedName;
-            activeSlot.setAttribute("aria-label", `${selectedName}を選択済み。タップで変更`);
+            appendDynamicSectionItem(section, {
+                id: createDynamicSectionItemId(),
+                name: selectedName,
+                source: "candidate"
+            }, true);
             closeModal();
         });
     });
+
+    section.addEventListener("click", (event) => {
+        const deleteButton = event.target.closest("[data-dynamic-delete]");
+        if (!deleteButton || !section.contains(deleteButton)) {
+            return;
+        }
+
+        const item = deleteButton.closest(".sequence-comp-added-item");
+        item?.remove();
+        syncDynamicSectionItemOrder(section);
+        syncDynamicSectionEmptyState(section);
+    });
+
+    syncDynamicSectionEmptyState(section);
 }
 
 function initDynamicSectionManager() {
@@ -1348,7 +1355,7 @@ function createSectionAddModal(candidates, handlers) {
                 <h3 class="sequence-comp-modal__title" id="sequenceSectionAddModalTitle">追加するセクションを選択</h3>
             </div>
             <div class="warming-up-modal__content">
-                <div class="warming-up-modal__master-list" data-section-add-options></div>
+                <div class="warming-up-modal__master-list" data-section-add-options role="listbox" aria-multiselectable="false" aria-labelledby="sequenceSectionAddModalTitle"></div>
                 <div class="sequence-comp-modal__actions">
                     <button class="sequence-comp-cancel" type="button" data-section-add-cancel>キャンセル</button>
                     <button class="sequence-comp-add sequence-comp-add--inline" type="button" data-section-add-submit disabled>追加する</button>
@@ -1387,7 +1394,7 @@ function createSectionAddModal(candidates, handlers) {
         optionButtons.forEach((button) => {
             const isSelected = button.dataset.sectionCategory === selectedCategory;
             button.classList.toggle("is-selected", isSelected);
-            button.setAttribute("aria-pressed", String(isSelected));
+            button.setAttribute("aria-selected", String(isSelected));
         });
 
         if (submitButton) {
@@ -1398,9 +1405,10 @@ function createSectionAddModal(candidates, handlers) {
     candidates.forEach((candidate) => {
         const optionButton = document.createElement("button");
         optionButton.type = "button";
-        optionButton.className = "warming-up-modal__master-button";
+        optionButton.className = "warming-up-modal__master-button section-option";
         optionButton.dataset.sectionCategory = candidate.category;
-        optionButton.setAttribute("aria-pressed", "false");
+        optionButton.setAttribute("role", "option");
+        optionButton.setAttribute("aria-selected", "false");
         optionButton.textContent = candidate.label;
 
         optionButton.addEventListener("click", () => {
@@ -1572,24 +1580,20 @@ function resetDynamicSection(section, category, sectionState) {
         emptyLabel.textContent = `まだ${selectedLabel}は追加されていません。`;
     }
 
-    if (category === "standing") {
-        const slots = section.querySelectorAll("[data-standing-slot]");
-        slots.forEach((slot, index) => {
-            const slotLabel = slot.querySelector("[data-standing-slot-label]");
-            const selectedName = sectionState?.slotSelections?.[index] || "";
-
-            if (slotLabel) {
-                slotLabel.textContent = selectedName || "立位を追加";
-            }
-
-            slot.dataset.selectedName = selectedName;
-            slot.setAttribute("aria-label", selectedName ? `${selectedName}を選択済み。タップで変更` : "立位を追加");
-        });
-    } else {
-        const items = Array.isArray(sectionState?.items) ? sectionState.items : [];
-        items.forEach((item) => appendDynamicSectionItem(section, item, false));
-        syncDynamicSectionEmptyState(section);
-    }
+    const items = Array.isArray(sectionState?.items) ? sectionState.items : [];
+    const legacyStandingItems = category === "standing" && Array.isArray(sectionState?.slotSelections)
+        ? sectionState.slotSelections
+            .map((name) => normalizeText(name))
+            .filter(Boolean)
+            .map((name) => ({
+                id: createDynamicSectionItemId(),
+                name,
+                source: "candidate"
+            }))
+        : [];
+    const restoredItems = items.length > 0 ? items : legacyStandingItems;
+    restoredItems.forEach((item) => appendDynamicSectionItem(section, item, false));
+    syncDynamicSectionEmptyState(section);
 }
 
 function setupDynamicSectionInteractions(section) {
@@ -1795,17 +1799,15 @@ function setupDynamicModalSection(section, persist) {
 }
 
 function setupDynamicStandingSection(section, persist) {
-    const slots = section.querySelectorAll("[data-standing-slot]");
+    const addButton = section.querySelector("[data-standing-slot]");
     const modal = section.querySelector(".sequence-comp-modal");
     const dialog = modal?.querySelector(".sequence-comp-modal__dialog");
     const closeButton = modal?.querySelector(".sequence-comp-modal__close");
     const candidateButtons = modal?.querySelectorAll("[data-standing-candidate-button]");
 
-    if (!modal || !dialog || !closeButton || slots.length === 0) {
+    if (!modal || !dialog || !closeButton || !addButton) {
         return;
     }
-
-    let activeSlot = null;
 
     const closeModal = () => {
         modal.hidden = true;
@@ -1813,8 +1815,7 @@ function setupDynamicStandingSection(section, persist) {
         document.body.classList.remove("modal-open");
     };
 
-    const openModal = (slot) => {
-        activeSlot = slot;
+    const openModal = () => {
         modal.hidden = false;
         modal.setAttribute("aria-hidden", "false");
         document.body.classList.add("modal-open");
@@ -1822,11 +1823,9 @@ function setupDynamicStandingSection(section, persist) {
 
     closeModal();
 
-    slots.forEach((slot) => {
-        slot.addEventListener("click", (event) => {
-            event.preventDefault();
-            openModal(slot);
-        });
+    addButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        openModal();
     });
 
     closeButton.addEventListener("click", closeModal);
@@ -1842,18 +1841,16 @@ function setupDynamicStandingSection(section, persist) {
     candidateButtons?.forEach((button) => {
         button.addEventListener("click", () => {
             const selectedName = normalizeText(button.dataset.asanaName);
-            if (!selectedName || !activeSlot) {
+            if (!selectedName) {
                 closeModal();
                 return;
             }
 
-            const slotLabel = activeSlot.querySelector("[data-standing-slot-label]");
-            if (slotLabel) {
-                slotLabel.textContent = selectedName;
-            }
-
-            activeSlot.dataset.selectedName = selectedName;
-            activeSlot.setAttribute("aria-label", `${selectedName}を選択済み。タップで変更`);
+            appendDynamicSectionItem(section, {
+                id: createDynamicSectionItemId(),
+                name: selectedName,
+                source: "candidate"
+            }, true);
             closeModal();
             persist();
         });
@@ -1967,6 +1964,10 @@ function syncDynamicSectionEmptyState(section) {
     const list = section.querySelector(".sequence-comp-added-list");
     const hasItems = Boolean(list && list.children.length > 0);
 
+    if (list) {
+        list.hidden = !hasItems;
+    }
+
     if (empty) {
         empty.hidden = hasItems;
     }
@@ -1981,22 +1982,13 @@ function saveDynamicSectionsState(sequenceId, sectionsRoot) {
             const title = normalizeText(section.querySelector(".sequence-comp-section__title")?.textContent) || (STIKA_SECTION_LABELS[category] || "セクション");
             const durationMinutes = Number.parseInt(section.querySelector(".sequence-comp-section__time")?.dataset.durationMinutes || "5", 10) || 5;
             const orderIndex = sections.indexOf(section);
-            const slotSelections = category === "standing"
-                ? Array.from(section.querySelectorAll("[data-standing-slot]")).map((slot) => normalizeText(slot.dataset.selectedName))
-                : [];
-            const items = category === "standing"
-                ? slotSelections.filter(Boolean).map((name) => ({
-                    id: createDynamicSectionItemId(),
-                    name,
-                    source: "candidate"
-                }))
-                : Array.from(section.querySelectorAll(".sequence-comp-added-list .sequence-comp-added-item")).map((item) => ({
-                    id: item.dataset.itemId || createDynamicSectionItemId(),
-                    name: normalizeText(item.querySelector(".sequence-comp-added-item__name")?.textContent),
-                    memo: normalizeText(item.querySelector(".sequence-comp-added-item__memo")?.textContent),
-                    description: normalizeText(item.querySelector(".sequence-comp-added-item__description")?.textContent),
-                    source: normalizeText(item.querySelector(".sequence-comp-added-item__meta")?.textContent) === "自由入力" ? "custom" : "candidate"
-                })).filter((item) => item.name);
+            const items = Array.from(section.querySelectorAll(".sequence-comp-added-list .sequence-comp-added-item")).map((item) => ({
+                id: item.dataset.itemId || createDynamicSectionItemId(),
+                name: normalizeText(item.querySelector(".sequence-comp-added-item__name")?.textContent),
+                memo: normalizeText(item.querySelector(".sequence-comp-added-item__memo")?.textContent),
+                description: normalizeText(item.querySelector(".sequence-comp-added-item__description")?.textContent),
+                source: normalizeText(item.querySelector(".sequence-comp-added-item__meta")?.textContent) === "自由入力" ? "custom" : "candidate"
+            })).filter((item) => item.name);
 
             return {
                 id: section.dataset.sectionId || createDynamicSectionId(),
@@ -2004,7 +1996,6 @@ function saveDynamicSectionsState(sequenceId, sectionsRoot) {
                 title,
                 durationMinutes,
                 orderIndex,
-                slotSelections,
                 items
             };
         });

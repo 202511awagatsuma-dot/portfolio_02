@@ -1741,6 +1741,21 @@ input {
     color: #fff;
 }
 
+.sequence-comp-modal--section-add .section-option {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.sequence-comp-modal--section-add .section-option.is-selected {
+    background: #ec8b33;
+    border-color: #ec8b33;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(236, 139, 51, 0.24);
+}
+
+.sequence-comp-modal--section-add .section-option:active {
+    transform: scale(0.98);
+}
+
 .warming-up-modal__master-name {
     font-size: 0.98rem;
     font-weight: 700;

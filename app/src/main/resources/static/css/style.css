@@ -218,6 +218,55 @@ input {
     text-align: center;
 }
 
+.sequence-create-btn {
+    border-radius: inherit;
+    transition:
+        background-color 0.28s var(--ease-soft, ease-out),
+        color 0.28s var(--ease-soft, ease-out),
+        border-color 0.28s var(--ease-soft, ease-out),
+        box-shadow 0.28s var(--ease-soft, ease-out),
+        transform 0.24s var(--ease-soft, ease-out);
+    -webkit-tap-highlight-color: rgba(229, 127, 89, 0.18);
+}
+
+.sequence-create-btn strong,
+.sequence-create-btn .hero-card__caption,
+.sequence-create-btn p {
+    transition: color 0.28s var(--ease-soft, ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .sequence-create-btn:hover {
+        background: linear-gradient(135deg, #f3a374 0%, #e57f59 100%);
+        box-shadow: 0 12px 24px rgba(229, 127, 89, 0.24);
+        transform: translateY(-1px);
+    }
+
+    .sequence-create-btn:hover strong,
+    .sequence-create-btn:hover .hero-card__caption,
+    .sequence-create-btn:hover p {
+        color: #fff;
+    }
+}
+
+.sequence-create-btn:active {
+    background: linear-gradient(135deg, #f3a374 0%, #e57f59 100%);
+    border-color: rgba(229, 127, 89, 0.38);
+    box-shadow: 0 6px 14px rgba(229, 127, 89, 0.3);
+    transform: translateY(1px) scale(0.98);
+}
+
+.sequence-create-btn:active strong,
+.sequence-create-btn:active .hero-card__caption,
+.sequence-create-btn:active p {
+    color: #fff;
+}
+
+.sequence-create-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(60, 98, 130, 0.3), 0 8px 16px rgba(60, 98, 130, 0.18);
+}
+
 .hero-card__caption {
     font-size: 0.78rem;
     line-height: 1.5;

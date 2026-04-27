@@ -57,12 +57,19 @@
                     <div class="sequence-comp-section__time">5分</div>
                     <div class="sequence-comp-section__content">
                         <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>呼吸法</h2>
-                        <div class="sequence-comp-added-list" th:if="${!#lists.isEmpty(sequenceBreathings)}">
-                            <div class="sequence-comp-added-item sequence-comp-added-item--breathing"
+                        <div class="sequence-comp-added-list asana-sortable-list"
+                             data-asana-sortable
+                             data-reorder-param="breathingIds"
+                             th:if="${!#lists.isEmpty(sequenceBreathings)}"
+                             th:attr="data-reorder-url=@{/sequence/{sequenceId}/breathing/reorder(sequenceId=${sequenceId})},data-mode=${createMode ? 'create' : 'edit'}">
+                            <div class="sequence-comp-added-item sequence-comp-added-item--breathing asana-card"
                                  th:each="item : ${sequenceBreathings}"
-                                 th:attr="data-id=${item.id}">
-                                <span class="sequence-comp-added-item__order" th:text="${item.displayOrder}">1</span>
+                                 th:attr="data-id=${item.id},data-asana-id=${item.id}">
+                                <button class="asana-drag-handle"
+                                        type="button"
+                                        th:attr="aria-label=${item.breathingName + ' をドラッグして並び替え'}">≡</button>
                                 <div class="sequence-comp-added-item__body">
+                                    <span class="sequence-comp-added-item__index" th:text="${item.displayOrder}">1</span>
                                     <span class="sequence-comp-added-item__name" th:text="${item.breathingName}">腹式呼吸</span>
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
@@ -143,12 +150,19 @@
                     <div class="sequence-comp-section__time">10分</div>
                     <div class="sequence-comp-section__content">
                         <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>Warming UP</h2>
-                        <div class="sequence-comp-added-list" th:if="${!#lists.isEmpty(sequenceWarmingUps)}">
-                            <div class="sequence-comp-added-item sequence-comp-added-item--warming-up"
+                        <div class="sequence-comp-added-list sequence-comp-added-list--warming-up asana-sortable-list"
+                             data-asana-sortable
+                             data-reorder-param="warmingUpIds"
+                             th:if="${!#lists.isEmpty(sequenceWarmingUps)}"
+                             th:attr="data-reorder-url=@{/sequence/{sequenceId}/warming-up/reorder(sequenceId=${sequenceId})},data-mode=${createMode ? 'create' : 'edit'}">
+                            <div class="sequence-comp-added-item sequence-comp-added-item--warming-up asana-card"
                                  th:each="item, itemStat : ${sequenceWarmingUps}"
-                                 th:attr="data-id=${item.id}">
-                                <span class="sequence-comp-added-item__order" th:text="${item.sortOrder}">1</span>
+                                 th:attr="data-id=${item.id},data-asana-id=${item.id},data-order=${item.sortOrder},data-index=${itemStat.index}">
+                                <button class="asana-drag-handle"
+                                        type="button"
+                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}">≡</button>
                                 <div class="sequence-comp-added-item__body">
+                                    <span class="sequence-comp-added-item__index" th:text="${item.sortOrder}">1</span>
                                     <span class="sequence-comp-added-item__name" th:text="${item.displayName}">キャット＆カウ</span>
                                     <span class="sequence-comp-added-item__description"
                                           th:if="${item.nameSanskrit != null and !#strings.isEmpty(item.nameSanskrit)}"
@@ -157,41 +171,19 @@
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
                                           th:text="${item.memo}">メモ</span>
                                 </div>
-                                <div class="sequence-comp-added-item__tools">
-                                    <form class="sequence-comp-sort-form"
-                                          th:action="@{/sequence/{sequenceId}/warming-up/{warmingUpId}/move(sequenceId=${sequenceId},warmingUpId=${item.id})}"
-                                          method="post">
-                                        <input type="hidden" name="mode" th:if="${createMode}" value="create">
-                                        <input type="hidden" name="direction" value="up">
-                                        <button class="sequence-comp-sort-button"
-                                                type="submit"
-                                                th:disabled="${itemStat.first}"
-                                                th:attr="aria-label=${item.displayName + ' を上へ移動'}">▲</button>
-                                    </form>
-                                    <form class="sequence-comp-sort-form"
-                                          th:action="@{/sequence/{sequenceId}/warming-up/{warmingUpId}/move(sequenceId=${sequenceId},warmingUpId=${item.id})}"
-                                          method="post">
-                                        <input type="hidden" name="mode" th:if="${createMode}" value="create">
-                                        <input type="hidden" name="direction" value="down">
-                                        <button class="sequence-comp-sort-button"
-                                                type="submit"
-                                                th:disabled="${itemStat.last}"
-                                                th:attr="aria-label=${item.displayName + ' を下へ移動'}">▼</button>
-                                    </form>
-                                    <form class="sequence-comp-added-item__delete-form"
-                                          th:action="@{/sequence/{sequenceId}/warming-up/{warmingUpId}/delete(sequenceId=${sequenceId},warmingUpId=${item.id})}"
-                                          method="post">
-                                        <input type="hidden" name="mode" th:if="${createMode}" value="create">
-                                        <button class="sequence-comp-delete"
-                                                type="submit"
-                                                data-warming-up-delete
-                                                th:attr="data-name=${item.displayName},aria-label=${item.displayName + ' を削除'}">
-                                            <svg class="sequence-comp-delete__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                                <path d="M9 3.75h6a1 1 0 0 1 1 1V6h3a.75.75 0 0 1 0 1.5h-1.1l-.77 11.02A2.5 2.5 0 0 1 14.64 21h-5.28a2.5 2.5 0 0 1-2.49-2.48L6.1 7.5H5a.75.75 0 0 1 0-1.5h3V4.75a1 1 0 0 1 1-1Zm5.5 2.25V5.25H9.5V6h5Zm-5.88 1.5.74 10.91a1 1 0 0 0 1 .94h5.28a1 1 0 0 0 1-.94l.74-10.91H8.62Zm2.13 2.25c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Zm4.5 0c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Z"></path>
-                                            </svg>
-                                        </button>
-                                    </form>
-                                </div>
+                                <form class="sequence-comp-added-item__delete-form"
+                                      th:action="@{/sequence/{sequenceId}/warming-up/{warmingUpId}/delete(sequenceId=${sequenceId},warmingUpId=${item.id})}"
+                                      method="post">
+                                    <input type="hidden" name="mode" th:if="${createMode}" value="create">
+                                    <button class="sequence-comp-delete"
+                                            type="submit"
+                                            data-warming-up-delete
+                                            th:attr="data-name=${item.displayName},aria-label=${item.displayName + ' を削除'}">
+                                        <svg class="sequence-comp-delete__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                            <path d="M9 3.75h6a1 1 0 0 1 1 1V6h3a.75.75 0 0 1 0 1.5h-1.1l-.77 11.02A2.5 2.5 0 0 1 14.64 21h-5.28a2.5 2.5 0 0 1-2.49-2.48L6.1 7.5H5a.75.75 0 0 1 0-1.5h3V4.75a1 1 0 0 1 1-1Zm5.5 2.25V5.25H9.5V6h5Zm-5.88 1.5.74 10.91a1 1 0 0 0 1 .94h5.28a1 1 0 0 0 1-.94l.74-10.91H8.62Zm2.13 2.25c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Zm4.5 0c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Z"></path>
+                                        </svg>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                         <div class="sequence-comp-slot-list">
@@ -300,12 +292,19 @@
                     <div class="sequence-comp-section__time">10分</div>
                     <div class="sequence-comp-section__content">
                         <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>太陽礼拝</h2>
-                        <div class="sequence-comp-added-list" th:if="${!#lists.isEmpty(sequenceSunSalutations)}">
-                            <div class="sequence-comp-added-item sequence-comp-added-item--sun-salutation"
+                        <div class="sequence-comp-added-list asana-sortable-list"
+                             data-asana-sortable
+                             data-reorder-param="sunSalutationIds"
+                             th:if="${!#lists.isEmpty(sequenceSunSalutations)}"
+                             th:attr="data-reorder-url=@{/sequence/{sequenceId}/sun-salutation/reorder(sequenceId=${sequenceId})},data-mode=${createMode ? 'create' : 'edit'}">
+                            <div class="sequence-comp-added-item sequence-comp-added-item--sun-salutation asana-card"
                                  th:each="item : ${sequenceSunSalutations}"
-                                 th:attr="data-id=${item.id}">
-                                <span class="sequence-comp-added-item__order" th:text="${item.sortOrder}">1</span>
+                                 th:attr="data-id=${item.id},data-asana-id=${item.id}">
+                                <button class="asana-drag-handle"
+                                        type="button"
+                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}">≡</button>
                                 <div class="sequence-comp-added-item__body">
+                                    <span class="sequence-comp-added-item__index" th:text="${item.sortOrder}">1</span>
                                     <span class="sequence-comp-added-item__name" th:text="${item.displayName}">太陽礼拝A</span>
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
@@ -404,7 +403,7 @@
                     <div class="sequence-comp-section__time">15分</div>
                     <div class="sequence-comp-section__content">
                         <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>立位</h2>
-                        <div class="sequence-comp-added-list"></div>
+                        <div class="sequence-comp-added-list asana-sortable-list" data-asana-sortable></div>
                         <div class="sequence-comp-slot-list">
                             <button class="sequence-comp-slot" type="button" aria-label="立位を追加" data-standing-slot>
                                 <span class="sequence-comp-slot__plus"></span>
@@ -457,12 +456,19 @@
                     <div class="sequence-comp-section__time">5分</div>
                     <div class="sequence-comp-section__content">
                         <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>ピークポーズ</h2>
-                        <div class="sequence-comp-added-list" th:if="${!#lists.isEmpty(sequencePeakPoses)}">
-                            <div class="sequence-comp-added-item sequence-comp-added-item--peak"
+                        <div class="sequence-comp-added-list asana-sortable-list"
+                             data-asana-sortable
+                             data-reorder-param="peakPoseIds"
+                             th:if="${!#lists.isEmpty(sequencePeakPoses)}"
+                             th:attr="data-reorder-url=@{/sequence/{sequenceId}/peak/reorder(sequenceId=${sequenceId})},data-mode=${createMode ? 'create' : 'edit'}">
+                            <div class="sequence-comp-added-item sequence-comp-added-item--peak asana-card"
                                  th:each="item : ${sequencePeakPoses}"
-                                 th:attr="data-id=${item.id}">
-                                <span class="sequence-comp-added-item__order" th:text="${item.sortOrder}">1</span>
+                                 th:attr="data-id=${item.id},data-asana-id=${item.id}">
+                                <button class="asana-drag-handle"
+                                        type="button"
+                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}">≡</button>
                                 <div class="sequence-comp-added-item__body">
+                                    <span class="sequence-comp-added-item__index" th:text="${item.sortOrder}">1</span>
                                     <span class="sequence-comp-added-item__name" th:text="${item.displayName}">アルダ チャンドラーサナ</span>
                                 </div>
                                 <form class="sequence-comp-added-item__delete-form"
@@ -554,12 +560,19 @@
                     <div class="sequence-comp-section__time">5分</div>
                     <div class="sequence-comp-section__content">
                         <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>後屈</h2>
-                        <div class="sequence-comp-added-list" th:if="${!#lists.isEmpty(sequenceBackbends)}">
-                            <div class="sequence-comp-added-item sequence-comp-added-item--backbend"
+                        <div class="sequence-comp-added-list asana-sortable-list"
+                             data-asana-sortable
+                             data-reorder-param="backbendIds"
+                             th:if="${!#lists.isEmpty(sequenceBackbends)}"
+                             th:attr="data-reorder-url=@{/sequence/{sequenceId}/backbend/reorder(sequenceId=${sequenceId})},data-mode=${createMode ? 'create' : 'edit'}">
+                            <div class="sequence-comp-added-item sequence-comp-added-item--backbend asana-card"
                                  th:each="item : ${sequenceBackbends}"
-                                 th:attr="data-id=${item.id}">
-                                <span class="sequence-comp-added-item__order" th:text="${item.sortOrder}">1</span>
+                                 th:attr="data-id=${item.id},data-asana-id=${item.id}">
+                                <button class="asana-drag-handle"
+                                        type="button"
+                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}">≡</button>
                                 <div class="sequence-comp-added-item__body">
+                                    <span class="sequence-comp-added-item__index" th:text="${item.sortOrder}">1</span>
                                     <span class="sequence-comp-added-item__name" th:text="${item.displayName}">スフィンクス</span>
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
@@ -658,12 +671,19 @@
                     <div class="sequence-comp-section__time">5分</div>
                     <div class="sequence-comp-section__content">
                         <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>座位</h2>
-                        <div class="sequence-comp-added-list" th:if="${!#lists.isEmpty(sequenceSeateds)}">
-                            <div class="sequence-comp-added-item sequence-comp-added-item--seated"
+                        <div class="sequence-comp-added-list asana-sortable-list"
+                             data-asana-sortable
+                             data-reorder-param="seatedIds"
+                             th:if="${!#lists.isEmpty(sequenceSeateds)}"
+                             th:attr="data-reorder-url=@{/sequence/{sequenceId}/seated/reorder(sequenceId=${sequenceId})},data-mode=${createMode ? 'create' : 'edit'}">
+                            <div class="sequence-comp-added-item sequence-comp-added-item--seated asana-card"
                                  th:each="item : ${sequenceSeateds}"
-                                 th:attr="data-id=${item.id}">
-                                <span class="sequence-comp-added-item__order" th:text="${item.sortOrder}">1</span>
+                                 th:attr="data-id=${item.id},data-asana-id=${item.id}">
+                                <button class="asana-drag-handle"
+                                        type="button"
+                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}">≡</button>
                                 <div class="sequence-comp-added-item__body">
+                                    <span class="sequence-comp-added-item__index" th:text="${item.sortOrder}">1</span>
                                     <span class="sequence-comp-added-item__name" th:text="${item.displayName}">ダンダーサナ</span>
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
@@ -762,12 +782,19 @@
                     <div class="sequence-comp-section__time">10分</div>
                     <div class="sequence-comp-section__content">
                         <h2 class="sequence-comp-section__title"><span class="sequence-comp-section__dot"></span>リラクゼーション</h2>
-                        <div class="sequence-comp-added-list" th:if="${!#lists.isEmpty(sequenceRelaxations)}">
-                            <div class="sequence-comp-added-item sequence-comp-added-item--relaxation"
+                        <div class="sequence-comp-added-list asana-sortable-list"
+                             data-asana-sortable
+                             data-reorder-param="relaxationIds"
+                             th:if="${!#lists.isEmpty(sequenceRelaxations)}"
+                             th:attr="data-reorder-url=@{/sequence/{sequenceId}/relaxation/reorder(sequenceId=${sequenceId})},data-mode=${createMode ? 'create' : 'edit'}">
+                            <div class="sequence-comp-added-item sequence-comp-added-item--relaxation asana-card"
                                  th:each="item : ${sequenceRelaxations}"
-                                 th:attr="data-id=${item.id}">
-                                <span class="sequence-comp-added-item__order" th:text="${item.sortOrder}">1</span>
+                                 th:attr="data-id=${item.id},data-asana-id=${item.id}">
+                                <button class="asana-drag-handle"
+                                        type="button"
+                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}">≡</button>
                                 <div class="sequence-comp-added-item__body">
+                                    <span class="sequence-comp-added-item__index" th:text="${item.sortOrder}">1</span>
                                     <span class="sequence-comp-added-item__name" th:text="${item.displayName}">シャバーサナ</span>
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
@@ -875,7 +902,8 @@
         </main>
     </div>
 
-    <script th:src="@{/js/script.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+    <script th:src="@{/js/script.js}" charset="UTF-8"></script>
 </body>
 
 </html>

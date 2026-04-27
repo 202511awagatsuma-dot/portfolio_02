@@ -1569,27 +1569,6 @@ input {
     gap: 6px;
 }
 
-.sequence-comp-sort-form {
-    margin: 0;
-}
-
-.sequence-comp-sort-button {
-    width: 32px;
-    height: 32px;
-    border: 1px solid rgba(80, 101, 124, 0.22);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.84);
-    color: #35567c;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.sequence-comp-sort-button:disabled {
-    opacity: 0.45;
-    cursor: default;
-}
-
 .sequence-comp-added-item__delete-form {
     display: flex;
     align-items: center;
@@ -1636,93 +1615,123 @@ input {
     fill: currentColor;
 }
 
-/* Sequence edit (Warming UP): unified card layout with left edge label + top-right tools */
-.sequence-comp-added-item--warming-up {
+/* Sequence edit (Warming UP): drag handle + name + delete */
+.asana-sortable-list {
     position: relative;
-    display: block;
-    padding: 10px 10px 10px 40px;
+    touch-action: pan-y;
 }
 
-.sequence-comp-added-item--warming-up .sequence-comp-added-item__order {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 24px;
-    height: auto;
-    border-radius: 14px 0 0 14px;
-    background: #e5654f;
-    color: #ffffff;
-    font-size: 0.82rem;
-    font-weight: 700;
+.asana-sortable-list.is-sorting {
+    touch-action: none;
 }
 
-.sequence-comp-added-item--warming-up .sequence-comp-added-item__body {
+.asana-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 10px;
+    user-select: none;
+}
+
+.asana-card .sequence-comp-added-item__order {
+    display: none;
+}
+
+.asana-drag-handle {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+    border: 1px solid rgba(80, 101, 124, 0.24);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.86);
+    color: #5f7388;
+    font-size: 1rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+}
+
+.asana-drag-handle:active,
+.asana-card-chosen .asana-drag-handle,
+.asana-card-dragging .asana-drag-handle {
+    cursor: grabbing;
+}
+
+.asana-card .sequence-comp-added-item__body {
     min-width: 0;
-    padding-right: 100px;
-    padding-top: 2px;
+    padding-right: 0;
+    padding-top: 0;
     gap: 3px;
 }
 
-.sequence-comp-added-item--warming-up .sequence-comp-added-item__name,
-.sequence-comp-added-item--warming-up .sequence-comp-added-item__description,
-.sequence-comp-added-item--warming-up .sequence-comp-added-item__memo {
+.sequence-comp-added-item__index {
+    color: #8b99a6;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.asana-card .sequence-comp-added-item__name,
+.asana-card .sequence-comp-added-item__description,
+.asana-card .sequence-comp-added-item__memo {
     white-space: normal;
     overflow: visible;
     text-overflow: clip;
     word-break: break-word;
 }
 
-.sequence-comp-added-item--warming-up .sequence-comp-added-item__tools {
-    position: absolute;
-    top: 8px;
-    right: 10px;
+.asana-card .sequence-comp-added-item__delete-form {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 6px;
-}
-
-.sequence-comp-added-item--warming-up .sequence-comp-sort-form,
-.sequence-comp-added-item--warming-up .sequence-comp-added-item__delete-form {
-    display: flex;
-    align-items: center;
     margin: 0;
 }
 
-/* Keep tap target comfortable while making visual mass slightly compact */
-.sequence-comp-added-item--warming-up .sequence-comp-sort-button {
-    width: 28px;
-    height: 28px;
-    min-width: 28px;
-    min-height: 28px;
-    border-radius: 8px;
-    font-size: 0.62rem;
-    line-height: 1;
-    background: #35567c;
-    border-color: #35567c;
-    color: #ffffff;
-}
-
-/* Invert enabled/disabled expression: enabled = high contrast, disabled = subtle outline */
-.sequence-comp-added-item--warming-up .sequence-comp-sort-button:disabled {
-    opacity: 1;
-    background: rgba(255, 255, 255, 0.92);
-    border-color: rgba(80, 101, 124, 0.26);
-    color: rgba(53, 86, 124, 0.32);
-    box-shadow: none;
-}
-
-.sequence-comp-added-item--warming-up .sequence-comp-delete {
+.asana-card .sequence-comp-delete {
     width: 30px;
     height: 30px;
     min-width: 30px;
     min-height: 30px;
 }
 
-.sequence-comp-added-item--warming-up .sequence-comp-delete__icon {
+.asana-card .sequence-comp-delete__icon {
     width: 14px;
     height: 14px;
+}
+
+.asana-sortable-list.is-sorting .asana-card {
+    transition: transform 0.14s ease, box-shadow 0.14s ease, opacity 0.14s ease;
+}
+
+.asana-card-chosen {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(44, 66, 92, 0.14);
+}
+
+.asana-card-ghost {
+    opacity: 0.36;
+    background: rgba(255, 248, 245, 0.58);
+    border-style: dashed;
+}
+
+.asana-card-dragging {
+    opacity: 0.88;
+    box-shadow: 0 12px 24px rgba(44, 66, 92, 0.2);
+    border-color: rgba(80, 101, 124, 0.35);
+    z-index: 2;
+}
+
+.sequence-comp-drop-indicator {
+    height: 4px;
+    border-radius: 999px;
+    margin: 2px 8px;
+    background: rgba(53, 86, 124, 0.34);
 }
 
 .sequence-comp-picker {

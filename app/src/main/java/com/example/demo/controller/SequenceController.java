@@ -31,6 +31,7 @@ import com.example.demo.service.BreathingService;
 import com.example.demo.service.PeakPoseService;
 import com.example.demo.service.RelaxationService;
 import com.example.demo.service.SeatedService;
+import com.example.demo.service.SequenceAsanaReorderService;
 import com.example.demo.service.SunSalutationService;
 import com.example.demo.service.WarmingUpService;
 
@@ -46,6 +47,7 @@ public class SequenceController {
     private final BackbendService backbendService;
     private final SeatedService seatedService;
     private final RelaxationService relaxationService;
+    private final SequenceAsanaReorderService sequenceAsanaReorderService;
 
     public SequenceController(
             BreathingService breathingService,
@@ -54,7 +56,8 @@ public class SequenceController {
             PeakPoseService peakPoseService,
             BackbendService backbendService,
             SeatedService seatedService,
-            RelaxationService relaxationService) {
+            RelaxationService relaxationService,
+            SequenceAsanaReorderService sequenceAsanaReorderService) {
         this.breathingService = breathingService;
         this.warmingUpService = warmingUpService;
         this.sunSalutationService = sunSalutationService;
@@ -62,6 +65,7 @@ public class SequenceController {
         this.backbendService = backbendService;
         this.seatedService = seatedService;
         this.relaxationService = relaxationService;
+        this.sequenceAsanaReorderService = sequenceAsanaReorderService;
     }
 
     @GetMapping("/sequence/setup")
@@ -238,6 +242,15 @@ public class SequenceController {
         return buildEditRedirect(sequenceId, mode);
     }
 
+    @PostMapping("/sequence/{sequenceId}/breathing/reorder")
+    public String reorderBreathing(
+            @PathVariable Long sequenceId,
+            @RequestParam(name = "breathingIds") List<Long> breathingIds,
+            @RequestParam(required = false, defaultValue = "edit") String mode) {
+        sequenceAsanaReorderService.reorder(sequenceId, "breathing", breathingIds);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
     @PostMapping("/sequence/{sequenceId}/warming-up/master")
     public String addWarmingUpFromMaster(
             @PathVariable Long sequenceId,
@@ -296,6 +309,15 @@ public class SequenceController {
         return buildEditRedirect(sequenceId, mode);
     }
 
+    @PostMapping("/sequence/{sequenceId}/warming-up/reorder")
+    public String reorderWarmingUp(
+            @PathVariable Long sequenceId,
+            @RequestParam(name = "warmingUpIds") List<Long> warmingUpIds,
+            @RequestParam(required = false, defaultValue = "edit") String mode) {
+        sequenceAsanaReorderService.reorder(sequenceId, "warming-up", warmingUpIds);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
     @PostMapping("/sequence/{sequenceId}/sun-salutation/master")
     public String addSunSalutationFromMaster(
             @PathVariable Long sequenceId,
@@ -325,6 +347,15 @@ public class SequenceController {
         return buildEditRedirect(sequenceId, mode);
     }
 
+    @PostMapping("/sequence/{sequenceId}/sun-salutation/reorder")
+    public String reorderSunSalutation(
+            @PathVariable Long sequenceId,
+            @RequestParam(name = "sunSalutationIds") List<Long> sunSalutationIds,
+            @RequestParam(required = false, defaultValue = "edit") String mode) {
+        sequenceAsanaReorderService.reorder(sequenceId, "sun-salutation", sunSalutationIds);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
     @PostMapping("/sequence/{sequenceId}/peak/master")
     public String addPeakPoseFromMaster(
             @PathVariable Long sequenceId,
@@ -349,6 +380,15 @@ public class SequenceController {
             @PathVariable Long peakPoseId,
             @RequestParam(required = false, defaultValue = "edit") String mode) {
         peakPoseService.delete(sequenceId, peakPoseId);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
+    @PostMapping("/sequence/{sequenceId}/peak/reorder")
+    public String reorderPeakPose(
+            @PathVariable Long sequenceId,
+            @RequestParam(name = "peakPoseIds") List<Long> peakPoseIds,
+            @RequestParam(required = false, defaultValue = "edit") String mode) {
+        sequenceAsanaReorderService.reorder(sequenceId, "peak", peakPoseIds);
         return buildEditRedirect(sequenceId, mode);
     }
 
@@ -381,6 +421,15 @@ public class SequenceController {
         return buildEditRedirect(sequenceId, mode);
     }
 
+    @PostMapping("/sequence/{sequenceId}/backbend/reorder")
+    public String reorderBackbend(
+            @PathVariable Long sequenceId,
+            @RequestParam(name = "backbendIds") List<Long> backbendIds,
+            @RequestParam(required = false, defaultValue = "edit") String mode) {
+        sequenceAsanaReorderService.reorder(sequenceId, "backbend", backbendIds);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
     @PostMapping("/sequence/{sequenceId}/seated/master")
     public String addSeatedFromMaster(
             @PathVariable Long sequenceId,
@@ -410,6 +459,15 @@ public class SequenceController {
         return buildEditRedirect(sequenceId, mode);
     }
 
+    @PostMapping("/sequence/{sequenceId}/seated/reorder")
+    public String reorderSeated(
+            @PathVariable Long sequenceId,
+            @RequestParam(name = "seatedIds") List<Long> seatedIds,
+            @RequestParam(required = false, defaultValue = "edit") String mode) {
+        sequenceAsanaReorderService.reorder(sequenceId, "seated", seatedIds);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
     @PostMapping("/sequence/{sequenceId}/relaxation/master")
     public String addRelaxationFromMaster(
             @PathVariable Long sequenceId,
@@ -436,6 +494,15 @@ public class SequenceController {
             @PathVariable Long relaxationId,
             @RequestParam(required = false, defaultValue = "edit") String mode) {
         relaxationService.delete(sequenceId, relaxationId);
+        return buildEditRedirect(sequenceId, mode);
+    }
+
+    @PostMapping("/sequence/{sequenceId}/relaxation/reorder")
+    public String reorderRelaxation(
+            @PathVariable Long sequenceId,
+            @RequestParam(name = "relaxationIds") List<Long> relaxationIds,
+            @RequestParam(required = false, defaultValue = "edit") String mode) {
+        sequenceAsanaReorderService.reorder(sequenceId, "relaxation", relaxationIds);
         return buildEditRedirect(sequenceId, mode);
     }
 

@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -133,6 +135,38 @@ public class WarmingUpService {
         SequenceWarmingUp target = items.get(targetIndex);
         sequenceWarmingUpRepository.updateSortOrder(current.id(), sequenceId, target.sortOrder());
         sequenceWarmingUpRepository.updateSortOrder(target.id(), sequenceId, current.sortOrder());
+        resequence(sequenceId);
+    }
+
+    @Transactional
+    public void reorder(Long sequenceId, List<Long> warmingUpIds) {
+        requireSequence(sequenceId);
+
+        if (warmingUpIds == null || warmingUpIds.isEmpty()) {
+            return;
+        }
+
+        List<SequenceWarmingUp> items = sequenceWarmingUpRepository.findBySequenceId(sequenceId);
+        if (items.isEmpty()) {
+            return;
+        }
+
+        Set<Long> currentIds = items.stream()
+                .map(SequenceWarmingUp::id)
+                .collect(Collectors.toSet());
+        Set<Long> requestedIds = warmingUpIds.stream()
+                .collect(Collectors.toSet());
+
+        if (currentIds.size() != requestedIds.size() || !currentIds.equals(requestedIds)) {
+            return;
+        }
+
+        for (int index = 0; index < warmingUpIds.size(); index += 1) {
+            Long id = warmingUpIds.get(index);
+            int nextOrder = index + 1;
+            sequenceWarmingUpRepository.updateSortOrder(id, sequenceId, nextOrder);
+        }
+
         resequence(sequenceId);
     }
 

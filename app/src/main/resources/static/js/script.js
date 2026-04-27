@@ -1,4 +1,4 @@
-﻿const STIKA_SEQUENCE_STORAGE_KEY = "stika_sequences";
+const STIKA_SEQUENCE_STORAGE_KEY = "stika_sequences";
 const STIKA_SEQUENCE_DRAFT_KEY = "stika_sequence_draft";
 const STIKA_SEQUENCE_LIST_PATH = "/sequence-list.html";
 const STIKA_SEQUENCE_DETAIL_PATH = "/sequence-detail.html";
@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initSectionDurationPicker);
     runInitializer(initBreathingModal);
     runInitializer(initWarmingUpModal);
+    runInitializer(initAsanaCardSortable);
     runInitializer(initSunSalutationModal);
     runInitializer(initPeakPoseModal);
     runInitializer(initBackbendModal);
@@ -138,7 +139,7 @@ function initGrowthCalendar() {
             button.className = "calendar-day";
             button.dataset.date = isoDate;
             button.setAttribute("role", "gridcell");
-            button.setAttribute("aria-label", `${isoDate}${hasRecord ? " 險倬鹸縺ゅｊ" : ""}${isToday ? " 莉頑律" : ""}`);
+            button.setAttribute("aria-label", `${isoDate}${hasRecord ? " 記録あり" : ""}${isToday ? " 今日" : ""}`);
             button.setAttribute("aria-selected", String(isSelected));
 
             if (!isCurrentMonth) {
@@ -589,6 +590,115 @@ function initWarmingUpModal() {
 
         categorySelect.addEventListener("change", syncStandingSubcategoryVisibility);
         syncStandingSubcategoryVisibility();
+    }
+}
+
+function initAsanaCardSortable() {
+    if (typeof window.Sortable === "undefined") {
+        return;
+    }
+
+    const lists = document.querySelectorAll("[data-asana-sortable]");
+    lists.forEach(initializeAsanaSortableList);
+}
+
+function initializeAsanaSortableList(list) {
+    if (!list || list.dataset.sortableInitialized === "true" || typeof window.Sortable === "undefined") {
+        return;
+    }
+
+    list.dataset.sortableInitialized = "true";
+    updateAsanaSortOrderFields(list);
+
+    window.Sortable.create(list, {
+        animation: 150,
+        handle: ".asana-drag-handle",
+        draggable: ".asana-card",
+        ghostClass: "asana-card-ghost",
+        chosenClass: "asana-card-chosen",
+        dragClass: "asana-card-dragging",
+        forceFallback: false,
+        fallbackOnBody: true,
+        swapThreshold: 0.65,
+        onStart: () => {
+            list.classList.add("is-sorting");
+        },
+        onEnd: () => {
+            list.classList.remove("is-sorting");
+            const orderedAsanaIds = getOrderedAsanaIds(list);
+            updateAsanaSortOrderFields(list);
+            persistAsanaOrder(list, orderedAsanaIds);
+        }
+    });
+}
+
+function getOrderedAsanaIds(list) {
+    return Array.from(list.querySelectorAll(".asana-card"))
+        .map((item) => normalizeText(item.dataset.asanaId || item.dataset.itemId || item.dataset.id))
+        .filter(Boolean);
+}
+
+function updateAsanaSortOrderFields(list) {
+    Array.from(list.querySelectorAll(".asana-card")).forEach((item, index) => {
+        const nextSortOrder = index + 1;
+        item.dataset.order = String(nextSortOrder);
+        item.dataset.index = String(index);
+
+        const orderElement = item.querySelector(".sequence-comp-added-item__index, .sequence-comp-added-item__order");
+        if (orderElement) {
+            orderElement.textContent = String(nextSortOrder);
+        }
+
+        let sortOrderInput = item.querySelector("input[data-asana-sort-order]");
+        if (!sortOrderInput) {
+            sortOrderInput = document.createElement("input");
+            sortOrderInput.type = "hidden";
+            sortOrderInput.dataset.asanaSortOrder = "true";
+            sortOrderInput.name = "sortOrder";
+            item.appendChild(sortOrderInput);
+        }
+        sortOrderInput.value = String(nextSortOrder);
+    });
+}
+
+async function persistAsanaOrder(list, orderedAsanaIds) {
+    const reorderUrl = normalizeText(list.dataset.reorderUrl);
+    const reorderParam = normalizeText(list.dataset.reorderParam);
+    if (!reorderUrl || !reorderParam || orderedAsanaIds.length < 2) {
+        return;
+    }
+
+    const params = new URLSearchParams();
+    orderedAsanaIds.forEach((id) => {
+        params.append(reorderParam, id);
+    });
+    params.append("mode", normalizeText(list.dataset.mode) || "edit");
+
+    const csrfToken = normalizeText(
+        document.querySelector("meta[name='_csrf']")?.getAttribute("content")
+        || document.querySelector("input[name='_csrf']")?.value
+    );
+    if (csrfToken) {
+        params.append("_csrf", csrfToken);
+    }
+
+    try {
+        const response = await fetch(reorderUrl, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                "X-Requested-With": "XMLHttpRequest",
+                ...(csrfToken ? { "X-CSRF-TOKEN": csrfToken } : {})
+            },
+            body: params.toString()
+        });
+
+        if (!response.ok) {
+            throw new Error(`asana reorder failed: ${response.status}`);
+        }
+    } catch (_error) {
+        // Keep the updated DOM order visible even if persistence fails.
     }
 }
 
@@ -1765,17 +1875,25 @@ function appendDynamicSectionItem(section, itemData, syncOrder) {
     }
 
     const item = document.createElement("div");
-    item.className = "sequence-comp-added-item";
+    item.className = "sequence-comp-added-item asana-card";
     item.dataset.dynamicItem = "true";
     item.dataset.itemId = itemData?.id || createDynamicSectionItemId();
+    item.dataset.asanaId = item.dataset.itemId;
     item.dataset.source = itemData?.source === "custom" ? "custom" : "candidate";
 
-    const order = document.createElement("span");
-    order.className = "sequence-comp-added-item__order";
-    order.textContent = String(list.children.length + 1);
+    const handle = document.createElement("button");
+    handle.className = "asana-drag-handle";
+    handle.type = "button";
+    handle.setAttribute("aria-label", `${itemData?.name || "このアーサナ"} をドラッグして並び替え`);
+    handle.textContent = "≡";
 
     const body = document.createElement("div");
     body.className = "sequence-comp-added-item__body";
+
+    const order = document.createElement("span");
+    order.className = "sequence-comp-added-item__index";
+    order.textContent = String(list.children.length + 1);
+    body.appendChild(order);
 
     const name = document.createElement("span");
     name.className = "sequence-comp-added-item__name";
@@ -1811,10 +1929,11 @@ function appendDynamicSectionItem(section, itemData, syncOrder) {
     `;
 
     tools.appendChild(deleteButton);
-    item.appendChild(order);
+    item.appendChild(handle);
     item.appendChild(body);
     item.appendChild(tools);
     list.appendChild(item);
+    initializeAsanaSortableList(list);
 
     if (syncOrder) {
         syncDynamicSectionItemOrder(section);
@@ -1827,7 +1946,8 @@ function ensureDynamicSectionList(section) {
 
     if (!list) {
         list = document.createElement("div");
-        list.className = "sequence-comp-added-list";
+        list.className = "sequence-comp-added-list asana-sortable-list";
+        list.dataset.asanaSortable = "";
         const title = section.querySelector(".sequence-comp-section__title");
         if (title) {
             title.insertAdjacentElement("afterend", list);

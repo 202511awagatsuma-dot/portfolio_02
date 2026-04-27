@@ -2734,49 +2734,15 @@ input {
 .report-month-card {
     background: #dfe1e3;
     border-radius: 4px;
-    padding: 10px 12px 12px;
+    padding: 14px 12px 16px;
 }
 
-.report-month-card__header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.report-month-calendar-card .calendar-card__header {
+    margin-bottom: 12px;
+}
+
+.report-month-calendar-card .calendar {
     gap: 10px;
-    margin-bottom: 10px;
-}
-
-.report-month-card__arrow {
-    border: none;
-    background: transparent;
-    color: #5f6872;
-    font-size: 0.84rem;
-    line-height: 1;
-    padding: 0;
-}
-
-.report-month-card__label {
-    margin: 0;
-    color: #384a5b;
-    font-size: 0.94rem;
-    font-weight: 700;
-}
-
-.report-month-card__dots {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 8px 10px;
-}
-
-.report-month-card__dot {
-    width: 12px;
-    height: 12px;
-    margin: 0 auto;
-    border-radius: 50%;
-    background: #f4f5f6;
-}
-
-.report-month-card__dot.is-filled {
-    background: #c9d5e2;
 }
 
 .report-title {

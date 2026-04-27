@@ -25,19 +25,26 @@
             </header>
 
             <section class="report-section" aria-label="月間カレンダー">
-                <div class="report-month-card">
-                    <div class="report-month-card__header">
-                        <button type="button" class="report-month-card__arrow" aria-label="前月">◀</button>
-                        <p class="report-month-card__label">2025年10月</p>
-                        <button type="button" class="report-month-card__arrow" aria-label="次月">▶</button>
+                <div class="report-month-card report-month-calendar-card">
+                    <div class="calendar-card__header">
+                        <div class="calendar-nav" aria-label="月送り">
+                            <button type="button" class="calendar-nav__button" data-calendar-nav="prev" aria-label="前月">◀</button>
+                            <strong class="calendar-nav__label" id="calendarMonthLabel" aria-live="polite">2026年4月</strong>
+                            <button type="button" class="calendar-nav__button" data-calendar-nav="next" aria-label="次月">▶</button>
+                        </div>
                     </div>
-                    <div class="report-month-card__dots" aria-hidden="true">
-                        <span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span>
-                        <span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span>
-                        <span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot"></span>
-                        <span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span>
-                        <span class="report-month-card__dot"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot is-filled"></span><span class="report-month-card__dot"></span><span class="report-month-card__dot"></span>
-                    </div>
+                    <section class="calendar" id="growthCalendar" aria-labelledby="calendarMonthLabel">
+                        <div class="calendar__weekdays" aria-hidden="true">
+                            <span>日</span>
+                            <span>月</span>
+                            <span>火</span>
+                            <span>水</span>
+                            <span>木</span>
+                            <span>金</span>
+                            <span>土</span>
+                        </div>
+                        <div class="calendar__grid" id="calendarGrid" role="grid"></div>
+                    </section>
                 </div>
             </section>
 

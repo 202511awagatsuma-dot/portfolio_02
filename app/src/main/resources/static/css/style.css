@@ -2915,6 +2915,292 @@ input {
     line-height: 1.5;
 }
 
+.self-care-screen {
+    padding: 12px 14px 30px;
+    background: #fbf3ef;
+}
+
+.self-care-header {
+    margin-bottom: 16px;
+}
+
+.self-care-header__center {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+}
+
+.self-care-header__center p {
+    margin: 6px auto 0;
+    max-width: 220px;
+    color: #5f7388;
+    font-size: 0.74rem;
+    font-weight: 500;
+    line-height: 1.55;
+}
+
+.self-care-card {
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 10px 26px rgba(82, 97, 115, 0.08);
+}
+
+.self-care-mood-card {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.self-care-section {
+    margin-bottom: 20px;
+}
+
+.self-care-section-heading {
+    margin-bottom: 0;
+}
+
+.self-care-section-heading h2 {
+    font-size: 1rem;
+    color: var(--navy);
+}
+
+.self-care-mood-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.self-care-mood-option {
+    display: block;
+}
+
+.self-care-mood-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.self-care-mood-option span {
+    min-height: 48px;
+    padding: 0 8px;
+    border-radius: 12px;
+    border: 1px solid #d7dfe6;
+    background: #fff;
+    color: var(--text);
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition:
+        background-color 0.24s ease,
+        border-color 0.24s ease,
+        color 0.24s ease,
+        box-shadow 0.24s ease,
+        transform 0.18s ease;
+}
+
+.self-care-mood-option input:checked + span {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(239, 139, 99, 0.24);
+}
+
+.self-care-mood-option input:focus-visible + span {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(239, 139, 99, 0.28);
+}
+
+.self-care-mood-option:active span {
+    transform: translateY(1px) scale(0.98);
+}
+
+.self-care-note-field {
+    display: grid;
+    gap: 8px;
+}
+
+.self-care-note-field span {
+    color: var(--navy);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.self-care-note-field textarea {
+    width: 100%;
+    min-height: 104px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #d5dde5;
+    background: #fff;
+    color: var(--text);
+    font: inherit;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+.self-care-note-field textarea::placeholder {
+    color: #9aa7b3;
+}
+
+.self-care-record-button {
+    min-height: 52px;
+}
+
+.self-care-practice-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.self-care-practice-card {
+    min-height: 94px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(234, 242, 248, 0.58)),
+        #fff;
+    box-shadow: 0 10px 24px rgba(82, 97, 115, 0.08);
+}
+
+.self-care-practice-card__content {
+    min-width: 0;
+}
+
+.self-care-practice-card h3 {
+    margin: 0 0 7px;
+    color: var(--navy);
+    font-size: 1rem;
+    line-height: 1.35;
+}
+
+.self-care-practice-card p {
+    margin: 0;
+    color: #6a7f93;
+    font-size: 0.8rem;
+    line-height: 1.55;
+}
+
+.self-care-play-button {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex: 0 0 42px;
+    background: linear-gradient(135deg, #ef9a70 0%, #e57f59 100%);
+    box-shadow: 0 8px 18px rgba(239, 139, 99, 0.24);
+    color: #fff;
+}
+
+.self-care-play-button span {
+    width: 0;
+    height: 0;
+    margin-left: 3px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid currentColor;
+}
+
+.self-care-reminder-card {
+    background:
+        linear-gradient(135deg, rgba(255, 250, 247, 0.96), rgba(246, 240, 253, 0.72)),
+        var(--surface);
+}
+
+.self-care-reminder-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 12px;
+}
+
+.self-care-reminder-row__text {
+    min-width: 0;
+}
+
+.self-care-reminder-row__text p {
+    margin: 0 0 5px;
+    color: var(--navy);
+    font-size: 0.98rem;
+    font-weight: 700;
+}
+
+.self-care-reminder-row__text span {
+    color: #6a7f93;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.self-care-toggle {
+    position: relative;
+    width: 68px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: #cfd8e3;
+    color: #fff;
+    flex: 0 0 auto;
+    transition: background-color 0.24s ease;
+}
+
+.self-care-toggle.is-on {
+    background: var(--accent);
+}
+
+.self-care-toggle__label {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+.self-care-toggle:not(.is-on) .self-care-toggle__label {
+    left: auto;
+    right: 9px;
+}
+
+.self-care-toggle__knob {
+    position: absolute;
+    top: 4px;
+    left: 36px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(38, 56, 76, 0.18);
+    transition: left 0.24s ease;
+}
+
+.self-care-toggle:not(.is-on) .self-care-toggle__knob {
+    left: 4px;
+}
+
+.self-care-page .bottom-nav {
+    z-index: 120;
+}
+
+.self-care-page .bottom-nav__item.is-active {
+    color: var(--accent);
+    font-weight: 800;
+}
+
+.self-care-page .bottom-nav__item.is-active .bottom-nav__icon {
+    filter: brightness(0) saturate(100%) invert(64%) sepia(63%) saturate(765%) hue-rotate(320deg) brightness(96%) contrast(94%);
+}
+
 @media (max-width: 380px) {
     .knowledge-grid {
         gap: 8px;

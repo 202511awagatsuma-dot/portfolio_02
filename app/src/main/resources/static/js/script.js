@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initSequenceLocalSave);
     runInitializer(initSequenceListPage);
     runInitializer(initSequenceDetailPage);
+    runInitializer(initSelfCareToggles);
 });
 
 function runInitializer(initializer) {
@@ -251,6 +252,34 @@ function isSameDate(a, b) {
         a.getMonth() === b.getMonth() &&
         a.getDate() === b.getDate()
     );
+}
+
+function initSelfCareToggles() {
+    const toggles = document.querySelectorAll("[data-self-care-toggle]");
+
+    if (toggles.length === 0) {
+        return;
+    }
+
+    toggles.forEach((toggle) => {
+        const label = toggle.querySelector(".self-care-toggle__label");
+
+        const syncState = () => {
+            const isOn = toggle.classList.contains("is-on");
+            toggle.setAttribute("aria-checked", String(isOn));
+
+            if (label) {
+                label.textContent = isOn ? "ON" : "OFF";
+            }
+        };
+
+        toggle.addEventListener("click", () => {
+            toggle.classList.toggle("is-on");
+            syncState();
+        });
+
+        syncState();
+    });
 }
 
 function initSequenceTabs() {

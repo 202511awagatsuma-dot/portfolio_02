@@ -2732,17 +2732,48 @@ input {
 }
 
 .report-month-card {
-    background: #dfe1e3;
+    background: #fbf8f3;
+    border: 1px solid rgba(95, 115, 136, 0.12);
     border-radius: 4px;
-    padding: 14px 12px 16px;
+    padding: 8px 12px 10px;
 }
 
 .report-month-calendar-card .calendar-card__header {
-    margin-bottom: 12px;
+    margin-bottom: 6px;
 }
 
 .report-month-calendar-card .calendar {
-    gap: 10px;
+    gap: 5px;
+}
+
+.report-month-calendar-card .calendar__grid {
+    gap: 1px;
+    padding-top: 0;
+}
+
+.report-month-calendar-card .calendar-day {
+    min-height: 38px;
+    padding: 2px 4px;
+}
+
+.report-month-calendar-card .calendar-nav__button {
+    color: rgba(32, 51, 84, 0.56);
+}
+
+.report-month-calendar-card .calendar-nav__button[data-calendar-nav="next"] {
+    color: rgba(32, 51, 84, 0.84);
+}
+
+.report-month-calendar-card .calendar-nav__label {
+    color: #384a5b;
+}
+
+.report-month-calendar-card .calendar__weekdays span {
+    color: #8b99a6;
+}
+
+.report-month-calendar-card .calendar-day--muted {
+    color: rgba(116, 129, 139, 0.42);
 }
 
 .report-title {

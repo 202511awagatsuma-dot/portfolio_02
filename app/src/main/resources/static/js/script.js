@@ -641,12 +641,13 @@ function getOrderedAsanaIds(list) {
 function updateAsanaSortOrderFields(list) {
     Array.from(list.querySelectorAll(".asana-card")).forEach((item, index) => {
         const nextSortOrder = index + 1;
+        const labelOrder = String(nextSortOrder).padStart(2, "0");
         item.dataset.order = String(nextSortOrder);
         item.dataset.index = String(index);
 
-        const orderElement = item.querySelector(".sequence-comp-added-item__index, .sequence-comp-added-item__order");
-        if (orderElement) {
-            orderElement.textContent = String(nextSortOrder);
+        const handle = item.querySelector(".asana-drag-handle");
+        if (handle) {
+            handle.textContent = `${labelOrder} ≡`;
         }
 
         let sortOrderInput = item.querySelector("input[data-asana-sort-order]");
@@ -1885,15 +1886,10 @@ function appendDynamicSectionItem(section, itemData, syncOrder) {
     handle.className = "asana-drag-handle";
     handle.type = "button";
     handle.setAttribute("aria-label", `${itemData?.name || "このアーサナ"} をドラッグして並び替え`);
-    handle.textContent = "≡";
+    handle.textContent = `${String(list.children.length + 1).padStart(2, "0")} ≡`;
 
     const body = document.createElement("div");
     body.className = "sequence-comp-added-item__body";
-
-    const order = document.createElement("span");
-    order.className = "sequence-comp-added-item__index";
-    order.textContent = String(list.children.length + 1);
-    body.appendChild(order);
 
     const name = document.createElement("span");
     name.className = "sequence-comp-added-item__name";

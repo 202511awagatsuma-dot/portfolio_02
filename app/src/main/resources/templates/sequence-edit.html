@@ -67,9 +67,9 @@
                                  th:attr="data-id=${item.id},data-asana-id=${item.id}">
                                 <button class="asana-drag-handle"
                                         type="button"
-                                        th:attr="aria-label=${item.breathingName + ' をドラッグして並び替え'}">≡</button>
+                                        th:attr="aria-label=${item.breathingName + ' をドラッグして並び替え'}"
+                                        th:text="${#numbers.formatInteger(item.displayOrder, 2) + ' ≡'}">01 ≡</button>
                                 <div class="sequence-comp-added-item__body">
-                                    <span class="sequence-comp-added-item__index" th:text="${item.displayOrder}">1</span>
                                     <span class="sequence-comp-added-item__name" th:text="${item.breathingName}">腹式呼吸</span>
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
@@ -160,9 +160,9 @@
                                  th:attr="data-id=${item.id},data-asana-id=${item.id},data-order=${item.sortOrder},data-index=${itemStat.index}">
                                 <button class="asana-drag-handle"
                                         type="button"
-                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}">≡</button>
+                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}"
+                                        th:text="${#numbers.formatInteger(item.sortOrder, 2) + ' ≡'}">01 ≡</button>
                                 <div class="sequence-comp-added-item__body">
-                                    <span class="sequence-comp-added-item__index" th:text="${item.sortOrder}">1</span>
                                     <span class="sequence-comp-added-item__name" th:text="${item.displayName}">キャット＆カウ</span>
                                     <span class="sequence-comp-added-item__description"
                                           th:if="${item.nameSanskrit != null and !#strings.isEmpty(item.nameSanskrit)}"
@@ -302,9 +302,9 @@
                                  th:attr="data-id=${item.id},data-asana-id=${item.id}">
                                 <button class="asana-drag-handle"
                                         type="button"
-                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}">≡</button>
+                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}"
+                                        th:text="${#numbers.formatInteger(item.sortOrder, 2) + ' ≡'}">01 ≡</button>
                                 <div class="sequence-comp-added-item__body">
-                                    <span class="sequence-comp-added-item__index" th:text="${item.sortOrder}">1</span>
                                     <span class="sequence-comp-added-item__name" th:text="${item.displayName}">太陽礼拝A</span>
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
@@ -466,9 +466,9 @@
                                  th:attr="data-id=${item.id},data-asana-id=${item.id}">
                                 <button class="asana-drag-handle"
                                         type="button"
-                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}">≡</button>
+                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}"
+                                        th:text="${#numbers.formatInteger(item.sortOrder, 2) + ' ≡'}">01 ≡</button>
                                 <div class="sequence-comp-added-item__body">
-                                    <span class="sequence-comp-added-item__index" th:text="${item.sortOrder}">1</span>
                                     <span class="sequence-comp-added-item__name" th:text="${item.displayName}">アルダ チャンドラーサナ</span>
                                 </div>
                                 <form class="sequence-comp-added-item__delete-form"
@@ -570,9 +570,9 @@
                                  th:attr="data-id=${item.id},data-asana-id=${item.id}">
                                 <button class="asana-drag-handle"
                                         type="button"
-                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}">≡</button>
+                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}"
+                                        th:text="${#numbers.formatInteger(item.sortOrder, 2) + ' ≡'}">01 ≡</button>
                                 <div class="sequence-comp-added-item__body">
-                                    <span class="sequence-comp-added-item__index" th:text="${item.sortOrder}">1</span>
                                     <span class="sequence-comp-added-item__name" th:text="${item.displayName}">スフィンクス</span>
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
@@ -681,9 +681,9 @@
                                  th:attr="data-id=${item.id},data-asana-id=${item.id}">
                                 <button class="asana-drag-handle"
                                         type="button"
-                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}">≡</button>
+                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}"
+                                        th:text="${#numbers.formatInteger(item.sortOrder, 2) + ' ≡'}">01 ≡</button>
                                 <div class="sequence-comp-added-item__body">
-                                    <span class="sequence-comp-added-item__index" th:text="${item.sortOrder}">1</span>
                                     <span class="sequence-comp-added-item__name" th:text="${item.displayName}">ダンダーサナ</span>
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"
@@ -792,9 +792,9 @@
                                  th:attr="data-id=${item.id},data-asana-id=${item.id}">
                                 <button class="asana-drag-handle"
                                         type="button"
-                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}">≡</button>
+                                        th:attr="aria-label=${item.displayName + ' をドラッグして並び替え'}"
+                                        th:text="${#numbers.formatInteger(item.sortOrder, 2) + ' ≡'}">01 ≡</button>
                                 <div class="sequence-comp-added-item__body">
-                                    <span class="sequence-comp-added-item__index" th:text="${item.sortOrder}">1</span>
                                     <span class="sequence-comp-added-item__name" th:text="${item.displayName}">シャバーサナ</span>
                                     <span class="sequence-comp-added-item__memo"
                                           th:if="${item.memo != null and !#strings.isEmpty(item.memo)}"

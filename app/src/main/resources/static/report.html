@@ -9,17 +9,19 @@
 <body class="stika-body">
     <div class="app-shell">
         <main class="screen report-screen">
-            <header class="topbar report-topbar">
-                <span class="icon-badge icon-badge--notice" aria-label="通知"></span>
-                <div class="report-topbar__center">
-                    <p class="report-topbar__date">2025.10.1(水)</p>
-                    <h1 class="report-topbar__title">レポート</h1>
+            <header class="topbar sequence-comp-header report-topbar">
+                <a class="topbar__brand" href="/" aria-label="ホームへ戻る">
+                    <img class="brand-mark" src="/assets/icon/img_home.svg" alt="">
+                </a>
+                <h1 class="topbar__date sequence-comp-header__title">レポート</h1>
+                <div class="topbar__actions">
+                    <span class="icon-badge icon-badge--notice" aria-hidden="true"></span>
+                    <span class="icon-badge icon-badge--menu" aria-hidden="true">
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                    </span>
                 </div>
-                <span class="icon-badge icon-badge--menu" aria-label="メニュー">
-                    <span></span><span></span><span></span>
-                    <span></span><span></span><span></span>
-                    <span></span><span></span><span></span>
-                </span>
             </header>
 
             <section class="report-section" aria-label="月間カレンダー">

@@ -1636,6 +1636,32 @@ input {
     fill: currentColor;
 }
 
+/* Sequence edit (Warming UP): keep card height compact while making right-side actions easier to tap */
+.sequence-comp-added-item--warming-up {
+    align-items: flex-start;
+}
+
+.sequence-comp-added-item--warming-up .sequence-comp-added-item__tools {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    align-self: flex-start;
+    gap: 8px;
+}
+
+.sequence-comp-added-item--warming-up .sequence-comp-sort-form,
+.sequence-comp-added-item--warming-up .sequence-comp-added-item__delete-form {
+    display: flex;
+    align-items: center;
+}
+
+.sequence-comp-added-item--warming-up .sequence-comp-sort-button {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    min-height: 38px;
+}
+
 .sequence-comp-picker {
     margin-top: 6px;
 }

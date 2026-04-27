@@ -1636,30 +1636,80 @@ input {
     fill: currentColor;
 }
 
-/* Sequence edit (Warming UP): keep card height compact while making right-side actions easier to tap */
+/* Sequence edit (Warming UP): 3-zone layout (order/name/tools) with fixed tool width */
 .sequence-comp-added-item--warming-up {
-    align-items: flex-start;
+    grid-template-columns: 34px minmax(0, 1fr) 96px;
+    align-items: center;
+    padding: 12px 10px 12px 12px;
+    column-gap: 10px;
+}
+
+.sequence-comp-added-item--warming-up .sequence-comp-added-item__order {
+    width: 32px;
+    height: 32px;
+}
+
+.sequence-comp-added-item--warming-up .sequence-comp-added-item__body {
+    min-width: 0;
+}
+
+.sequence-comp-added-item--warming-up .sequence-comp-added-item__name,
+.sequence-comp-added-item--warming-up .sequence-comp-added-item__description,
+.sequence-comp-added-item--warming-up .sequence-comp-added-item__memo {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    word-break: break-word;
 }
 
 .sequence-comp-added-item--warming-up .sequence-comp-added-item__tools {
+    width: 96px;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: flex-end;
-    align-self: flex-start;
-    gap: 8px;
+    gap: 6px;
 }
 
 .sequence-comp-added-item--warming-up .sequence-comp-sort-form,
 .sequence-comp-added-item--warming-up .sequence-comp-added-item__delete-form {
     display: flex;
     align-items: center;
+    margin: 0;
 }
 
+/* Keep tap target comfortable while making visual mass slightly compact */
 .sequence-comp-added-item--warming-up .sequence-comp-sort-button {
-    width: 38px;
-    height: 38px;
-    min-width: 38px;
-    min-height: 38px;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    border-radius: 8px;
+    font-size: 0.62rem;
+    line-height: 1;
+    background: #35567c;
+    border-color: #35567c;
+    color: #ffffff;
+}
+
+/* Invert enabled/disabled expression: enabled = high contrast, disabled = subtle outline */
+.sequence-comp-added-item--warming-up .sequence-comp-sort-button:disabled {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(80, 101, 124, 0.26);
+    color: rgba(53, 86, 124, 0.32);
+    box-shadow: none;
+}
+
+.sequence-comp-added-item--warming-up .sequence-comp-delete {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+}
+
+.sequence-comp-added-item--warming-up .sequence-comp-delete__icon {
+    width: 14px;
+    height: 14px;
 }
 
 .sequence-comp-picker {

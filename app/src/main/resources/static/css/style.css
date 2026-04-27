@@ -1636,23 +1636,32 @@ input {
     fill: currentColor;
 }
 
-/* Sequence edit (Warming UP): 3-zone layout (order/name/tools) with fixed tool width */
+/* Sequence edit (Warming UP): unified card layout with left edge label + top-right tools */
 .sequence-comp-added-item--warming-up {
     position: relative;
-    grid-template-columns: 34px minmax(0, 1fr);
-    align-items: start;
-    padding: 12px 10px 12px 12px;
-    column-gap: 10px;
+    display: block;
+    padding: 10px 10px 10px 40px;
 }
 
 .sequence-comp-added-item--warming-up .sequence-comp-added-item__order {
-    width: 32px;
-    height: 32px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 24px;
+    height: auto;
+    border-radius: 14px 0 0 14px;
+    background: #e5654f;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 700;
 }
 
 .sequence-comp-added-item--warming-up .sequence-comp-added-item__body {
     min-width: 0;
-    padding-top: 32px;
+    padding-right: 100px;
+    padding-top: 2px;
+    gap: 3px;
 }
 
 .sequence-comp-added-item--warming-up .sequence-comp-added-item__name,
@@ -1666,7 +1675,7 @@ input {
 
 .sequence-comp-added-item--warming-up .sequence-comp-added-item__tools {
     position: absolute;
-    top: 10px;
+    top: 8px;
     right: 10px;
     display: flex;
     align-items: center;

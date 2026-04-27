@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initSectionDurationPicker);
     runInitializer(initBreathingModal);
     runInitializer(initWarmingUpModal);
+    runInitializer(initAsanaCandidateSelectionState);
     runInitializer(initAsanaCardSortable);
     runInitializer(initSunSalutationModal);
     runInitializer(initPeakPoseModal);
@@ -54,6 +55,64 @@ function runInitializer(initializer) {
     } catch (error) {
         console.warn(`[stika] initializer failed: ${initializer.name}`, error);
     }
+}
+
+function initAsanaCandidateSelectionState() {
+    const candidateSelector = ".sequence-comp-modal .warming-up-modal__master-button";
+    const selectedClass = "asana-option-selected";
+
+    const markSelected = (button) => {
+        if (!button?.matches(candidateSelector)) {
+            return;
+        }
+
+        const modal = button.closest(".sequence-comp-modal");
+        if (modal?.classList.contains("sequence-duration-modal") || modal?.classList.contains("sequence-comp-modal--section-add")) {
+            return;
+        }
+
+        const optionList = button.closest(".warming-up-modal__master-list");
+        optionList?.querySelectorAll(candidateSelector).forEach((candidate) => {
+            candidate.classList.toggle(selectedClass, candidate === button);
+            candidate.classList.toggle("is-selected", candidate === button);
+            candidate.setAttribute("aria-selected", String(candidate === button));
+        });
+
+        window.setTimeout(() => {
+            if (modal?.hidden) {
+                clearSelected(modal);
+            }
+        }, 180);
+    };
+
+    const clearSelected = (modal) => {
+        modal?.querySelectorAll(candidateSelector).forEach((candidate) => {
+            candidate.classList.remove(selectedClass, "is-selected");
+            candidate.setAttribute("aria-selected", "false");
+        });
+    };
+
+    document.querySelectorAll(candidateSelector).forEach((button) => {
+        button.setAttribute("aria-selected", button.classList.contains(selectedClass) || button.classList.contains("is-selected") ? "true" : "false");
+    });
+
+    document.addEventListener("pointerdown", (event) => {
+        markSelected(event.target.closest(candidateSelector));
+    });
+
+    document.addEventListener("submit", (event) => {
+        markSelected(event.target.querySelector(candidateSelector));
+    }, true);
+
+    document.querySelectorAll(".sequence-comp-modal").forEach((modal) => {
+        const observer = new MutationObserver(() => {
+            if (modal.hidden) {
+                window.setTimeout(() => clearSelected(modal), 180);
+            }
+        });
+
+        observer.observe(modal, { attributes: true, attributeFilter: ["hidden"] });
+    });
 }
 
 function initPeakPoseField() {

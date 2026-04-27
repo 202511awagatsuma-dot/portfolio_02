@@ -1992,6 +1992,33 @@ input {
     display: grid;
     gap: 4px;
     text-align: left;
+    transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, color 0.18s ease, transform 0.15s ease;
+}
+
+.warming-up-modal__master-button:hover,
+.warming-up-modal__master-button:focus-visible {
+    border-color: rgba(236, 139, 51, 0.58);
+    background: rgba(255, 243, 235, 0.86);
+    outline: none;
+}
+
+.warming-up-modal__master-button:active {
+    transform: translateY(1px);
+}
+
+.warming-up-modal__master-button.asana-option-selected,
+.warming-up-modal__master-button.is-selected,
+.warming-up-modal__master-button[aria-selected="true"] {
+    border-color: #ec8b33;
+    background: #fff3eb;
+    color: #8f4715;
+    box-shadow: 0 4px 12px rgba(236, 139, 51, 0.22);
+}
+
+.warming-up-modal__master-button.asana-option-selected .warming-up-modal__master-sub,
+.warming-up-modal__master-button.is-selected .warming-up-modal__master-sub,
+.warming-up-modal__master-button[aria-selected="true"] .warming-up-modal__master-sub {
+    color: #a45b22;
 }
 
 .sequence-duration-option.is-selected {

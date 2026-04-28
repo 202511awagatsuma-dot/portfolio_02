@@ -345,6 +345,8 @@ function initSelfCareMoodLog() {
         document.body.classList.add("modal-open");
     };
 
+    closeDeleteModal();
+
     const renderState = () => {
         const hasLog = Boolean(currentLog);
         const showEditForm = !hasLog || isEditMode;

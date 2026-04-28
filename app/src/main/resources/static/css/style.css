@@ -3367,6 +3367,10 @@ input {
     filter: brightness(0) saturate(100%) invert(64%) sepia(63%) saturate(765%) hue-rotate(320deg) brightness(96%) contrast(94%);
 }
 
+.self-care-page [hidden] {
+    display: none !important;
+}
+
 @media (max-width: 380px) {
     .knowledge-grid {
         gap: 8px;

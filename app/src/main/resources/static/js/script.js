@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initSequenceDetailPage);
     runInitializer(initSelfCareToggles);
     runInitializer(initSelfCareMoodLog);
+    runInitializer(initKnowledgeTabs);
 });
 
 function runInitializer(initializer) {
@@ -658,6 +659,36 @@ function initSelfCareMoodLog() {
             renderState();
         }
     })();
+}
+
+function initKnowledgeTabs() {
+    const pageRoot = document.getElementById("knowledgePage");
+    const tabs = Array.from(document.querySelectorAll("[data-knowledge-tab]"));
+    const panels = Array.from(document.querySelectorAll("[data-knowledge-panel]"));
+
+    if (!pageRoot || tabs.length === 0 || panels.length === 0) {
+        return;
+    }
+
+    const activateTab = (tabKey) => {
+        tabs.forEach((tab) => {
+            const isActive = tab.dataset.knowledgeTab === tabKey;
+            tab.classList.toggle("is-active", isActive);
+            tab.setAttribute("aria-selected", String(isActive));
+        });
+
+        panels.forEach((panel) => {
+            panel.hidden = panel.dataset.knowledgePanel !== tabKey;
+        });
+    };
+
+    tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+            activateTab(tab.dataset.knowledgeTab || "");
+        });
+    });
+
+    activateTab("philosophy");
 }
 
 function initSequenceTabs() {

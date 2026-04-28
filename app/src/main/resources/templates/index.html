@@ -49,28 +49,36 @@
                 </div>
                 <div class="knowledge-grid">
                     <article class="round-card">
-                        <span class="knowledge-icon">
-                            <img class="knowledge-icon__image" th:src="@{/assets/icon/img01.svg}" src="/assets/icon/img01.svg" alt="">
-                            <span class="knowledge-icon__label">哲学</span>
-                        </span>
+                        <a class="knowledge-link" th:href="@{/knowledge.html(category='philosophy')}" href="/knowledge.html?category=philosophy">
+                            <span class="knowledge-icon">
+                                <img class="knowledge-icon__image" th:src="@{/assets/icon/img01.svg}" src="/assets/icon/img01.svg" alt="">
+                                <span class="knowledge-icon__label">哲学</span>
+                            </span>
+                        </a>
                     </article>
                     <article class="round-card">
-                        <span class="knowledge-icon">
-                            <img class="knowledge-icon__image" th:src="@{/assets/icon/img02.svg}" src="/assets/icon/img02.svg" alt="">
-                            <span class="knowledge-icon__label">解剖学</span>
-                        </span>
+                        <a class="knowledge-link" th:href="@{/knowledge.html(category='anatomy')}" href="/knowledge.html?category=anatomy">
+                            <span class="knowledge-icon">
+                                <img class="knowledge-icon__image" th:src="@{/assets/icon/img02.svg}" src="/assets/icon/img02.svg" alt="">
+                                <span class="knowledge-icon__label">解剖学</span>
+                            </span>
+                        </a>
                     </article>
                     <article class="round-card">
-                        <span class="knowledge-icon">
-                            <img class="knowledge-icon__image" th:src="@{/assets/icon/img03.svg}" src="/assets/icon/img03.svg" alt="">
-                            <span class="knowledge-icon__label">呼吸法</span>
-                        </span>
+                        <a class="knowledge-link" th:href="@{/knowledge.html(category='breathing')}" href="/knowledge.html?category=breathing">
+                            <span class="knowledge-icon">
+                                <img class="knowledge-icon__image" th:src="@{/assets/icon/img03.svg}" src="/assets/icon/img03.svg" alt="">
+                                <span class="knowledge-icon__label">呼吸法</span>
+                            </span>
+                        </a>
                     </article>
                     <article class="round-card">
-                        <span class="knowledge-icon">
-                            <img class="knowledge-icon__image" th:src="@{/assets/icon/img04.svg}" src="/assets/icon/img04.svg" alt="">
-                            <span class="knowledge-icon__label">指導法</span>
-                        </span>
+                        <a class="knowledge-link" th:href="@{/knowledge.html(category='teaching')}" href="/knowledge.html?category=teaching">
+                            <span class="knowledge-icon">
+                                <img class="knowledge-icon__image" th:src="@{/assets/icon/img04.svg}" src="/assets/icon/img04.svg" alt="">
+                                <span class="knowledge-icon__label">指導法</span>
+                            </span>
+                        </a>
                     </article>
                 </div>
             </section>

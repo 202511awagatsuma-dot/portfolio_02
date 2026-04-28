@@ -179,6 +179,7 @@
             var tabs = Array.prototype.slice.call(document.querySelectorAll(".knowledge-tab[data-category]"));
             var cards = Array.prototype.slice.call(document.querySelectorAll(".knowledge-note-card[data-category]"));
             if (!tabs.length || !cards.length) return;
+            var validCategories = ["philosophy", "anatomy", "breathing", "teaching"];
 
             function activateCategory(category) {
                 tabs.forEach(function (tab) {
@@ -198,7 +199,10 @@
                 });
             });
 
-            activateCategory("philosophy");
+            var params = new URLSearchParams(window.location.search);
+            var requestedCategory = params.get("category");
+            var initialCategory = validCategories.indexOf(requestedCategory) !== -1 ? requestedCategory : "philosophy";
+            activateCategory(initialCategory);
         });
     </script>
 </body>

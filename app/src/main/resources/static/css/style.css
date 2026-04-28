@@ -679,29 +679,29 @@ input {
 
 /* Keep TOP report calendar compact without affecting report page calendar styles. */
 .report-card.calendar-card {
-    padding: 13px 16px 12px;
+    padding: 11px 16px 10px;
 }
 
 .report-card.calendar-card .calendar-card__header {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .report-card.calendar-card .calendar {
-    gap: 8px;
+    gap: 6px;
 }
 
 .report-card.calendar-card .calendar__weekdays {
-    gap: 3px;
+    gap: 2px;
 }
 
 .report-card.calendar-card .calendar__grid {
     gap: 1px;
-    padding-top: 1px;
+    padding-top: 0;
 }
 
 .report-card.calendar-card .calendar-day {
-    min-height: 50px;
-    padding: 4px 4px;
+    min-height: 42px;
+    padding: 3px 3px;
 }
 
 .bottom-nav {

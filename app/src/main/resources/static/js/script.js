@@ -173,15 +173,17 @@ function initGrowthCalendar() {
         tired: "疲れ気味"
     };
 
-    const closeReportMoodModal = () => {
+    const closeMoodLogModal = () => {
         if (!reportMoodModal) {
             return;
         }
         reportMoodModal.hidden = true;
+        reportMoodModal.classList.remove("is-open");
+        reportMoodModal.setAttribute("aria-hidden", "true");
         document.body.classList.remove("modal-open");
     };
 
-    const openReportMoodModal = (isoDate, logItem) => {
+    const openMoodLogModal = (isoDate, logItem) => {
         if (!reportMoodModal || !reportMoodModalDate || !reportMoodModalMood || !reportMoodModalMemo) {
             return;
         }
@@ -197,6 +199,8 @@ function initGrowthCalendar() {
         reportMoodModalMood.textContent = moodLabels[logItem?.mood] || "-";
         reportMoodModalMemo.textContent = logItem?.memo || "メモはありません";
         reportMoodModal.hidden = false;
+        reportMoodModal.classList.add("is-open");
+        reportMoodModal.setAttribute("aria-hidden", "false");
         document.body.classList.add("modal-open");
     };
 
@@ -209,12 +213,24 @@ function initGrowthCalendar() {
         return payload;
     };
 
-    reportMoodModalBackdrop?.addEventListener("click", closeReportMoodModal);
-    reportMoodModalCloseButton?.addEventListener("click", closeReportMoodModal);
-    reportMoodModalOkButton?.addEventListener("click", closeReportMoodModal);
+    const bindCloseHandler = (element) => {
+        element?.addEventListener("click", (event) => {
+            event.preventDefault();
+            closeMoodLogModal();
+        });
+    };
+
+    bindCloseHandler(reportMoodModalBackdrop);
+    bindCloseHandler(reportMoodModalCloseButton);
+    bindCloseHandler(reportMoodModalOkButton);
+    reportMoodModal?.addEventListener("click", (event) => {
+        if (event.target === reportMoodModal) {
+            closeMoodLogModal();
+        }
+    });
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && reportMoodModal && !reportMoodModal.hidden) {
-            closeReportMoodModal();
+            closeMoodLogModal();
         }
     });
 
@@ -222,7 +238,7 @@ function initGrowthCalendar() {
         button.addEventListener("click", () => {
             const direction = button.dataset.calendarNav === "next" ? 1 : -1;
             currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + direction, 1);
-            closeReportMoodModal();
+            closeMoodLogModal();
             updateMonthMoodLogsAndRender();
         });
     });
@@ -310,7 +326,7 @@ function initGrowthCalendar() {
                 if (!moodLog) {
                     return;
                 }
-                openReportMoodModal(isoDate, moodLog);
+                openMoodLogModal(isoDate, moodLog);
             });
 
             calendarGrid.appendChild(button);

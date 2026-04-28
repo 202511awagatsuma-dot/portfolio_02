@@ -3235,12 +3235,17 @@ input {
     padding: 18px;
 }
 
+.report-mood-modal[hidden] {
+    display: none !important;
+}
+
 .self-care-complete-modal__backdrop,
 .report-mood-modal__backdrop {
     position: absolute;
     inset: 0;
     border: none;
     background: rgba(29, 43, 61, 0.42);
+    z-index: 0;
 }
 
 .self-care-complete-modal__dialog,
@@ -3252,6 +3257,7 @@ input {
     background: #fff;
     border: 1px solid var(--line);
     box-shadow: 0 16px 34px rgba(38, 56, 76, 0.24);
+    z-index: 1;
 }
 
 .self-care-complete-modal__dialog h3,

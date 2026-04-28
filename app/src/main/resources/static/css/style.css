@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     --bg: #f8f3ee;
     --surface: #fffaf7;
     --surface-soft: #fff3eb;
@@ -3555,24 +3555,47 @@ input {
     gap: 10px;
 }
 
+.knowledge-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
 .knowledge-note-card {
-    padding: 14px;
+    padding: 0;
     border-radius: 16px;
     box-shadow: 0 10px 24px rgba(82, 97, 115, 0.08);
+    overflow: hidden;
+}
+
+.knowledge-note-card__link {
+    display: grid;
+    gap: 8px;
+    padding: 10px;
+    min-height: 100%;
+}
+
+.knowledge-note-card__thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid rgba(220, 169, 146, 0.35);
+    background: #fff6f0;
 }
 
 .knowledge-note-card__title {
     margin: 0;
     color: var(--navy);
-    font-size: 0.98rem;
-    line-height: 1.45;
+    font-size: 0.88rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
 }
 
 .knowledge-note-card__preview {
-    margin: 8px 0 0;
-    color: #5f7388;
-    font-size: 0.82rem;
-    line-height: 1.7;
+    display: none;
 }
 
 .knowledge-note-card__meta {
@@ -3583,6 +3606,15 @@ input {
     gap: 8px;
     color: #6a7f93;
     font-size: 0.74rem;
+}
+
+.knowledge-note-card__date {
+    margin-left: auto;
+    color: #8ea0b2;
+    font-size: 0.68rem;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
 }
 
 .knowledge-note-card__tag {
@@ -3610,8 +3642,9 @@ input {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .knowledge-grid {
-        gap: 8px;
+    .knowledge-card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
     }
 
     .knowledge-icon,

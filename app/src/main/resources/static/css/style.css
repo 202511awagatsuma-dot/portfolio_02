@@ -2930,6 +2930,10 @@ input {
     text-align: center;
 }
 
+.self-care-header__center .sequence-comp-header__title {
+    margin-top: 8px;
+}
+
 .self-care-header__center p {
     margin: 6px auto 0;
     max-width: 220px;

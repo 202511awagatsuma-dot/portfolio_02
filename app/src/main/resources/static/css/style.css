@@ -400,12 +400,12 @@ input {
 .mood-item {
     flex: 1;
     text-align: center;
-    color: #c7ced5;
+    color: #97a1ab;
 }
 
 .mood-icon {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     display: block;
     margin: 0 auto 6px;
     color: currentColor;
@@ -417,7 +417,7 @@ input {
     display: block;
     fill: none;
     stroke: currentColor;
-    stroke-width: 1.8;
+    stroke-width: 2.1;
     stroke-linecap: round;
     stroke-linejoin: round;
 }

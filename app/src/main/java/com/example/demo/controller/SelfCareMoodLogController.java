@@ -2,8 +2,12 @@ package com.example.demo.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.DateTimeException;
+import java.time.YearMonth;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.model.MoodLog;
 import com.example.demo.service.MoodLogService;
@@ -38,6 +44,24 @@ public class SelfCareMoodLogController {
         return MoodLogResponse.from(todayLog.get());
     }
 
+    @GetMapping("/month")
+    public MoodLogMonthResponse getMonthMoodLogDates(
+            @RequestParam int year,
+            @RequestParam int month) {
+        if (month < 1 || month > 12) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "month must be between 1 and 12.");
+        }
+
+        YearMonth yearMonth;
+        try {
+            yearMonth = YearMonth.of(year, month);
+        } catch (DateTimeException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid year or month.");
+        }
+        List<LocalDate> dates = moodLogService.getLogDatesByMonth(yearMonth);
+        return new MoodLogMonthResponse(year, month, dates);
+    }
+
     @PostMapping("/today")
     public MoodLogResponse createTodayMoodLog(@RequestBody MoodLogSaveRequest request) {
         MoodLog created = moodLogService.createToday(request.mood(), request.memo());
@@ -57,6 +81,9 @@ public class SelfCareMoodLogController {
     }
 
     public record MoodLogSaveRequest(String mood, String memo) {
+    }
+
+    public record MoodLogMonthResponse(int year, int month, List<LocalDate> dates) {
     }
 
     public record MoodLogResponse(

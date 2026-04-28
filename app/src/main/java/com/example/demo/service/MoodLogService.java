@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -26,6 +28,12 @@ public class MoodLogService {
 
     public Optional<MoodLog> getTodayLog() {
         return moodLogRepository.findByDate(LocalDate.now());
+    }
+
+    public List<LocalDate> getLogDatesByMonth(YearMonth yearMonth) {
+        LocalDate from = yearMonth.atDay(1);
+        LocalDate to = yearMonth.atEndOfMonth();
+        return moodLogRepository.findLogDatesInRange(from, to);
     }
 
     public MoodLog createToday(String mood, String memo) {

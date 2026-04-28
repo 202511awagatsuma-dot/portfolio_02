@@ -148,36 +148,53 @@ function initGrowthCalendar() {
     const calendarGrid = document.getElementById("calendarGrid");
     const monthLabel = document.getElementById("calendarMonthLabel");
     const navButtons = document.querySelectorAll("[data-calendar-nav]");
+    const reportScreen = document.querySelector(".report-screen");
 
-    if (!calendarRoot || !calendarGrid || !monthLabel || navButtons.length === 0) {
+    if (!calendarRoot || !calendarGrid || !monthLabel || navButtons.length === 0 || !reportScreen) {
         return;
     }
 
-    const recordedDates = [
-        "2026-04-03",
-        "2026-04-08",
-        "2026-04-12",
-        "2026-04-15",
-        "2026-04-19",
-        "2026-04-24",
-        "2026-04-28",
-        "2026-05-02",
-        "2026-05-06",
-        "2026-05-14"
-    ];
-
-    const recordSet = new Set(recordedDates);
     const today = createDateOnly(new Date());
     let currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     let selectedDate = null;
+    let monthMoodLogDates = new Set();
+    let fetchSerial = 0;
 
     navButtons.forEach((button) => {
         button.addEventListener("click", () => {
             const direction = button.dataset.calendarNav === "next" ? 1 : -1;
             currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + direction, 1);
-            renderCalendar();
+            updateMonthMoodLogsAndRender();
         });
     });
+
+    async function updateMonthMoodLogsAndRender() {
+        const currentFetchId = fetchSerial + 1;
+        fetchSerial = currentFetchId;
+
+        try {
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth() + 1;
+            const response = await fetch(`/api/self-care/mood-logs/month?year=${year}&month=${month}`);
+            const payload = await response.json().catch(() => null);
+
+            if (!response.ok) {
+                throw new Error(payload?.message || "Failed to fetch month mood logs.");
+            }
+
+            const dates = Array.isArray(payload?.dates) ? payload.dates : [];
+            monthMoodLogDates = new Set(dates);
+        } catch (error) {
+            console.warn("[stika] failed to fetch month mood logs", error);
+            monthMoodLogDates = new Set();
+        }
+
+        if (currentFetchId !== fetchSerial) {
+            return;
+        }
+
+        renderCalendar();
+    }
 
     function renderCalendar() {
         monthLabel.textContent = formatMonthLabel(currentMonth);
@@ -193,14 +210,14 @@ function initGrowthCalendar() {
             const isCurrentMonth = date.getMonth() === currentMonth.getMonth();
             const isToday = isSameDate(date, today);
             const isSelected = selectedDate === isoDate;
-            const hasRecord = recordSet.has(isoDate);
+            const hasMoodLog = monthMoodLogDates.has(isoDate);
 
             const button = document.createElement("button");
             button.type = "button";
             button.className = "calendar-day";
             button.dataset.date = isoDate;
             button.setAttribute("role", "gridcell");
-            button.setAttribute("aria-label", `${isoDate}${hasRecord ? " 記録あり" : ""}${isToday ? " 今日" : ""}`);
+            button.setAttribute("aria-label", `${isoDate}${hasMoodLog ? " 記録あり" : ""}${isToday ? " 今日" : ""}`);
             button.setAttribute("aria-selected", String(isSelected));
 
             if (!isCurrentMonth) {
@@ -212,7 +229,8 @@ function initGrowthCalendar() {
             if (isSelected) {
                 button.classList.add("calendar-day--selected");
             }
-            if (hasRecord) {
+            if (hasMoodLog) {
+                button.classList.add("has-mood-log");
                 button.classList.add("calendar-day--has-record");
             }
 
@@ -226,7 +244,7 @@ function initGrowthCalendar() {
         }
     }
 
-    renderCalendar();
+    updateMonthMoodLogsAndRender();
 }
 
 function formatMonthLabel(date) {

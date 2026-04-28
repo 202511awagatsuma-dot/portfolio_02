@@ -633,9 +633,11 @@ input {
     transition: color 0.18s ease, font-weight 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
 }
 
-.calendar-day--has-record .calendar-day__number {
-    font-weight: 630;
+.calendar-day--has-record .calendar-day__number,
+.calendar-day.has-mood-log .calendar-day__number {
+    font-weight: 700;
     color: rgba(39, 55, 69, 0.96);
+    background: rgba(239, 139, 99, 0.08);
 }
 
 .calendar-day--today .calendar-day__number {
@@ -645,7 +647,11 @@ input {
 }
 
 .calendar-day--today.calendar-day--has-record .calendar-day__number {
-    font-weight: 630;
+    font-weight: 700;
+}
+
+.calendar-day--today.has-mood-log .calendar-day__number {
+    font-weight: 700;
 }
 
 .calendar-day--selected .calendar-day__number {
@@ -657,6 +663,12 @@ input {
 .calendar-day--muted .calendar-day__number {
     color: inherit;
     opacity: 0.9;
+}
+
+.calendar-day--muted.has-mood-log .calendar-day__number,
+.calendar-day--muted.calendar-day--has-record .calendar-day__number {
+    font-weight: 500;
+    background: transparent;
 }
 
 /* Keep TOP report calendar compact without affecting report page calendar styles. */

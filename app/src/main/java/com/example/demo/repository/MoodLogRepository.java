@@ -40,6 +40,19 @@ public class MoodLogRepository {
                 Date.valueOf(logDate)).stream().findFirst();
     }
 
+    public List<LocalDate> findLogDatesInRange(LocalDate fromInclusive, LocalDate toInclusive) {
+        return jdbcTemplate.query(
+                """
+                SELECT log_date
+                FROM mood_logs
+                WHERE log_date BETWEEN ? AND ?
+                ORDER BY log_date ASC
+                """,
+                (rs, rowNum) -> rs.getDate("log_date").toLocalDate(),
+                Date.valueOf(fromInclusive),
+                Date.valueOf(toInclusive));
+    }
+
     public Long create(LocalDate logDate, String mood, String memo) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {

@@ -53,6 +53,25 @@ public class MoodLogRepository {
                 Date.valueOf(toInclusive));
     }
 
+    public List<MoodLog> findByDateRange(LocalDate fromInclusive, LocalDate toInclusive) {
+        return jdbcTemplate.query(
+                """
+                SELECT id, log_date, mood, memo, created_at, updated_at
+                FROM mood_logs
+                WHERE log_date BETWEEN ? AND ?
+                ORDER BY log_date ASC
+                """,
+                (rs, rowNum) -> new MoodLog(
+                        rs.getLong("id"),
+                        rs.getDate("log_date").toLocalDate(),
+                        rs.getString("mood"),
+                        rs.getString("memo"),
+                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getTimestamp("updated_at").toLocalDateTime()),
+                Date.valueOf(fromInclusive),
+                Date.valueOf(toInclusive));
+    }
+
     public Long create(LocalDate logDate, String mood, String memo) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {

@@ -149,6 +149,13 @@ function initGrowthCalendar() {
     const monthLabel = document.getElementById("calendarMonthLabel");
     const navButtons = document.querySelectorAll("[data-calendar-nav]");
     const reportScreen = document.querySelector(".report-screen");
+    const reportMoodModal = document.getElementById("reportMoodModal");
+    const reportMoodModalBackdrop = document.getElementById("reportMoodModalBackdrop");
+    const reportMoodModalCloseButton = document.getElementById("reportMoodModalCloseButton");
+    const reportMoodModalOkButton = document.getElementById("reportMoodModalOkButton");
+    const reportMoodModalDate = document.getElementById("reportMoodModalDate");
+    const reportMoodModalMood = document.getElementById("reportMoodModalMood");
+    const reportMoodModalMemo = document.getElementById("reportMoodModalMemo");
 
     if (!calendarRoot || !calendarGrid || !monthLabel || navButtons.length === 0 || !reportScreen) {
         return;
@@ -158,12 +165,64 @@ function initGrowthCalendar() {
     let currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     let selectedDate = null;
     let monthMoodLogDates = new Set();
+    let monthMoodLogMap = new Map();
     let fetchSerial = 0;
+    const moodLabels = {
+        good: "良い",
+        normal: "普通",
+        tired: "疲れ気味"
+    };
+
+    const closeReportMoodModal = () => {
+        if (!reportMoodModal) {
+            return;
+        }
+        reportMoodModal.hidden = true;
+        document.body.classList.remove("modal-open");
+    };
+
+    const openReportMoodModal = (isoDate, logItem) => {
+        if (!reportMoodModal || !reportMoodModalDate || !reportMoodModalMood || !reportMoodModalMemo) {
+            return;
+        }
+        const [year, month, day] = isoDate.split("-").map((value) => Number.parseInt(value, 10));
+        const displayDate = Number.isFinite(year) && Number.isFinite(month) && Number.isFinite(day)
+            ? new Date(year, month - 1, day)
+            : new Date(isoDate);
+        reportMoodModalDate.textContent = new Intl.DateTimeFormat("ja-JP", {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        }).format(displayDate);
+        reportMoodModalMood.textContent = moodLabels[logItem?.mood] || "-";
+        reportMoodModalMemo.textContent = logItem?.memo || "メモはありません";
+        reportMoodModal.hidden = false;
+        document.body.classList.add("modal-open");
+    };
+
+    const fetchMoodLogByDate = async (isoDate) => {
+        const response = await fetch(`/api/self-care/mood-logs/by-date?date=${encodeURIComponent(isoDate)}`);
+        const payload = await response.json().catch(() => null);
+        if (!response.ok || !payload?.exists) {
+            return null;
+        }
+        return payload;
+    };
+
+    reportMoodModalBackdrop?.addEventListener("click", closeReportMoodModal);
+    reportMoodModalCloseButton?.addEventListener("click", closeReportMoodModal);
+    reportMoodModalOkButton?.addEventListener("click", closeReportMoodModal);
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && reportMoodModal && !reportMoodModal.hidden) {
+            closeReportMoodModal();
+        }
+    });
 
     navButtons.forEach((button) => {
         button.addEventListener("click", () => {
             const direction = button.dataset.calendarNav === "next" ? 1 : -1;
             currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + direction, 1);
+            closeReportMoodModal();
             updateMonthMoodLogsAndRender();
         });
     });
@@ -183,10 +242,16 @@ function initGrowthCalendar() {
             }
 
             const dates = Array.isArray(payload?.dates) ? payload.dates : [];
+            const logs = Array.isArray(payload?.logs) ? payload.logs : [];
             monthMoodLogDates = new Set(dates);
+            monthMoodLogMap = new Map(
+                logs
+                    .filter((entry) => typeof entry?.date === "string")
+                    .map((entry) => [entry.date, entry]));
         } catch (error) {
             console.warn("[stika] failed to fetch month mood logs", error);
             monthMoodLogDates = new Set();
+            monthMoodLogMap = new Map();
         }
 
         if (currentFetchId !== fetchSerial) {
@@ -235,9 +300,17 @@ function initGrowthCalendar() {
             }
 
             button.innerHTML = `<span class="calendar-day__number">${date.getDate()}</span>`;
-            button.addEventListener("click", () => {
+            button.addEventListener("click", async () => {
                 selectedDate = isoDate;
                 renderCalendar();
+                if (!hasMoodLog) {
+                    return;
+                }
+                const moodLog = monthMoodLogMap.get(isoDate) || await fetchMoodLogByDate(isoDate);
+                if (!moodLog) {
+                    return;
+                }
+                openReportMoodModal(isoDate, moodLog);
             });
 
             calendarGrid.appendChild(button);
@@ -316,11 +389,16 @@ function initSelfCareMoodLog() {
     const deleteModalBackdrop = document.getElementById("selfCareDeleteModalBackdrop");
     const deleteCancelButton = document.getElementById("selfCareDeleteCancelButton");
     const deleteConfirmButton = document.getElementById("selfCareDeleteConfirmButton");
+    const completeModal = document.getElementById("selfCareCompleteModal");
+    const completeModalBackdrop = document.getElementById("selfCareCompleteModalBackdrop");
+    const completeCloseButton = document.getElementById("selfCareCompleteCloseButton");
+    const completeReportButton = document.getElementById("selfCareCompleteReportButton");
     const moodInputs = document.querySelectorAll("input[name='todayMood']");
 
     if (!card || !form || !noteField || !recordButton || !registeredView || !registeredMoodLabel || !registeredMemo
         || !editButton || !deleteButton || !deleteModal || !deleteModalBackdrop || !deleteCancelButton
-        || !deleteConfirmButton || moodInputs.length === 0) {
+        || !deleteConfirmButton || !completeModal || !completeModalBackdrop || !completeCloseButton
+        || !completeReportButton || moodInputs.length === 0) {
         return;
     }
 
@@ -355,7 +433,9 @@ function initSelfCareMoodLog() {
 
     const closeDeleteModal = () => {
         deleteModal.hidden = true;
-        document.body.classList.remove("modal-open");
+        if (completeModal.hidden) {
+            document.body.classList.remove("modal-open");
+        }
     };
 
     const openDeleteModal = () => {
@@ -363,7 +443,20 @@ function initSelfCareMoodLog() {
         document.body.classList.add("modal-open");
     };
 
+    const closeCompleteModal = () => {
+        completeModal.hidden = true;
+        if (deleteModal.hidden) {
+            document.body.classList.remove("modal-open");
+        }
+    };
+
+    const openCompleteModal = () => {
+        completeModal.hidden = false;
+        document.body.classList.add("modal-open");
+    };
+
     closeDeleteModal();
+    closeCompleteModal();
 
     const renderState = () => {
         const hasLog = Boolean(currentLog);
@@ -455,6 +548,7 @@ function initSelfCareMoodLog() {
             isEditMode = false;
             applyLogToForm();
             renderState();
+            openCompleteModal();
             setFeedback(method === "POST" ? "今日の気分を記録しました。" : "今日の気分を更新しました。");
         } catch (error) {
             if (error?.status === 409) {
@@ -488,6 +582,11 @@ function initSelfCareMoodLog() {
 
     deleteModalBackdrop.addEventListener("click", closeDeleteModal);
     deleteCancelButton.addEventListener("click", closeDeleteModal);
+    completeModalBackdrop.addEventListener("click", closeCompleteModal);
+    completeCloseButton.addEventListener("click", closeCompleteModal);
+    completeReportButton.addEventListener("click", () => {
+        window.location.href = "/report.html";
+    });
 
     deleteConfirmButton.addEventListener("click", async () => {
         if (isSubmitting) {
@@ -515,8 +614,14 @@ function initSelfCareMoodLog() {
     });
 
     document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && !deleteModal.hidden) {
+        if (event.key !== "Escape") {
+            return;
+        }
+        if (!deleteModal.hidden) {
             closeDeleteModal();
+        }
+        if (!completeModal.hidden) {
+            closeCompleteModal();
         }
     });
 

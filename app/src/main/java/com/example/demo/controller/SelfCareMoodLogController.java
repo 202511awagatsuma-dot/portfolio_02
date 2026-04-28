@@ -58,8 +58,26 @@ public class SelfCareMoodLogController {
         } catch (DateTimeException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid year or month.");
         }
-        List<LocalDate> dates = moodLogService.getLogDatesByMonth(yearMonth);
-        return new MoodLogMonthResponse(year, month, dates);
+        List<MoodLog> logs = moodLogService.getLogsByMonth(yearMonth);
+        List<LocalDate> dates = logs.stream().map(MoodLog::logDate).toList();
+        List<MoodLogMonthItem> items = logs.stream()
+                .map(log -> new MoodLogMonthItem(log.logDate(), log.mood(), log.memo()))
+                .toList();
+        return new MoodLogMonthResponse(year, month, dates, items);
+    }
+
+    @GetMapping("/by-date")
+    public MoodLogResponse getMoodLogByDate(@RequestParam String date) {
+        LocalDate targetDate;
+        try {
+            targetDate = LocalDate.parse(date);
+        } catch (DateTimeException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid date format.");
+        }
+
+        return moodLogService.getLogByDate(targetDate)
+                .map(MoodLogResponse::from)
+                .orElseGet(() -> MoodLogResponse.empty(targetDate));
     }
 
     @PostMapping("/today")
@@ -83,7 +101,10 @@ public class SelfCareMoodLogController {
     public record MoodLogSaveRequest(String mood, String memo) {
     }
 
-    public record MoodLogMonthResponse(int year, int month, List<LocalDate> dates) {
+    public record MoodLogMonthItem(LocalDate date, String mood, String memo) {
+    }
+
+    public record MoodLogMonthResponse(int year, int month, List<LocalDate> dates, List<MoodLogMonthItem> logs) {
     }
 
     public record MoodLogResponse(

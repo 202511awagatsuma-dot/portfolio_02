@@ -93,6 +93,22 @@
                 <h2 class="report-title">今月の気づき</h2>
                 <p class="report-insight">感じたことや、来月のテーマを書き留めましょう</p>
             </section>
+
+            <div class="report-mood-modal" id="reportMoodModal" hidden>
+                <button class="report-mood-modal__backdrop" id="reportMoodModalBackdrop" type="button" aria-label="閉じる"></button>
+                <div class="report-mood-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="reportMoodModalTitle">
+                    <h3 id="reportMoodModalTitle">気分ログ詳細</h3>
+                    <div class="report-mood-modal__content">
+                        <p><span>日付</span><strong id="reportMoodModalDate">-</strong></p>
+                        <p><span>気分</span><strong id="reportMoodModalMood">-</strong></p>
+                        <p><span>メモ</span><strong id="reportMoodModalMemo">-</strong></p>
+                    </div>
+                    <div class="report-mood-modal__actions">
+                        <button class="secondary-button report-mood-modal__close" id="reportMoodModalCloseButton" type="button">閉じる</button>
+                        <button class="primary-button report-mood-modal__ok" id="reportMoodModalOkButton" type="button">OK</button>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <nav class="bottom-nav" aria-label="メインナビゲーション">

@@ -36,6 +36,16 @@ public class MoodLogService {
         return moodLogRepository.findLogDatesInRange(from, to);
     }
 
+    public List<MoodLog> getLogsByMonth(YearMonth yearMonth) {
+        LocalDate from = yearMonth.atDay(1);
+        LocalDate to = yearMonth.atEndOfMonth();
+        return moodLogRepository.findByDateRange(from, to);
+    }
+
+    public Optional<MoodLog> getLogByDate(LocalDate date) {
+        return moodLogRepository.findByDate(date);
+    }
+
     public MoodLog createToday(String mood, String memo) {
         String normalizedMood = normalizeMood(mood);
         String normalizedMemo = normalizeMemo(memo);

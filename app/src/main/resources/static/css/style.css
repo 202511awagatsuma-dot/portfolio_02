@@ -3147,8 +3147,9 @@ input {
 
 .self-care-mood-actions {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 8px;
+    align-items: center;
 }
 
 .self-care-mood-action-button {
@@ -3159,10 +3160,6 @@ input {
 .self-care-mood-action-button.secondary-button {
     border-color: rgba(239, 139, 99, 0.48);
     color: #d26f48;
-}
-
-.self-care-mood-action-button--danger.primary-button {
-    background: linear-gradient(135deg, #ef9a70 0%, #e57f59 100%);
 }
 
 .self-care-delete-modal {

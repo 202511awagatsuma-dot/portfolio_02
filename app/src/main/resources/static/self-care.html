@@ -28,32 +28,62 @@
                 </div>
             </header>
 
-            <section class="card self-care-card self-care-mood-card" aria-labelledby="selfCareMoodTitle">
+            <section class="card self-care-card self-care-mood-card" id="selfCareMoodCard" aria-labelledby="selfCareMoodTitle">
                 <div class="section-heading self-care-section-heading">
                     <h2 id="selfCareMoodTitle">今日の気分</h2>
                 </div>
 
-                <div class="self-care-mood-options" role="radiogroup" aria-label="今日の気分">
-                    <label class="self-care-mood-option">
-                        <input type="radio" name="todayMood" value="good" checked>
-                        <span>良い</span>
-                    </label>
-                    <label class="self-care-mood-option">
-                        <input type="radio" name="todayMood" value="normal">
-                        <span>普通</span>
-                    </label>
-                    <label class="self-care-mood-option">
-                        <input type="radio" name="todayMood" value="tired">
-                        <span>疲れ気味</span>
+                <div id="selfCareMoodForm">
+                    <div class="self-care-mood-options" role="radiogroup" aria-label="今日の気分">
+                        <label class="self-care-mood-option">
+                            <input type="radio" name="todayMood" value="good" checked>
+                            <span>良い</span>
+                        </label>
+                        <label class="self-care-mood-option">
+                            <input type="radio" name="todayMood" value="normal">
+                            <span>普通</span>
+                        </label>
+                        <label class="self-care-mood-option">
+                            <input type="radio" name="todayMood" value="tired">
+                            <span>疲れ気味</span>
+                        </label>
+                    </div>
+
+                    <label class="self-care-note-field" for="selfCareNote">
+                        <span>メモ</span>
+                        <textarea id="selfCareNote" rows="4" placeholder="今日の体調や気づきをメモ"></textarea>
                     </label>
                 </div>
 
-                <label class="self-care-note-field" for="selfCareNote">
-                    <span>メモ</span>
-                    <textarea id="selfCareNote" rows="4" placeholder="今日の体調や気づきをメモ"></textarea>
-                </label>
+                <div class="self-care-mood-registered" id="selfCareMoodRegistered" hidden>
+                    <div class="self-care-mood-registered__row">
+                        <span class="self-care-mood-registered__label">気分</span>
+                        <strong class="self-care-mood-registered__value" id="selfCareRegisteredMoodLabel">-</strong>
+                    </div>
+                    <div class="self-care-mood-registered__note">
+                        <span class="self-care-mood-registered__label">メモ</span>
+                        <p id="selfCareRegisteredMemo">-</p>
+                    </div>
+                    <div class="self-care-mood-actions">
+                        <button class="secondary-button self-care-mood-action-button" id="selfCareEditButton" type="button">編集</button>
+                        <button class="primary-button self-care-mood-action-button self-care-mood-action-button--danger" id="selfCareDeleteButton" type="button">削除</button>
+                    </div>
+                </div>
 
-                <button class="primary-button self-care-record-button" type="button">記録する</button>
+                <p class="self-care-mood-feedback" id="selfCareMoodFeedback" aria-live="polite"></p>
+                <button class="primary-button self-care-record-button" id="selfCareRecordButton" type="button">記録する</button>
+
+                <div class="self-care-delete-modal" id="selfCareDeleteModal" hidden>
+                    <button class="self-care-delete-modal__backdrop" id="selfCareDeleteModalBackdrop" type="button" aria-label="閉じる"></button>
+                    <div class="self-care-delete-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="selfCareDeleteModalTitle">
+                        <h3 id="selfCareDeleteModalTitle">今日の気分ログを削除しますか？</h3>
+                        <p>削除すると、今日の記録は未登録状態に戻ります。</p>
+                        <div class="self-care-delete-modal__actions">
+                            <button class="secondary-button self-care-delete-modal__cancel" id="selfCareDeleteCancelButton" type="button">キャンセル</button>
+                            <button class="primary-button self-care-delete-modal__delete" id="selfCareDeleteConfirmButton" type="button">削除する</button>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <section class="self-care-section" aria-labelledby="selfCareShortTitle">

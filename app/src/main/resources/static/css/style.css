@@ -3096,6 +3096,126 @@ input {
     min-height: 52px;
 }
 
+.self-care-mood-feedback {
+    margin: -4px 0 0;
+    min-height: 20px;
+    color: #7a8a98;
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+
+.self-care-mood-feedback.is-error {
+    color: #b85f40;
+}
+
+.self-care-mood-registered {
+    display: grid;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(220, 169, 146, 0.62);
+    background: rgba(255, 255, 255, 0.78);
+}
+
+.self-care-mood-registered__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.self-care-mood-registered__label {
+    color: #6a7f93;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.self-care-mood-registered__value {
+    color: var(--navy);
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.self-care-mood-registered__note p {
+    margin: 6px 0 0;
+    color: var(--text);
+    font-size: 0.88rem;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.self-care-mood-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.self-care-mood-action-button {
+    min-height: 44px;
+    width: 100%;
+}
+
+.self-care-mood-action-button.secondary-button {
+    border-color: rgba(239, 139, 99, 0.48);
+    color: #d26f48;
+}
+
+.self-care-mood-action-button--danger.primary-button {
+    background: linear-gradient(135deg, #ef9a70 0%, #e57f59 100%);
+}
+
+.self-care-delete-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 210;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+}
+
+.self-care-delete-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    border: none;
+    background: rgba(29, 43, 61, 0.42);
+}
+
+.self-care-delete-modal__dialog {
+    position: relative;
+    width: min(390px, calc(100vw - 36px));
+    padding: 16px;
+    border-radius: 16px;
+    background: #fffaf7;
+    border: 1px solid var(--line);
+    box-shadow: 0 16px 34px rgba(38, 56, 76, 0.24);
+}
+
+.self-care-delete-modal__dialog h3 {
+    margin: 0;
+    color: var(--navy);
+    font-size: 1rem;
+}
+
+.self-care-delete-modal__dialog p {
+    margin: 8px 0 0;
+    color: #5e7387;
+    font-size: 0.84rem;
+    line-height: 1.6;
+}
+
+.self-care-delete-modal__actions {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.self-care-delete-modal__actions > button {
+    min-height: 46px;
+    width: 100%;
+}
+
 .self-care-practice-list {
     display: grid;
     gap: 10px;

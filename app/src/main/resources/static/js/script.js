@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initSequenceListPage);
     runInitializer(initSequenceDetailPage);
     runInitializer(initSelfCareToggles);
+    runInitializer(initSelfCareMoodLog);
 });
 
 function runInitializer(initializer) {
@@ -280,6 +281,242 @@ function initSelfCareToggles() {
 
         syncState();
     });
+}
+
+function initSelfCareMoodLog() {
+    const card = document.getElementById("selfCareMoodCard");
+    const form = document.getElementById("selfCareMoodForm");
+    const noteField = document.getElementById("selfCareNote");
+    const recordButton = document.getElementById("selfCareRecordButton");
+    const feedback = document.getElementById("selfCareMoodFeedback");
+    const registeredView = document.getElementById("selfCareMoodRegistered");
+    const registeredMoodLabel = document.getElementById("selfCareRegisteredMoodLabel");
+    const registeredMemo = document.getElementById("selfCareRegisteredMemo");
+    const editButton = document.getElementById("selfCareEditButton");
+    const deleteButton = document.getElementById("selfCareDeleteButton");
+    const deleteModal = document.getElementById("selfCareDeleteModal");
+    const deleteModalBackdrop = document.getElementById("selfCareDeleteModalBackdrop");
+    const deleteCancelButton = document.getElementById("selfCareDeleteCancelButton");
+    const deleteConfirmButton = document.getElementById("selfCareDeleteConfirmButton");
+    const moodInputs = document.querySelectorAll("input[name='todayMood']");
+
+    if (!card || !form || !noteField || !recordButton || !registeredView || !registeredMoodLabel || !registeredMemo
+        || !editButton || !deleteButton || !deleteModal || !deleteModalBackdrop || !deleteCancelButton
+        || !deleteConfirmButton || moodInputs.length === 0) {
+        return;
+    }
+
+    const moodLabels = {
+        good: "良い",
+        normal: "普通",
+        tired: "疲れ気味"
+    };
+
+    let currentLog = null;
+    let isEditMode = false;
+    let isSubmitting = false;
+
+    const getSelectedMood = () => document.querySelector("input[name='todayMood']:checked")?.value || "";
+
+    const setSelectedMood = (moodValue) => {
+        moodInputs.forEach((input) => {
+            input.checked = input.value === moodValue;
+        });
+    };
+
+    const normalizeMemo = (memo) => (typeof memo === "string" ? memo.trim() : "");
+
+    const setFeedback = (message, isError = false) => {
+        if (!feedback) {
+            return;
+        }
+
+        feedback.textContent = message || "";
+        feedback.classList.toggle("is-error", Boolean(isError && message));
+    };
+
+    const closeDeleteModal = () => {
+        deleteModal.hidden = true;
+        document.body.classList.remove("modal-open");
+    };
+
+    const openDeleteModal = () => {
+        deleteModal.hidden = false;
+        document.body.classList.add("modal-open");
+    };
+
+    const renderState = () => {
+        const hasLog = Boolean(currentLog);
+        const showEditForm = !hasLog || isEditMode;
+
+        form.hidden = !showEditForm;
+        recordButton.hidden = !showEditForm;
+        registeredView.hidden = !hasLog || isEditMode;
+
+        if (showEditForm) {
+            recordButton.textContent = hasLog ? "保存する" : "記録する";
+        }
+
+        if (hasLog) {
+            registeredMoodLabel.textContent = moodLabels[currentLog.mood] || "-";
+            registeredMemo.textContent = currentLog.memo || "（メモなし）";
+        } else {
+            setSelectedMood("good");
+            noteField.value = "";
+        }
+    };
+
+    const applyLogToForm = () => {
+        if (!currentLog) {
+            setSelectedMood("good");
+            noteField.value = "";
+            return;
+        }
+
+        setSelectedMood(currentLog.mood || "good");
+        noteField.value = currentLog.memo || "";
+    };
+
+    const fetchMoodLog = async () => {
+        const response = await fetch("/api/self-care/mood-logs/today");
+        const payload = await response.json().catch(() => null);
+
+        if (!response.ok) {
+            throw new Error(payload?.message || "今日の気分ログの取得に失敗しました。");
+        }
+
+        return payload;
+    };
+
+    const saveMoodLog = async (method, mood, memo) => {
+        const response = await fetch("/api/self-care/mood-logs/today", {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ mood, memo })
+        });
+
+        const payload = await response.json().catch(() => null);
+        if (!response.ok) {
+            const error = new Error(payload?.message || "気分ログの保存に失敗しました。");
+            error.status = response.status;
+            throw error;
+        }
+
+        return payload;
+    };
+
+    const deleteMoodLog = async () => {
+        const response = await fetch("/api/self-care/mood-logs/today", { method: "DELETE" });
+        if (!response.ok && response.status !== 404) {
+            const payload = await response.json().catch(() => null);
+            throw new Error(payload?.message || "気分ログの削除に失敗しました。");
+        }
+    };
+
+    recordButton.addEventListener("click", async () => {
+        if (isSubmitting) {
+            return;
+        }
+
+        const selectedMood = getSelectedMood();
+        if (!moodLabels[selectedMood]) {
+            setFeedback("気分を選択してください。", true);
+            return;
+        }
+
+        isSubmitting = true;
+        recordButton.disabled = true;
+        setFeedback("");
+
+        try {
+            const method = currentLog && isEditMode ? "PUT" : "POST";
+            const saved = await saveMoodLog(method, selectedMood, normalizeMemo(noteField.value) || null);
+            currentLog = saved?.exists ? saved : null;
+            isEditMode = false;
+            applyLogToForm();
+            renderState();
+            setFeedback(method === "POST" ? "今日の気分を記録しました。" : "今日の気分を更新しました。");
+        } catch (error) {
+            if (error?.status === 409) {
+                setFeedback("今日の気分はすでに登録されています。編集から更新してください。", true);
+            } else {
+                setFeedback(error?.message || "処理に失敗しました。時間をおいて再度お試しください。", true);
+            }
+        } finally {
+            isSubmitting = false;
+            recordButton.disabled = false;
+        }
+    });
+
+    editButton.addEventListener("click", () => {
+        if (!currentLog) {
+            return;
+        }
+
+        isEditMode = true;
+        applyLogToForm();
+        renderState();
+        setFeedback("");
+    });
+
+    deleteButton.addEventListener("click", () => {
+        if (!currentLog) {
+            return;
+        }
+        openDeleteModal();
+    });
+
+    deleteModalBackdrop.addEventListener("click", closeDeleteModal);
+    deleteCancelButton.addEventListener("click", closeDeleteModal);
+
+    deleteConfirmButton.addEventListener("click", async () => {
+        if (isSubmitting) {
+            return;
+        }
+
+        isSubmitting = true;
+        deleteConfirmButton.disabled = true;
+        setFeedback("");
+
+        try {
+            await deleteMoodLog();
+            currentLog = null;
+            isEditMode = false;
+            applyLogToForm();
+            renderState();
+            closeDeleteModal();
+            setFeedback("今日の気分ログを削除しました。");
+        } catch (error) {
+            setFeedback(error?.message || "削除に失敗しました。時間をおいて再度お試しください。", true);
+        } finally {
+            isSubmitting = false;
+            deleteConfirmButton.disabled = false;
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !deleteModal.hidden) {
+            closeDeleteModal();
+        }
+    });
+
+    (async () => {
+        setFeedback("読み込み中...");
+
+        try {
+            const payload = await fetchMoodLog();
+            currentLog = payload?.exists ? payload : null;
+            isEditMode = false;
+            applyLogToForm();
+            renderState();
+            setFeedback("");
+        } catch (error) {
+            setFeedback(error?.message || "今日の気分ログを読み込めませんでした。", true);
+            currentLog = null;
+            isEditMode = false;
+            renderState();
+        }
+    })();
 }
 
 function initSequenceTabs() {

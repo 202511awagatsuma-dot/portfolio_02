@@ -149,7 +149,6 @@ function initGrowthCalendar() {
     const calendarGrid = document.getElementById("calendarGrid");
     const monthLabel = document.getElementById("calendarMonthLabel");
     const navButtons = document.querySelectorAll("[data-calendar-nav]");
-    const reportScreen = document.querySelector(".report-screen");
     const reportMoodModal = document.getElementById("reportMoodModal");
     const reportMoodModalBackdrop = document.getElementById("reportMoodModalBackdrop");
     const reportMoodModalCloseButton = document.getElementById("reportMoodModalCloseButton");
@@ -158,7 +157,7 @@ function initGrowthCalendar() {
     const reportMoodModalMood = document.getElementById("reportMoodModalMood");
     const reportMoodModalMemo = document.getElementById("reportMoodModalMemo");
 
-    if (!calendarRoot || !calendarGrid || !monthLabel || navButtons.length === 0 || !reportScreen) {
+    if (!calendarRoot || !calendarGrid || !monthLabel || navButtons.length === 0) {
         return;
     }
 

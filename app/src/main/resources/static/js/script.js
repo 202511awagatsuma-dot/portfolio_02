@@ -21,6 +21,7 @@ const STIKA_SECTION_LABELS = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+    runInitializer(initDailyPhilosophyMessage);
     runInitializer(initPeakPoseField);
     runInitializer(initGrowthCalendar);
     runInitializer(initSequenceTabs);
@@ -47,6 +48,58 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initSelfCareMoodLog);
     runInitializer(initKnowledgeTabs);
 });
+
+function initDailyPhilosophyMessage() {
+    const titleElement = document.querySelector("[data-daily-philosophy-title]");
+    const bodyElement = document.querySelector("[data-daily-philosophy-body]");
+
+    if (!titleElement || !bodyElement) {
+        return;
+    }
+
+    const dailyPhilosophyMessages = [
+        { title: "スティラ スッカ", body: "安定と心地よさを、今日の小さな選択から育てましょう。" },
+        { title: "アヒンサー", body: "自分に向ける言葉も、やさしさから始めてみましょう。" },
+        { title: "サントーシャ", body: "足りないものより、今ある満ち足りた感覚に目を向けてみましょう。" },
+        { title: "アビヤーサ", body: "一度に大きく進まなくても、続ける姿勢が土台になります。" },
+        { title: "ヴァイラーギャ", body: "結果へのこだわりを少しゆるめ、今できることに戻りましょう。" },
+        { title: "サティヤ", body: "今日の自分の状態を、良い悪いで判断せず正直に見つめてみましょう。" },
+        { title: "シャウチャ", body: "身の回りや呼吸を整えることが、心の余白にもつながります。" },
+        { title: "タパス", body: "小さな実践を重ねる熱が、未来の自信を育てます。" },
+        { title: "スヴァディヤーヤ", body: "今日の気づきをひとつ残すことが、自分を知る練習になります。" },
+        { title: "イーシュヴァラ・プラニダーナ", body: "すべてを抱え込まず、流れに委ねる時間も大切にしましょう。" },
+        { title: "プラーナ", body: "呼吸の流れを感じるだけで、今ここに戻るきっかけになります。" },
+        { title: "アーサナ", body: "形を完成させるより、体の声を聞くことを大切にしましょう。" },
+        { title: "プラティヤーハーラ", body: "外の刺激から少し離れ、自分の内側に静かな場所をつくりましょう。" },
+        { title: "ダーラナー", body: "ひとつのことに意識を向ける時間が、心の散らばりを整えます。" },
+        { title: "ディヤーナ", body: "頑張って静かになるのではなく、静けさが訪れる余白を待ちましょう。" },
+        { title: "サマーディ", body: "小さな集中の先に、自分と世界がやわらかくつながる瞬間があります。" },
+        { title: "ヤマ", body: "誰かとの関わり方は、自分自身との関わり方にも映し出されます。" },
+        { title: "ニヤマ", body: "日々の整える習慣が、心地よく進むための支えになります。" },
+        { title: "アスティヤ", body: "比べる気持ちを手放し、自分の歩幅を信じてみましょう。" },
+        { title: "ブラフマチャリヤ", body: "エネルギーをどこへ向けるか、今日の自分に問いかけてみましょう。" },
+        { title: "アパリグラハ", body: "抱えすぎているものをひとつ手放すと、必要なものが見えやすくなります。" },
+        { title: "クレーシャ", body: "心の揺れに気づけたなら、それだけで一歩やさしくなれています。" },
+        { title: "ヴィヴェーカ", body: "反応する前に一呼吸置くことで、選び直す余地が生まれます。" },
+        { title: "グナ", body: "活動、静けさ、重さ。今日の自分にある質を観察してみましょう。" },
+        { title: "サットヴァ", body: "澄んだ感覚は、無理に作るより丁寧な選択の中で育ちます。" },
+        { title: "ラジャス", body: "動き続ける日こそ、呼吸のリズムをひとつの軸にしましょう。" },
+        { title: "タマス", body: "重たさを責めず、休むことも必要な実践として受け取ってみましょう。" },
+        { title: "カルマ", body: "今日の小さな行動が、明日の自分を支える種になります。" },
+        { title: "ダルマ", body: "自分らしい役割は、日々の違和感や喜びの中に静かに現れます。" },
+        { title: "マイトリー", body: "自分にも周りにも、あたたかいまなざしを向ける一日にしましょう。" },
+        { title: "ウペクシャー", body: "揺れをなくすのではなく、揺れの中でも穏やかに見守ってみましょう。" }
+    ];
+
+    const dayOfMonth = new Date().getDate();
+    const dailyMessage = dailyPhilosophyMessages[dayOfMonth - 1];
+    if (!dailyMessage) {
+        return;
+    }
+
+    titleElement.textContent = dailyMessage.title;
+    bodyElement.textContent = dailyMessage.body;
+}
 
 function runInitializer(initializer) {
     if (typeof initializer !== "function") {

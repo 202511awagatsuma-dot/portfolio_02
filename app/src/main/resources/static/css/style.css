@@ -176,6 +176,10 @@ input {
     text-align: center;
 }
 
+.home-screen .message-card {
+    margin-bottom: 30px;
+}
+
 .message-card__title {
     margin: 6px 0 4px;
     font-weight: 700;

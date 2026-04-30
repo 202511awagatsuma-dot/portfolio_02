@@ -785,9 +785,9 @@ function initHomeSelfCareQuickActions() {
             if (!moodLabels[mood]) {
                 return;
             }
+            setSelectedMood(mood);
             try {
                 await saveMood(mood);
-                setSelectedMood(mood);
                 showToast("今日の状態を登録しました。レポートとセルフケアで確認できます");
             } catch (_error) {
                 showToast("状態の登録に失敗しました。時間をおいて再度お試しください");

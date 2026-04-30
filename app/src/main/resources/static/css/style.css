@@ -4024,6 +4024,34 @@ input {
         linear-gradient(144deg, #e8f0f8 0%, #d6e6f3 44%, #f4e6d9 100%);
 }
 
+.knowledge-detail-hero--breathing-abdominal {
+    background:
+        radial-gradient(132px 98px at 20% 18%, rgba(246, 252, 255, 0.92), rgba(246, 252, 255, 0) 72%),
+        radial-gradient(178px 124px at 86% 20%, rgba(233, 241, 252, 0.88), rgba(233, 241, 252, 0) 76%),
+        linear-gradient(148deg, #e9f1f9 0%, #e6edf8 38%, #f2e8df 72%, #f7efe6 100%);
+}
+
+.knowledge-detail-hero--breathing-nadi {
+    background:
+        radial-gradient(128px 94px at 18% 18%, rgba(245, 251, 255, 0.92), rgba(245, 251, 255, 0) 72%),
+        radial-gradient(166px 122px at 84% 22%, rgba(234, 229, 247, 0.82), rgba(234, 229, 247, 0) 74%),
+        linear-gradient(146deg, #e8f0f9 0%, #dde8f5 40%, #ece6f3 70%, #f5ebe1 100%);
+}
+
+.knowledge-detail-hero--breathing-thoracic {
+    background:
+        radial-gradient(132px 96px at 20% 16%, rgba(243, 250, 255, 0.92), rgba(243, 250, 255, 0) 72%),
+        radial-gradient(170px 126px at 84% 18%, rgba(227, 239, 250, 0.88), rgba(227, 239, 250, 0) 76%),
+        linear-gradient(144deg, #e7f0f9 0%, #d8e8f5 42%, #efe7df 74%, #f8efe6 100%);
+}
+
+.knowledge-detail-hero--breathing-3minute {
+    background:
+        radial-gradient(130px 96px at 18% 20%, rgba(246, 251, 255, 0.92), rgba(246, 251, 255, 0) 72%),
+        radial-gradient(174px 122px at 86% 20%, rgba(238, 231, 246, 0.78), rgba(238, 231, 246, 0) 74%),
+        linear-gradient(150deg, #e9f1f9 0%, #deebf6 40%, #efe7de 74%, #f7eee4 100%);
+}
+
 .knowledge-detail-headline {
     margin: 0 0 10px;
     color: var(--navy);

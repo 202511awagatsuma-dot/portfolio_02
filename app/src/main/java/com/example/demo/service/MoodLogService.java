@@ -17,7 +17,7 @@ import com.example.demo.repository.MoodLogRepository;
 @Service
 public class MoodLogService {
 
-    private static final Set<String> ALLOWED_MOODS = Set.of("good", "normal", "tired");
+    private static final Set<String> ALLOWED_MOODS = Set.of("good", "normal", "care");
     private static final int MAX_MEMO_LENGTH = 1000;
 
     private final MoodLogRepository moodLogRepository;

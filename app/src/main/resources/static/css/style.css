@@ -411,6 +411,14 @@ input {
     flex: 1;
     text-align: center;
     color: #7f8a96;
+    appearance: none;
+    font: inherit;
+    background: #f4f8fd;
+    border: 1px solid #d8e4f1;
+    border-radius: 12px;
+    padding: 10px 6px;
+    cursor: pointer;
+    transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
 }
 
 .mood-icon {
@@ -436,6 +444,8 @@ input {
 
 .mood-item.is-active {
     color: var(--accent);
+    background: #fff6ef;
+    border-color: rgba(220, 169, 146, 0.9);
 }
 
 .mood-item.is-active .mood-icon {
@@ -494,6 +504,20 @@ input {
     border: 1px solid var(--line-strong);
     color: var(--navy);
     flex-shrink: 0;
+    cursor: pointer;
+}
+
+.selfcare-toast {
+    min-height: 1.2em;
+    margin: 10px 0 0;
+    font-size: 0.74rem;
+    color: #42546b;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.selfcare-toast.is-show {
+    opacity: 1;
 }
 
 .report-card__header {

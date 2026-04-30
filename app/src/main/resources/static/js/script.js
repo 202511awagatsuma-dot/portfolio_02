@@ -1,4 +1,4 @@
-const STIKA_SEQUENCE_STORAGE_KEY = "stika_sequences";
+﻿const STIKA_SEQUENCE_STORAGE_KEY = "stika_sequences";
 const STIKA_SEQUENCE_DRAFT_KEY = "stika_sequence_draft";
 const STIKA_SEQUENCE_LIST_PATH = "/sequence-list.html";
 const STIKA_SEQUENCE_DETAIL_PATH = "/sequence-detail.html";
@@ -10,14 +10,14 @@ const STIKA_SECTION_DURATIONS_STORAGE_PREFIX = "stika_section_durations_";
 const STIKA_SECTION_DURATION_OPTIONS = [3, 5, 8, 10, 12, 15, 20, 25, 30];
 const STIKA_ALLOWED_SECTION_CATEGORIES = ["breathing", "warming-up", "sun-salutation", "standing", "peak", "backbend", "seated", "relaxation"];
 const STIKA_SECTION_LABELS = {
-    breathing: "呼吸法",
+    breathing: "蜻ｼ蜷ｸ豕・,
     "warming-up": "Warming UP",
-    "sun-salutation": "太陽礼拝",
-    standing: "立位",
-    peak: "ピークポーズ",
-    backbend: "後屈",
-    seated: "座位",
-    relaxation: "リラクゼーション"
+    "sun-salutation": "螟ｪ髯ｽ遉ｼ諡・,
+    standing: "遶倶ｽ・,
+    peak: "繝斐・繧ｯ繝昴・繧ｺ",
+    backbend: "蠕悟ｱ・,
+    seated: "蠎ｧ菴・,
+    relaxation: "繝ｪ繝ｩ繧ｯ繧ｼ繝ｼ繧ｷ繝ｧ繝ｳ"
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initSequenceDetailPage);
     runInitializer(initSelfCareToggles);
     runInitializer(initSelfCareMoodLog);
+    runInitializer(initHomeSelfCareQuickActions);
     runInitializer(initKnowledgeTabs);
 });
 
@@ -58,37 +59,37 @@ function initDailyPhilosophyMessage() {
     }
 
     const dailyPhilosophyMessages = [
-        { title: "スティラ スッカ", body: "安定と心地よさを、今日の小さな選択から育てましょう。" },
-        { title: "アヒンサー", body: "自分に向ける言葉も、やさしさから始めてみましょう。" },
-        { title: "サントーシャ", body: "足りないものより、今ある満ち足りた感覚に目を向けてみましょう。" },
-        { title: "アビヤーサ", body: "一度に大きく進まなくても、続ける姿勢が土台になります。" },
-        { title: "ヴァイラーギャ", body: "結果へのこだわりを少しゆるめ、今できることに戻りましょう。" },
-        { title: "サティヤ", body: "今日の自分の状態を、良い悪いで判断せず正直に見つめてみましょう。" },
-        { title: "シャウチャ", body: "身の回りや呼吸を整えることが、心の余白にもつながります。" },
-        { title: "タパス", body: "小さな実践を重ねる熱が、未来の自信を育てます。" },
-        { title: "スヴァディヤーヤ", body: "今日の気づきをひとつ残すことが、自分を知る練習になります。" },
-        { title: "イーシュヴァラ・プラニダーナ", body: "すべてを抱え込まず、流れに委ねる時間も大切にしましょう。" },
-        { title: "プラーナ", body: "呼吸の流れを感じるだけで、今ここに戻るきっかけになります。" },
-        { title: "アーサナ", body: "形を完成させるより、体の声を聞くことを大切にしましょう。" },
-        { title: "プラティヤーハーラ", body: "外の刺激から少し離れ、自分の内側に静かな場所をつくりましょう。" },
-        { title: "ダーラナー", body: "ひとつのことに意識を向ける時間が、心の散らばりを整えます。" },
-        { title: "ディヤーナ", body: "頑張って静かになるのではなく、静けさが訪れる余白を待ちましょう。" },
-        { title: "サマーディ", body: "小さな集中の先に、自分と世界がやわらかくつながる瞬間があります。" },
-        { title: "ヤマ", body: "誰かとの関わり方は、自分自身との関わり方にも映し出されます。" },
-        { title: "ニヤマ", body: "日々の整える習慣が、心地よく進むための支えになります。" },
-        { title: "アスティヤ", body: "比べる気持ちを手放し、自分の歩幅を信じてみましょう。" },
-        { title: "ブラフマチャリヤ", body: "エネルギーをどこへ向けるか、今日の自分に問いかけてみましょう。" },
-        { title: "アパリグラハ", body: "抱えすぎているものをひとつ手放すと、必要なものが見えやすくなります。" },
-        { title: "クレーシャ", body: "心の揺れに気づけたなら、それだけで一歩やさしくなれています。" },
-        { title: "ヴィヴェーカ", body: "反応する前に一呼吸置くことで、選び直す余地が生まれます。" },
-        { title: "グナ", body: "活動、静けさ、重さ。今日の自分にある質を観察してみましょう。" },
-        { title: "サットヴァ", body: "澄んだ感覚は、無理に作るより丁寧な選択の中で育ちます。" },
-        { title: "ラジャス", body: "動き続ける日こそ、呼吸のリズムをひとつの軸にしましょう。" },
-        { title: "タマス", body: "重たさを責めず、休むことも必要な実践として受け取ってみましょう。" },
-        { title: "カルマ", body: "今日の小さな行動が、明日の自分を支える種になります。" },
-        { title: "ダルマ", body: "自分らしい役割は、日々の違和感や喜びの中に静かに現れます。" },
-        { title: "マイトリー", body: "自分にも周りにも、あたたかいまなざしを向ける一日にしましょう。" },
-        { title: "ウペクシャー", body: "揺れをなくすのではなく、揺れの中でも穏やかに見守ってみましょう。" }
+        { title: "繧ｹ繝・ぅ繝ｩ 繧ｹ繝・き", body: "螳牙ｮ壹→蠢・慍繧医＆繧偵∽ｻ頑律縺ｮ蟆上＆縺ｪ驕ｸ謚槭°繧芽ご縺ｦ縺ｾ縺励ｇ縺・・ },
+        { title: "繧｢繝偵Φ繧ｵ繝ｼ", body: "閾ｪ蛻・↓蜷代￠繧玖ｨ闡峨ｂ縲√ｄ縺輔＠縺輔°繧牙ｧ九ａ縺ｦ縺ｿ縺ｾ縺励ｇ縺・・ },
+        { title: "繧ｵ繝ｳ繝医・繧ｷ繝｣", body: "雜ｳ繧翫↑縺・ｂ縺ｮ繧医ｊ縲∽ｻ翫≠繧区ｺ縺｡雜ｳ繧翫◆諢溯ｦ壹↓逶ｮ繧貞髄縺代※縺ｿ縺ｾ縺励ｇ縺・・ },
+        { title: "繧｢繝薙Ζ繝ｼ繧ｵ", body: "荳蠎ｦ縺ｫ螟ｧ縺阪￥騾ｲ縺ｾ縺ｪ縺上※繧ゅ∫ｶ壹￠繧句ｧｿ蜍｢縺悟悄蜿ｰ縺ｫ縺ｪ繧翫∪縺吶・ },
+        { title: "繝ｴ繧｡繧､繝ｩ繝ｼ繧ｮ繝｣", body: "邨先棡縺ｸ縺ｮ縺薙□繧上ｊ繧貞ｰ代＠繧・ｋ繧√∽ｻ翫〒縺阪ｋ縺薙→縺ｫ謌ｻ繧翫∪縺励ｇ縺・・ },
+        { title: "繧ｵ繝・ぅ繝､", body: "莉頑律縺ｮ閾ｪ蛻・・迥ｶ諷九ｒ縲∬憶縺・が縺・〒蛻､譁ｭ縺帙★豁｣逶ｴ縺ｫ隕九▽繧√※縺ｿ縺ｾ縺励ｇ縺・・ },
+        { title: "繧ｷ繝｣繧ｦ繝√Ε", body: "霄ｫ縺ｮ蝗槭ｊ繧・他蜷ｸ繧呈紛縺医ｋ縺薙→縺後∝ｿ・・菴咏區縺ｫ繧ゅ▽縺ｪ縺後ｊ縺ｾ縺吶・ },
+        { title: "繧ｿ繝代せ", body: "蟆上＆縺ｪ螳溯ｷｵ繧帝㍾縺ｭ繧狗・縺後∵悴譚･縺ｮ閾ｪ菫｡繧定ご縺ｦ縺ｾ縺吶・ },
+        { title: "繧ｹ繝ｴ繧｡繝・ぅ繝､繝ｼ繝､", body: "莉頑律縺ｮ豌励▼縺阪ｒ縺ｲ縺ｨ縺､谿九☆縺薙→縺後∬・蛻・ｒ遏･繧狗ｷｴ鄙偵↓縺ｪ繧翫∪縺吶・ },
+        { title: "繧､繝ｼ繧ｷ繝･繝ｴ繧｡繝ｩ繝ｻ繝励Λ繝九ム繝ｼ繝・, body: "縺吶∋縺ｦ繧呈干縺郁ｾｼ縺ｾ縺壹∵ｵ√ｌ縺ｫ蟋斐・繧区凾髢薙ｂ螟ｧ蛻・↓縺励∪縺励ｇ縺・・ },
+        { title: "繝励Λ繝ｼ繝・, body: "蜻ｼ蜷ｸ縺ｮ豬√ｌ繧呈─縺倥ｋ縺縺代〒縲∽ｻ翫％縺薙↓謌ｻ繧九″縺｣縺九￠縺ｫ縺ｪ繧翫∪縺吶・ },
+        { title: "繧｢繝ｼ繧ｵ繝・, body: "蠖｢繧貞ｮ梧・縺輔○繧九ｈ繧翫∽ｽ薙・螢ｰ繧定◇縺上％縺ｨ繧貞､ｧ蛻・↓縺励∪縺励ｇ縺・・ },
+        { title: "繝励Λ繝・ぅ繝､繝ｼ繝上・繝ｩ", body: "螟悶・蛻ｺ豼縺九ｉ蟆代＠髮｢繧後∬・蛻・・蜀・・縺ｫ髱吶°縺ｪ蝣ｴ謇繧偵▽縺上ｊ縺ｾ縺励ｇ縺・・ },
+        { title: "繝繝ｼ繝ｩ繝翫・", body: "縺ｲ縺ｨ縺､縺ｮ縺薙→縺ｫ諢剰ｭ倥ｒ蜷代￠繧区凾髢薙′縲∝ｿ・・謨｣繧峨・繧翫ｒ謨ｴ縺医∪縺吶・ },
+        { title: "繝・ぅ繝､繝ｼ繝・, body: "鬆大ｼｵ縺｣縺ｦ髱吶°縺ｫ縺ｪ繧九・縺ｧ縺ｯ縺ｪ縺上・撕縺代＆縺瑚ｨｪ繧後ｋ菴咏區繧貞ｾ・■縺ｾ縺励ｇ縺・・ },
+        { title: "繧ｵ繝槭・繝・ぅ", body: "蟆上＆縺ｪ髮・ｸｭ縺ｮ蜈医↓縲∬・蛻・→荳也阜縺後ｄ繧上ｉ縺九￥縺､縺ｪ縺後ｋ迸ｬ髢薙′縺ゅｊ縺ｾ縺吶・ },
+        { title: "繝､繝・, body: "隱ｰ縺九→縺ｮ髢｢繧上ｊ譁ｹ縺ｯ縲∬・蛻・・霄ｫ縺ｨ縺ｮ髢｢繧上ｊ譁ｹ縺ｫ繧よ丐縺怜・縺輔ｌ縺ｾ縺吶・ },
+        { title: "繝九Ζ繝・, body: "譌･縲・・謨ｴ縺医ｋ鄙呈・縺後∝ｿ・慍繧医￥騾ｲ繧縺溘ａ縺ｮ謾ｯ縺医↓縺ｪ繧翫∪縺吶・ },
+        { title: "繧｢繧ｹ繝・ぅ繝､", body: "豈斐∋繧区ｰ玲戟縺｡繧呈焔謾ｾ縺励∬・蛻・・豁ｩ蟷・ｒ菫｡縺倥※縺ｿ縺ｾ縺励ｇ縺・・ },
+        { title: "繝悶Λ繝輔・繝√Ε繝ｪ繝､", body: "繧ｨ繝阪Ν繧ｮ繝ｼ繧偵←縺薙∈蜷代￠繧九°縲∽ｻ頑律縺ｮ閾ｪ蛻・↓蝠上＞縺九￠縺ｦ縺ｿ縺ｾ縺励ｇ縺・・ },
+        { title: "繧｢繝代Μ繧ｰ繝ｩ繝・, body: "謚ｱ縺医☆縺弱※縺・ｋ繧ゅ・繧偵・縺ｨ縺､謇区叛縺吶→縲∝ｿ・ｦ√↑繧ゅ・縺瑚ｦ九∴繧・☆縺上↑繧翫∪縺吶・ },
+        { title: "繧ｯ繝ｬ繝ｼ繧ｷ繝｣", body: "蠢・・謠ｺ繧後↓豌励▼縺代◆縺ｪ繧峨√◎繧後□縺代〒荳豁ｩ繧・＆縺励￥縺ｪ繧後※縺・∪縺吶・ },
+        { title: "繝ｴ繧｣繝ｴ繧ｧ繝ｼ繧ｫ", body: "蜿榊ｿ懊☆繧句燕縺ｫ荳蜻ｼ蜷ｸ鄂ｮ縺上％縺ｨ縺ｧ縲・∈縺ｳ逶ｴ縺吩ｽ吝慍縺檎函縺ｾ繧後∪縺吶・ },
+        { title: "繧ｰ繝・, body: "豢ｻ蜍輔・撕縺代＆縲・㍾縺輔ゆｻ頑律縺ｮ閾ｪ蛻・↓縺ゅｋ雉ｪ繧定ｦｳ蟇溘＠縺ｦ縺ｿ縺ｾ縺励ｇ縺・・ },
+        { title: "繧ｵ繝・ヨ繝ｴ繧｡", body: "貔・ｓ縺諢溯ｦ壹・縲∫┌逅・↓菴懊ｋ繧医ｊ荳∝ｯｧ縺ｪ驕ｸ謚槭・荳ｭ縺ｧ閧ｲ縺｡縺ｾ縺吶・ },
+        { title: "繝ｩ繧ｸ繝｣繧ｹ", body: "蜍輔″邯壹￠繧区律縺薙◎縲∝他蜷ｸ縺ｮ繝ｪ繧ｺ繝繧偵・縺ｨ縺､縺ｮ霆ｸ縺ｫ縺励∪縺励ｇ縺・・ },
+        { title: "繧ｿ繝槭せ", body: "驥阪◆縺輔ｒ雋ｬ繧√★縲∽ｼ代・縺薙→繧ょｿ・ｦ√↑螳溯ｷｵ縺ｨ縺励※蜿励￠蜿悶▲縺ｦ縺ｿ縺ｾ縺励ｇ縺・・ },
+        { title: "繧ｫ繝ｫ繝・, body: "莉頑律縺ｮ蟆上＆縺ｪ陦悟虚縺後∵・譌･縺ｮ閾ｪ蛻・ｒ謾ｯ縺医ｋ遞ｮ縺ｫ縺ｪ繧翫∪縺吶・ },
+        { title: "繝繝ｫ繝・, body: "閾ｪ蛻・ｉ縺励＞蠖ｹ蜑ｲ縺ｯ縲∵律縲・・驕募柱諢溘ｄ蝟懊・縺ｮ荳ｭ縺ｫ髱吶°縺ｫ迴ｾ繧後∪縺吶・ },
+        { title: "繝槭う繝医Μ繝ｼ", body: "閾ｪ蛻・↓繧ょ捉繧翫↓繧ゅ√≠縺溘◆縺九＞縺ｾ縺ｪ縺悶＠繧貞髄縺代ｋ荳譌･縺ｫ縺励∪縺励ｇ縺・・ },
+        { title: "繧ｦ繝壹け繧ｷ繝｣繝ｼ", body: "謠ｺ繧後ｒ縺ｪ縺上☆縺ｮ縺ｧ縺ｯ縺ｪ縺上∵昭繧後・荳ｭ縺ｧ繧らｩ上ｄ縺九↓隕句ｮ医▲縺ｦ縺ｿ縺ｾ縺励ｇ縺・・ }
     ];
 
     const dayOfMonth = new Date().getDate();
@@ -221,9 +222,9 @@ function initGrowthCalendar() {
     let monthMoodLogMap = new Map();
     let fetchSerial = 0;
     const moodLabels = {
-        good: "良い",
-        normal: "普通",
-        tired: "疲れ気味"
+        good: "蠢ｫ隱ｿ",
+        normal: "縺ｵ縺､縺・,
+        care: "繧ｱ繧｢"
     };
 
     const closeMoodLogModal = () => {
@@ -249,8 +250,8 @@ function initGrowthCalendar() {
             month: "long",
             day: "numeric"
         }).format(displayDate);
-        reportMoodModalMood.textContent = moodLabels[logItem?.mood] || "-";
-        reportMoodModalMemo.textContent = logItem?.memo || "メモはありません";
+        reportMoodModalMood.textContent = moodLabels[logItem?.mood] || "譛ｪ逋ｻ骭ｲ";
+        reportMoodModalMemo.textContent = logItem?.memo || "繝｡繝｢縺ｯ縺ゅｊ縺ｾ縺帙ｓ";
         reportMoodModal.hidden = false;
         reportMoodModal.classList.add("is-open");
         reportMoodModal.setAttribute("aria-hidden", "false");
@@ -351,7 +352,7 @@ function initGrowthCalendar() {
             button.className = "calendar-day";
             button.dataset.date = isoDate;
             button.setAttribute("role", "gridcell");
-            button.setAttribute("aria-label", `${isoDate}${hasMoodLog ? " 記録あり" : ""}${isToday ? " 今日" : ""}`);
+            button.setAttribute("aria-label", `${isoDate}${hasMoodLog ? " 險倬鹸縺ゅｊ" : ""}${isToday ? " 莉頑律" : ""}`);
             button.setAttribute("aria-selected", String(isSelected));
 
             if (!isCurrentMonth) {
@@ -372,13 +373,7 @@ function initGrowthCalendar() {
             button.addEventListener("click", async () => {
                 selectedDate = isoDate;
                 renderCalendar();
-                if (!hasMoodLog) {
-                    return;
-                }
                 const moodLog = monthMoodLogMap.get(isoDate) || await fetchMoodLogByDate(isoDate);
-                if (!moodLog) {
-                    return;
-                }
                 openMoodLogModal(isoDate, moodLog);
             });
 
@@ -472,9 +467,9 @@ function initSelfCareMoodLog() {
     }
 
     const moodLabels = {
-        good: "良い",
-        normal: "普通",
-        tired: "疲れ気味"
+        good: "蠢ｫ隱ｿ",
+        normal: "縺ｵ縺､縺・,
+        care: "繧ｱ繧｢"
     };
 
     let currentLog = null;
@@ -536,12 +531,12 @@ function initSelfCareMoodLog() {
         registeredView.hidden = !hasLog || isEditMode;
 
         if (showEditForm) {
-            recordButton.textContent = hasLog ? "保存する" : "記録する";
+            recordButton.textContent = hasLog ? "菫晏ｭ倥☆繧・ : "險倬鹸縺吶ｋ";
         }
 
         if (hasLog) {
             registeredMoodLabel.textContent = moodLabels[currentLog.mood] || "-";
-            registeredMemo.textContent = currentLog.memo || "（メモなし）";
+            registeredMemo.textContent = currentLog.memo || "・医Γ繝｢縺ｪ縺暦ｼ・;
         } else {
             setSelectedMood("good");
             noteField.value = "";
@@ -564,7 +559,7 @@ function initSelfCareMoodLog() {
         const payload = await response.json().catch(() => null);
 
         if (!response.ok) {
-            throw new Error(payload?.message || "今日の気分ログの取得に失敗しました。");
+            throw new Error(payload?.message || "莉頑律縺ｮ豌怜・繝ｭ繧ｰ縺ｮ蜿門ｾ励↓螟ｱ謨励＠縺ｾ縺励◆縲・);
         }
 
         return payload;
@@ -579,7 +574,7 @@ function initSelfCareMoodLog() {
 
         const payload = await response.json().catch(() => null);
         if (!response.ok) {
-            const error = new Error(payload?.message || "気分ログの保存に失敗しました。");
+            const error = new Error(payload?.message || "豌怜・繝ｭ繧ｰ縺ｮ菫晏ｭ倥↓螟ｱ謨励＠縺ｾ縺励◆縲・);
             error.status = response.status;
             throw error;
         }
@@ -591,7 +586,7 @@ function initSelfCareMoodLog() {
         const response = await fetch("/api/self-care/mood-logs/today", { method: "DELETE" });
         if (!response.ok && response.status !== 404) {
             const payload = await response.json().catch(() => null);
-            throw new Error(payload?.message || "気分ログの削除に失敗しました。");
+            throw new Error(payload?.message || "豌怜・繝ｭ繧ｰ縺ｮ蜑企勁縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲・);
         }
     };
 
@@ -602,7 +597,7 @@ function initSelfCareMoodLog() {
 
         const selectedMood = getSelectedMood();
         if (!moodLabels[selectedMood]) {
-            setFeedback("気分を選択してください。", true);
+            setFeedback("豌怜・繧帝∈謚槭＠縺ｦ縺上□縺輔＞縲・, true);
             return;
         }
 
@@ -618,12 +613,12 @@ function initSelfCareMoodLog() {
             applyLogToForm();
             renderState();
             openCompleteModal();
-            setFeedback(method === "POST" ? "今日の気分を記録しました。" : "今日の気分を更新しました。");
+            setFeedback(method === "POST" ? "莉頑律縺ｮ豌怜・繧定ｨ倬鹸縺励∪縺励◆縲・ : "莉頑律縺ｮ豌怜・繧呈峩譁ｰ縺励∪縺励◆縲・);
         } catch (error) {
             if (error?.status === 409) {
-                setFeedback("今日の気分はすでに登録されています。編集から更新してください。", true);
+                setFeedback("莉頑律縺ｮ豌怜・縺ｯ縺吶〒縺ｫ逋ｻ骭ｲ縺輔ｌ縺ｦ縺・∪縺吶らｷｨ髮・°繧画峩譁ｰ縺励※縺上□縺輔＞縲・, true);
             } else {
-                setFeedback(error?.message || "処理に失敗しました。時間をおいて再度お試しください。", true);
+                setFeedback(error?.message || "蜃ｦ逅・↓螟ｱ謨励＠縺ｾ縺励◆縲よ凾髢薙ｒ縺翫＞縺ｦ蜀榊ｺｦ縺願ｩｦ縺励￥縺縺輔＞縲・, true);
             }
         } finally {
             isSubmitting = false;
@@ -673,9 +668,9 @@ function initSelfCareMoodLog() {
             applyLogToForm();
             renderState();
             closeDeleteModal();
-            setFeedback("今日の気分ログを削除しました。");
+            setFeedback("莉頑律縺ｮ豌怜・繝ｭ繧ｰ繧貞炎髯､縺励∪縺励◆縲・);
         } catch (error) {
-            setFeedback(error?.message || "削除に失敗しました。時間をおいて再度お試しください。", true);
+            setFeedback(error?.message || "蜑企勁縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲よ凾髢薙ｒ縺翫＞縺ｦ蜀榊ｺｦ縺願ｩｦ縺励￥縺縺輔＞縲・, true);
         } finally {
             isSubmitting = false;
             deleteConfirmButton.disabled = false;
@@ -695,7 +690,7 @@ function initSelfCareMoodLog() {
     });
 
     (async () => {
-        setFeedback("読み込み中...");
+        setFeedback("隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...");
 
         try {
             const payload = await fetchMoodLog();
@@ -705,11 +700,135 @@ function initSelfCareMoodLog() {
             renderState();
             setFeedback("");
         } catch (error) {
-            setFeedback(error?.message || "今日の気分ログを読み込めませんでした。", true);
+            setFeedback(error?.message || "莉頑律縺ｮ豌怜・繝ｭ繧ｰ繧定ｪｭ縺ｿ霎ｼ繧√∪縺帙ｓ縺ｧ縺励◆縲・, true);
             currentLog = null;
             isEditMode = false;
             renderState();
         }
+    })();
+}
+
+function initHomeSelfCareQuickActions() {
+    const homeCard = document.getElementById("homeSelfCareCard");
+    if (!homeCard) {
+        return;
+    }
+
+    const moodButtons = Array.from(homeCard.querySelectorAll("[data-home-mood]"));
+    const careButtons = Array.from(homeCard.querySelectorAll("[data-home-care-type]"));
+    const toast = document.getElementById("homeSelfCareToast");
+
+    if (moodButtons.length === 0 || careButtons.length === 0 || !toast) {
+        return;
+    }
+
+    const moodLabels = { good: "快調", normal: "ふつう", care: "ケア" };
+    const defaultMood = "normal";
+    let selectedMood = "";
+    let toastTimer = null;
+
+    const setSelectedMood = (mood) => {
+        selectedMood = moodLabels[mood] ? mood : "";
+        moodButtons.forEach((button) => {
+            const isSelected = button.dataset.homeMood === selectedMood;
+            button.classList.toggle("is-active", isSelected);
+            button.setAttribute("aria-checked", String(isSelected));
+        });
+    };
+
+    const showToast = (message) => {
+        toast.textContent = message;
+        toast.classList.add("is-show");
+        if (toastTimer) {
+            window.clearTimeout(toastTimer);
+        }
+        toastTimer = window.setTimeout(() => {
+            toast.classList.remove("is-show");
+        }, 2800);
+    };
+
+    const fetchTodayMoodLog = async () => {
+        const response = await fetch("/api/self-care/mood-logs/today");
+        const payload = await response.json().catch(() => null);
+        if (!response.ok) {
+            return null;
+        }
+        return payload?.exists ? payload : null;
+    };
+
+    const saveMood = async (mood) => {
+        const payload = { mood, memo: null };
+        const updateResponse = await fetch("/api/self-care/mood-logs/today", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+        if (updateResponse.ok) {
+            return;
+        }
+        if (updateResponse.status !== 404) {
+            throw new Error("failed to update mood");
+        }
+        const createResponse = await fetch("/api/self-care/mood-logs/today", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+        if (!createResponse.ok) {
+            throw new Error("failed to create mood");
+        }
+    };
+
+    moodButtons.forEach((button) => {
+        button.addEventListener("click", async () => {
+            const mood = button.dataset.homeMood || "";
+            if (!moodLabels[mood]) {
+                return;
+            }
+            try {
+                await saveMood(mood);
+                setSelectedMood(mood);
+                showToast("今日の状態を登録しました。レポートとセルフケアで確認できます");
+            } catch (_error) {
+                showToast("状態の登録に失敗しました。時間をおいて再度お試しください");
+            }
+        });
+    });
+
+    careButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const careType = button.dataset.homeCareType;
+            if (!careType) {
+                return;
+            }
+
+            const moodForCare = selectedMood || defaultMood;
+            const toastMessage = careType === "meditation"
+                ? "今日のおすすめ瞑想を表示します"
+                : "今日のおすすめブレスワークを表示します";
+
+            showToast(toastMessage);
+
+            const params = new URLSearchParams({
+                type: careType,
+                mood: moodForCare
+            });
+
+            window.setTimeout(() => {
+                window.location.href = `/self-care.html?${params.toString()}`;
+            }, 350);
+        });
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            toast.classList.remove("is-show");
+        }
+    });
+
+    (async () => {
+        const log = await fetchTodayMoodLog();
+        setSelectedMood(log?.mood || "");
     })();
 }
 
@@ -808,9 +927,9 @@ function initBreathingModal() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const name = button.dataset.name || "この呼吸法";
+            const name = button.dataset.name || "縺薙・蜻ｼ蜷ｸ豕・;
 
-            if (!window.confirm(`${name}を削除しますか？`)) {
+            if (!window.confirm(`${name}繧貞炎髯､縺励∪縺吶°・歔)) {
                 event.preventDefault();
             }
         });
@@ -878,9 +997,9 @@ function initSectionDurationPicker() {
     modal.setAttribute("aria-hidden", "true");
     modal.innerHTML = `
         <div class="sequence-comp-modal__dialog warming-up-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="sectionDurationModalTitle">
-            <button class="sequence-comp-modal__close" type="button" aria-label="モーダルを閉じる">×</button>
+            <button class="sequence-comp-modal__close" type="button" aria-label="繝｢繝ｼ繝繝ｫ繧帝哩縺倥ｋ">ﾃ・/button>
             <div class="sequence-comp-modal__header">
-                <h3 class="sequence-comp-modal__title" id="sectionDurationModalTitle">時間を選択</h3>
+                <h3 class="sequence-comp-modal__title" id="sectionDurationModalTitle">譎る俣繧帝∈謚・/h3>
             </div>
             <div class="warming-up-modal__content">
                 <div class="warming-up-modal__master-list" id="sectionDurationOptionList"></div>
@@ -899,7 +1018,7 @@ function initSectionDurationPicker() {
         return match ? Number.parseInt(match[0], 10) : null;
     };
 
-    const getDurationLabel = (minutes) => (Number.isFinite(minutes) ? `${minutes}分` : "時間を選択");
+    const getDurationLabel = (minutes) => (Number.isFinite(minutes) ? `${minutes}蛻・ : "譎る俣繧帝∈謚・);
 
     const closeModal = () => {
         modal.hidden = true;
@@ -939,7 +1058,7 @@ function initSectionDurationPicker() {
             const button = document.createElement("button");
             button.type = "button";
             button.className = "warming-up-modal__master-button sequence-duration-option";
-            button.textContent = `${minutes}分`;
+            button.textContent = `${minutes}蛻・;
 
             const isSelected = selectedMinutes === minutes;
             button.classList.toggle("is-selected", isSelected);
@@ -991,7 +1110,7 @@ function initSectionDurationPicker() {
             timeElement.dataset.durationMinutes = String(initialMinutes);
             timeElement.textContent = getDurationLabel(initialMinutes);
         } else {
-            timeElement.textContent = "時間を選択";
+            timeElement.textContent = "譎る俣繧帝∈謚・;
         }
 
         timeElement.classList.add("sequence-comp-section__time--selectable");
@@ -999,7 +1118,7 @@ function initSectionDurationPicker() {
         timeElement.setAttribute("tabindex", "0");
         timeElement.setAttribute("aria-haspopup", "dialog");
         timeElement.setAttribute("aria-controls", "sectionDurationModal");
-        timeElement.setAttribute("aria-label", "時間を選択");
+        timeElement.setAttribute("aria-label", "譎る俣繧帝∈謚・);
         timeElement.dataset.durationPickerBound = "true";
     };
 
@@ -1062,8 +1181,8 @@ function initWarmingUpModal() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const name = button.dataset.name || "この Warming UP";
-            if (!window.confirm(`${name}を削除しますか？`)) {
+            const name = button.dataset.name || "縺薙・ Warming UP";
+            if (!window.confirm(`${name}繧貞炎髯､縺励∪縺吶°・歔)) {
                 event.preventDefault();
             }
         });
@@ -1196,7 +1315,7 @@ function updateAsanaSortOrderFields(list) {
 
         const handle = item.querySelector(".asana-drag-handle");
         if (handle) {
-            handle.textContent = `${labelOrder} ≡`;
+            handle.textContent = `${labelOrder} 竕｡`;
         }
 
         let sortOrderInput = item.querySelector("input[data-asana-sort-order]");
@@ -1266,8 +1385,8 @@ function initSunSalutationModal() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const name = button.dataset.name || "この太陽礼拝";
-            if (!window.confirm(`${name}を削除しますか？`)) {
+            const name = button.dataset.name || "縺薙・螟ｪ髯ｽ遉ｼ諡・;
+            if (!window.confirm(`${name}繧貞炎髯､縺励∪縺吶°・歔)) {
                 event.preventDefault();
             }
         });
@@ -1339,8 +1458,8 @@ function initPeakPoseModal() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const name = button.dataset.name || "このピークポーズ";
-            if (!window.confirm(`${name}を削除しますか？`)) {
+            const name = button.dataset.name || "縺薙・繝斐・繧ｯ繝昴・繧ｺ";
+            if (!window.confirm(`${name}繧貞炎髯､縺励∪縺吶°・歔)) {
                 event.preventDefault();
             }
         });
@@ -1412,8 +1531,8 @@ function initBackbendModal() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const name = button.dataset.name || "この後屈";
-            if (!window.confirm(`${name}を削除しますか？`)) {
+            const name = button.dataset.name || "縺薙・蠕悟ｱ・;
+            if (!window.confirm(`${name}繧貞炎髯､縺励∪縺吶°・歔)) {
                 event.preventDefault();
             }
         });
@@ -1485,8 +1604,8 @@ function initSeatedModal() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const name = button.dataset.name || "この座位";
-            if (!window.confirm(`${name}を削除しますか？`)) {
+            const name = button.dataset.name || "縺薙・蠎ｧ菴・;
+            if (!window.confirm(`${name}繧貞炎髯､縺励∪縺吶°・歔)) {
                 event.preventDefault();
             }
         });
@@ -1558,8 +1677,8 @@ function initRelaxationModal() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const name = button.dataset.name || "このリラクゼーション";
-            if (!window.confirm(`${name}を削除しますか？`)) {
+            const name = button.dataset.name || "縺薙・繝ｪ繝ｩ繧ｯ繧ｼ繝ｼ繧ｷ繝ｧ繝ｳ";
+            if (!window.confirm(`${name}繧貞炎髯､縺励∪縺吶°・歔)) {
                 event.preventDefault();
             }
         });
@@ -1739,7 +1858,7 @@ function initDynamicSectionManager() {
 
             removeButton.disabled = !canDelete;
             removeButton.setAttribute("aria-disabled", String(!canDelete));
-            removeButton.title = canDelete ? "" : "セクションは1つ以上必要です";
+            removeButton.title = canDelete ? "" : "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ縺ｯ1縺､莉･荳雁ｿ・ｦ√〒縺・;
 
             if (moveUpButton) {
                 const disableUp = index === 0;
@@ -1917,7 +2036,7 @@ function initDynamicSectionsOnConfirmPage() {
         const durationLabel = card.querySelector(".sequence-confirm-card__time");
         const minutes = Number.parseInt(sectionDurations[card.dataset.sectionId], 10);
         if (durationLabel && Number.isFinite(minutes)) {
-            durationLabel.textContent = `${minutes}分`;
+            durationLabel.textContent = `${minutes}蛻・;
         }
 
         if (removedSectionIds.has(card.dataset.sectionId)) {
@@ -1937,7 +2056,7 @@ function initDynamicSectionsOnConfirmPage() {
         const durationLabel = card.querySelector(".sequence-confirm-card__time");
         const minutes = Number.parseInt(sectionDurations[section.id], 10);
         if (durationLabel && Number.isFinite(minutes)) {
-            durationLabel.textContent = `${minutes}分`;
+            durationLabel.textContent = `${minutes}蛻・;
         }
         list.appendChild(card);
     });
@@ -1984,15 +2103,15 @@ function createSectionAddModal(candidates, handlers) {
     modal.setAttribute("aria-hidden", "true");
     modal.innerHTML = `
         <div class="sequence-comp-modal__dialog warming-up-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="sequenceSectionAddModalTitle">
-            <button class="sequence-comp-modal__close" type="button" aria-label="モーダルを閉じる">×</button>
+            <button class="sequence-comp-modal__close" type="button" aria-label="繝｢繝ｼ繝繝ｫ繧帝哩縺倥ｋ">ﾃ・/button>
             <div class="sequence-comp-modal__header">
-                <h3 class="sequence-comp-modal__title" id="sequenceSectionAddModalTitle">追加するセクションを選択</h3>
+                <h3 class="sequence-comp-modal__title" id="sequenceSectionAddModalTitle">霑ｽ蜉縺吶ｋ繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ繧帝∈謚・/h3>
             </div>
             <div class="warming-up-modal__content">
                 <div class="warming-up-modal__master-list" data-section-add-options role="listbox" aria-multiselectable="false" aria-labelledby="sequenceSectionAddModalTitle"></div>
                 <div class="sequence-comp-modal__actions">
-                    <button class="sequence-comp-cancel" type="button" data-section-add-cancel>キャンセル</button>
-                    <button class="sequence-comp-add sequence-comp-add--inline" type="button" data-section-add-submit disabled>追加する</button>
+                    <button class="sequence-comp-cancel" type="button" data-section-add-cancel>繧ｭ繝｣繝ｳ繧ｻ繝ｫ</button>
+                    <button class="sequence-comp-add sequence-comp-add--inline" type="button" data-section-add-submit disabled>霑ｽ蜉縺吶ｋ</button>
                 </div>
             </div>
         </div>
@@ -2118,7 +2237,7 @@ function insertDynamicSection({ sectionsRoot, insertButton, category, sectionSta
     if (!dynamicSection.querySelector(".sequence-comp-section__time")) {
         const fallbackTime = document.createElement("div");
         fallbackTime.className = "sequence-comp-section__time";
-        fallbackTime.textContent = "5分";
+        fallbackTime.textContent = "5蛻・;
         dynamicSection.insertAdjacentElement("afterbegin", fallbackTime);
     }
 
@@ -2170,7 +2289,7 @@ function resetDynamicSection(section, category, sectionState) {
     const sectionTitle = section.querySelector(".sequence-comp-section__title");
     const timeElement = section.querySelector(".sequence-comp-section__time");
     const addedList = section.querySelector(".sequence-comp-added-list");
-    const selectedLabel = STIKA_SECTION_LABELS[category] || normalizeText(sectionTitle?.textContent) || "セクション";
+    const selectedLabel = STIKA_SECTION_LABELS[category] || normalizeText(sectionTitle?.textContent) || "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ";
     const initialDuration = Number.isFinite(sectionState?.durationMinutes) ? sectionState.durationMinutes : 5;
 
     if (sectionTitle) {
@@ -2187,7 +2306,7 @@ function resetDynamicSection(section, category, sectionState) {
     }
 
     if (timeElement) {
-        timeElement.textContent = `${initialDuration}分`;
+        timeElement.textContent = `${initialDuration}蛻・;
         timeElement.dataset.durationMinutes = String(initialDuration);
         window.__stikaBindDurationPickerToTimeElement?.(timeElement);
     }
@@ -2434,15 +2553,15 @@ function appendDynamicSectionItem(section, itemData, syncOrder) {
     const handle = document.createElement("button");
     handle.className = "asana-drag-handle";
     handle.type = "button";
-    handle.setAttribute("aria-label", `${itemData?.name || "このアーサナ"} をドラッグして並び替え`);
-    handle.textContent = `${String(list.children.length + 1).padStart(2, "0")} ≡`;
+    handle.setAttribute("aria-label", `${itemData?.name || "縺薙・繧｢繝ｼ繧ｵ繝・} 繧偵ラ繝ｩ繝・げ縺励※荳ｦ縺ｳ譖ｿ縺・);
+    handle.textContent = `${String(list.children.length + 1).padStart(2, "0")} 竕｡`;
 
     const body = document.createElement("div");
     body.className = "sequence-comp-added-item__body";
 
     const name = document.createElement("span");
     name.className = "sequence-comp-added-item__name";
-    name.textContent = itemData?.name || "名称未設定";
+    name.textContent = itemData?.name || "蜷咲ｧｰ譛ｪ險ｭ螳・;
     body.appendChild(name);
 
     if (itemData?.memo) {
@@ -2466,7 +2585,7 @@ function appendDynamicSectionItem(section, itemData, syncOrder) {
     deleteButton.className = "sequence-comp-delete";
     deleteButton.type = "button";
     deleteButton.dataset.dynamicDelete = "true";
-    deleteButton.setAttribute("aria-label", `${name.textContent} を削除`);
+    deleteButton.setAttribute("aria-label", `${name.textContent} 繧貞炎髯､`);
     deleteButton.innerHTML = `
         <svg class="sequence-comp-delete__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M9 3.75h6a1 1 0 0 1 1 1V6h3a.75.75 0 0 1 0 1.5h-1.1l-.77 11.02A2.5 2.5 0 0 1 14.64 21h-5.28a2.5 2.5 0 0 1-2.49-2.48L6.1 7.5H5a.75.75 0 0 1 0-1.5h3V4.75a1 1 0 0 1 1-1Zm5.5 2.25V5.25H9.5V6h5Zm-5.88 1.5.74 10.91a1 1 0 0 0 1 .94h5.28a1 1 0 0 0 1-.94l.74-10.91H8.62Zm2.13 2.25c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Zm4.5 0c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Z"></path>
@@ -2530,7 +2649,7 @@ function saveDynamicSectionsState(sequenceId, sectionsRoot) {
         .filter((section) => section.dataset.dynamicSection === "true")
         .map((section) => {
             const category = section.dataset.category || "";
-            const title = normalizeText(section.querySelector(".sequence-comp-section__title")?.textContent) || (STIKA_SECTION_LABELS[category] || "セクション");
+            const title = normalizeText(section.querySelector(".sequence-comp-section__title")?.textContent) || (STIKA_SECTION_LABELS[category] || "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ");
             const durationMinutes = Number.parseInt(section.querySelector(".sequence-comp-section__time")?.dataset.durationMinutes || "5", 10) || 5;
             const orderIndex = sections.indexOf(section);
             const items = Array.from(section.querySelectorAll(".sequence-comp-added-list .sequence-comp-added-item")).map((item) => ({
@@ -2794,8 +2913,8 @@ function ensureSectionControlButtons(section) {
         moveUpButton.type = "button";
         moveUpButton.className = "sequence-comp-section__move";
         moveUpButton.dataset.sectionMove = "up";
-        moveUpButton.setAttribute("aria-label", "セクションを上へ移動");
-        moveUpButton.textContent = "↑";
+        moveUpButton.setAttribute("aria-label", "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ繧剃ｸ翫∈遘ｻ蜍・);
+        moveUpButton.textContent = "竊・;
         actionRoot.appendChild(moveUpButton);
     }
 
@@ -2805,8 +2924,8 @@ function ensureSectionControlButtons(section) {
         moveDownButton.type = "button";
         moveDownButton.className = "sequence-comp-section__move";
         moveDownButton.dataset.sectionMove = "down";
-        moveDownButton.setAttribute("aria-label", "セクションを下へ移動");
-        moveDownButton.textContent = "↓";
+        moveDownButton.setAttribute("aria-label", "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ繧剃ｸ九∈遘ｻ蜍・);
+        moveDownButton.textContent = "竊・;
         actionRoot.appendChild(moveDownButton);
     }
 
@@ -2816,10 +2935,10 @@ function ensureSectionControlButtons(section) {
         removeButton.type = "button";
         removeButton.className = "sequence-comp-section__remove";
         removeButton.dataset.sectionRemove = "true";
-        removeButton.setAttribute("aria-label", "このセクションを削除");
+        removeButton.setAttribute("aria-label", "縺薙・繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ繧貞炎髯､");
         removeButton.innerHTML = `
-            <span class="sequence-comp-section__remove-icon" aria-hidden="true">×</span>
-            <span>削除</span>
+            <span class="sequence-comp-section__remove-icon" aria-hidden="true">ﾃ・/span>
+            <span>蜑企勁</span>
         `;
         actionRoot.appendChild(removeButton);
     }
@@ -2845,14 +2964,14 @@ function createSectionDeleteModal(handlers) {
     modal.setAttribute("aria-hidden", "true");
     modal.innerHTML = `
         <div class="sequence-comp-modal__dialog warming-up-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="sequenceSectionDeleteModalTitle">
-            <button class="sequence-comp-modal__close" type="button" aria-label="モーダルを閉じる">×</button>
+            <button class="sequence-comp-modal__close" type="button" aria-label="繝｢繝ｼ繝繝ｫ繧帝哩縺倥ｋ">ﾃ・/button>
             <div class="sequence-comp-modal__header">
-                <h3 class="sequence-comp-modal__title" id="sequenceSectionDeleteModalTitle">このセクションを削除しますか？</h3>
+                <h3 class="sequence-comp-modal__title" id="sequenceSectionDeleteModalTitle">縺薙・繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ繧貞炎髯､縺励∪縺吶°・・/h3>
             </div>
             <div class="warming-up-modal__content">
                 <div class="sequence-comp-modal__actions">
-                    <button class="sequence-comp-cancel sequence-comp-modal__cancel" type="button" data-section-delete-cancel>キャンセル</button>
-                    <button class="sequence-comp-modal__delete" type="button" data-section-delete-confirm>削除する</button>
+                    <button class="sequence-comp-cancel sequence-comp-modal__cancel" type="button" data-section-delete-cancel>繧ｭ繝｣繝ｳ繧ｻ繝ｫ</button>
+                    <button class="sequence-comp-modal__delete" type="button" data-section-delete-confirm>蜑企勁縺吶ｋ</button>
                 </div>
             </div>
         </div>
@@ -2920,11 +3039,11 @@ function createConfirmCardFromDynamicSection(section) {
 
     const time = document.createElement("span");
     time.className = "sequence-confirm-card__time";
-    time.textContent = `${Number.parseInt(section?.durationMinutes || 5, 10) || 5}分`;
+    time.textContent = `${Number.parseInt(section?.durationMinutes || 5, 10) || 5}蛻・;
 
     const title = document.createElement("h2");
     title.className = "sequence-confirm-card__title";
-    title.textContent = normalizeText(section?.title) || STIKA_SECTION_LABELS[section?.category] || "セクション";
+    title.textContent = normalizeText(section?.title) || STIKA_SECTION_LABELS[section?.category] || "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ";
 
     header.appendChild(time);
     header.appendChild(title);
@@ -3193,9 +3312,9 @@ function initSequenceListPage() {
         if (action === "delete") {
             const sequences = getSavedSequences();
             const target = sequences.find((item) => item.id === sequenceId);
-            const title = target?.title || "このシークエンス";
+            const title = target?.title || "縺薙・繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ";
 
-            if (!window.confirm(`${title}を削除しますか？`)) {
+            if (!window.confirm(`${title}繧貞炎髯､縺励∪縺吶°・歔)) {
                 return;
             }
 
@@ -3289,9 +3408,9 @@ function initSequenceDetailPage() {
 
     if (deleteButton) {
         deleteButton.addEventListener("click", () => {
-            const title = sequence.title || "このシークエンス";
+            const title = sequence.title || "縺薙・繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ";
 
-            if (!window.confirm(`${title}を削除しますか？`)) {
+            if (!window.confirm(`${title}繧貞炎髯､縺励∪縺吶°・歔)) {
                 return;
             }
 
@@ -3326,9 +3445,9 @@ function syncConfirmDraftMeta(draft) {
 
     const fallbackDuration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "-";
     const title = draft?.title || buildFallbackSequenceTitle();
-    const target = draft?.target || "未設定";
+    const target = draft?.target || "譛ｪ險ｭ螳・;
     const memo = draft?.memo || "";
-    const duration = draft?.duration ? `${draft.duration}分` : fallbackDuration;
+    const duration = draft?.duration ? `${draft.duration}蛻・ : fallbackDuration;
 
     titleElement.textContent = title;
     targetElement.textContent = target;
@@ -3338,9 +3457,9 @@ function syncConfirmDraftMeta(draft) {
 }
 
 function buildSequenceFromConfirmPage(draft) {
-    const duration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "未設定";
+    const duration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "譛ｪ險ｭ螳・;
     const sections = Array.from(document.querySelectorAll(".sequence-confirm-card")).map((card, index) => {
-        const title = normalizeText(card.querySelector(".sequence-confirm-card__title")?.textContent) || "未設定";
+        const title = normalizeText(card.querySelector(".sequence-confirm-card__title")?.textContent) || "譛ｪ險ｭ螳・;
         const durationLabel = normalizeText(card.querySelector(".sequence-confirm-card__time")?.textContent) || "";
         const items = Array.from(card.querySelectorAll(".sequence-confirm-card__items li"))
             .map((item) => normalizeText(item.textContent))
@@ -3360,7 +3479,7 @@ function buildSequenceFromConfirmPage(draft) {
         id: createSequenceStorageId(),
         title: draft?.title || buildFallbackSequenceTitle(),
         duration,
-        target: draft?.target || "未設定",
+        target: draft?.target || "譛ｪ險ｭ螳・,
         createdAt: new Date().toISOString(),
         sections,
         memo: draft?.memo || ""
@@ -3369,13 +3488,13 @@ function buildSequenceFromConfirmPage(draft) {
 
 function buildFallbackSequenceTitle() {
     const peakPose = normalizeText(document.querySelector(".sequence-comp-summary__peak")?.textContent);
-    const duration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "シークエンス";
+    const duration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ";
 
     if (peakPose && peakPose !== "\u30d4\u30fc\u30af\u30dd\u30fc\u30ba\u672a\u8a2d\u5b9a") {
-        return `${peakPose}のシークエンス`;
+        return `${peakPose}縺ｮ繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ`;
     }
 
-    return `${duration}のシークエンス`;
+    return `${duration}縺ｮ繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ`;
 }
 
 function createSequenceStorageId() {
@@ -3391,7 +3510,7 @@ function createSequenceListCard(sequence) {
     link.className = "sequence-list-card__link";
     link.href = `${STIKA_SEQUENCE_DETAIL_PATH}?id=${encodeURIComponent(sequence.id)}`;
     link.dataset.sequenceLink = "true";
-    link.setAttribute("aria-label", `${sequence.title || "シークエンス"}の内容を確認する`);
+    link.setAttribute("aria-label", `${sequence.title || "繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ"}縺ｮ蜀・ｮｹ繧堤｢ｺ隱阪☆繧義);
 
     const content = document.createElement("div");
     content.className = "sequence-list-card__content";
@@ -3401,7 +3520,7 @@ function createSequenceListCard(sequence) {
 
     const title = document.createElement("h2");
     title.className = "sequence-list-card__title";
-    title.textContent = sequence.title || "シークエンス";
+    title.textContent = sequence.title || "繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ";
 
     const date = document.createElement("p");
     date.className = "sequence-list-card__date";
@@ -3413,11 +3532,11 @@ function createSequenceListCard(sequence) {
     const body = document.createElement("dl");
     body.className = "sequence-list-card__meta";
 
-    body.appendChild(createMetaRow("所要時間", sequence.duration || "-"));
-    body.appendChild(createMetaRow("対象", sequence.target || "未設定"));
+    body.appendChild(createMetaRow("謇隕∵凾髢・, sequence.duration || "-"));
+    body.appendChild(createMetaRow("蟇ｾ雎｡", sequence.target || "譛ｪ險ｭ螳・));
 
     if (sequence.memo) {
-        body.appendChild(createMetaRow("メモ", sequence.memo));
+        body.appendChild(createMetaRow("繝｡繝｢", sequence.memo));
     }
 
     const footer = document.createElement("div");
@@ -3428,14 +3547,14 @@ function createSequenceListCard(sequence) {
     editButton.className = "secondary-button sequence-list-card__button";
     editButton.dataset.action = "edit";
     editButton.dataset.sequenceId = sequence.id;
-    editButton.textContent = "編集";
+    editButton.textContent = "邱ｨ髮・;
 
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
     deleteButton.className = "sequence-list-card__delete";
     deleteButton.dataset.action = "delete";
     deleteButton.dataset.sequenceId = sequence.id;
-    deleteButton.textContent = "削除";
+    deleteButton.textContent = "蜑企勁";
 
     footer.appendChild(editButton);
     footer.appendChild(deleteButton);
@@ -3478,10 +3597,10 @@ function renderSequenceDetail(sequence) {
         return;
     }
 
-    titleElement.textContent = sequence.title || "シークエンス";
+    titleElement.textContent = sequence.title || "繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ";
     dateElement.textContent = formatDateTimeLabel(sequence.createdAt);
     durationElement.textContent = sequence.duration || "-";
-    targetElement.textContent = sequence.target || "未設定";
+    targetElement.textContent = sequence.target || "譛ｪ險ｭ螳・;
     memoElement.textContent = sequence.memo || "";
     memoRow.hidden = !normalizeText(sequence.memo);
 
@@ -3490,17 +3609,17 @@ function renderSequenceDetail(sequence) {
         .flatMap((section) => Array.isArray(section?.items) ? section.items : [])
         .filter(Boolean);
 
-    sectionCountElement.textContent = `${sections.length}件`;
+    sectionCountElement.textContent = `${sections.length}莉ｶ`;
     asanaSummaryElement.textContent = asanaNames.length > 0
-        ? `アーサナ一覧: ${asanaNames.join(" / ")}`
-        : "登録されているアーサナはありません。";
+        ? `繧｢繝ｼ繧ｵ繝贋ｸ隕ｧ: ${asanaNames.join(" / ")}`
+        : "逋ｻ骭ｲ縺輔ｌ縺ｦ縺・ｋ繧｢繝ｼ繧ｵ繝翫・縺ゅｊ縺ｾ縺帙ｓ縲・;
 
     sectionsRoot.innerHTML = "";
 
     if (sections.length === 0) {
         const empty = document.createElement("p");
         empty.className = "sequence-confirm-empty";
-        empty.textContent = "セクション情報が見つかりません。";
+        empty.textContent = "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ諠・ｱ縺瑚ｦ九▽縺九ｊ縺ｾ縺帙ｓ縲・;
         sectionsRoot.appendChild(empty);
         return;
     }
@@ -3524,7 +3643,7 @@ function createSequenceDetailSection(section) {
 
     const title = document.createElement("h2");
     title.className = "sequence-confirm-card__title";
-    title.textContent = normalizeText(section?.title) || "セクション";
+    title.textContent = normalizeText(section?.title) || "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ";
 
     header.appendChild(time);
     header.appendChild(title);
@@ -3535,7 +3654,7 @@ function createSequenceDetailSection(section) {
     if (items.length === 0) {
         const empty = document.createElement("p");
         empty.className = "sequence-detail-card__empty";
-        empty.textContent = "登録されている項目はありません。";
+        empty.textContent = "逋ｻ骭ｲ縺輔ｌ縺ｦ縺・ｋ鬆・岼縺ｯ縺ゅｊ縺ｾ縺帙ｓ縲・;
         article.appendChild(empty);
         return article;
     }
@@ -3711,3 +3830,4 @@ function getTimestamp(value) {
     const timestamp = Date.parse(value || "");
     return Number.isFinite(timestamp) ? timestamp : 0;
 }
+

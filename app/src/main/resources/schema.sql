@@ -271,8 +271,12 @@ CREATE TABLE IF NOT EXISTS mood_logs (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uq_mood_logs_log_date UNIQUE (log_date),
-    CONSTRAINT chk_mood_logs_mood CHECK (mood IN ('good', 'normal', 'tired'))
+    CONSTRAINT chk_mood_logs_mood CHECK (mood IN ('good', 'normal', 'care'))
 );
+
+ALTER TABLE mood_logs DROP CONSTRAINT IF EXISTS chk_mood_logs_mood;
+ALTER TABLE mood_logs
+    ADD CONSTRAINT chk_mood_logs_mood CHECK (mood IN ('good', 'normal', 'care'));
 
 CREATE INDEX IF NOT EXISTS idx_mood_logs_log_date
     ON mood_logs(log_date);

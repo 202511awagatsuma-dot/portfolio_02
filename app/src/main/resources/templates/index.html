@@ -87,9 +87,9 @@
                 <div class="section-heading">
                     <h2>セルフケア</h2>
                 </div>
-                <div class="card selfcare-card">
-                    <div class="mood-row">
-                        <div class="mood-item is-active">
+                <div class="card selfcare-card" id="homeSelfCareCard">
+                    <div class="mood-row" role="radiogroup" aria-label="今日の状態">
+                        <button class="mood-item" type="button" data-home-mood="good" data-home-mood-label="快調" role="radio" aria-checked="false">
                             <span class="mood-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
                                     <circle cx="12" cy="12" r="1.6"></circle>
@@ -101,8 +101,8 @@
                                 </svg>
                             </span>
                             <small>快調</small>
-                        </div>
-                        <div class="mood-item">
+                        </button>
+                        <button class="mood-item" type="button" data-home-mood="normal" data-home-mood-label="ふつう" role="radio" aria-checked="false">
                             <span class="mood-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
                                     <ellipse cx="12" cy="8.2" rx="2.05" ry="3.05"></ellipse>
@@ -113,8 +113,8 @@
                                 </svg>
                             </span>
                             <small>ふつう</small>
-                        </div>
-                        <div class="mood-item">
+                        </button>
+                        <button class="mood-item" type="button" data-home-mood="care" data-home-mood-label="ケア" role="radio" aria-checked="false">
                             <span class="mood-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
                                     <path d="M12 6.1c2.1 1.3 3.2 3.1 3.2 5 0 1.8-1.4 3.2-3.2 3.2s-3.2-1.4-3.2-3.2c0-1.9 1.1-3.7 3.2-5Z"></path>
@@ -124,24 +124,25 @@
                                 </svg>
                             </span>
                             <small>ケア</small>
-                        </div>
+                        </button>
                     </div>
                     <div class="selfcare-stats">
                         <article class="play-card">
                             <div class="play-card__content">
-                                <p>運動</p>
-                                <strong>00分</strong>
+                                <p>瞑想</p>
+                                <strong>3分</strong>
                             </div>
-                            <span class="play-card__button">▶</span>
+                            <button class="play-card__button" type="button" data-home-care-type="meditation" aria-label="瞑想を開始">▶</button>
                         </article>
                         <article class="play-card">
                             <div class="play-card__content">
                                 <p>ブレスワーク</p>
-                                <strong>00分</strong>
+                                <strong>3分</strong>
                             </div>
-                            <span class="play-card__button">▶</span>
+                            <button class="play-card__button" type="button" data-home-care-type="breathwork" aria-label="ブレスワークを開始">▶</button>
                         </article>
                     </div>
+                    <p class="selfcare-toast" id="homeSelfCareToast" aria-live="polite"></p>
                 </div>
             </section>
 
@@ -172,7 +173,6 @@
                 </div>
             </section>
         </main>
-
         <nav class="bottom-nav" aria-label="メインナビゲーション">
             <a class="bottom-nav__item is-active" th:href="@{/sequence-list.html}">
                 <img class="bottom-nav__icon" th:src="@{/assets/icon/g_sq.svg}" src="/assets/icon/g_sq.svg" alt="">

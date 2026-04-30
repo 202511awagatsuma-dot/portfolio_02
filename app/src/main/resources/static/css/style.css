@@ -4052,6 +4052,34 @@ input {
         linear-gradient(150deg, #e9f1f9 0%, #deebf6 40%, #efe7de 74%, #f7eee4 100%);
 }
 
+.knowledge-detail-hero--teaching-beginner {
+    background:
+        radial-gradient(128px 94px at 18% 18%, rgba(255, 247, 236, 0.94), rgba(255, 247, 236, 0) 72%),
+        radial-gradient(176px 126px at 84% 22%, rgba(226, 238, 250, 0.9), rgba(226, 238, 250, 0) 76%),
+        linear-gradient(146deg, #e4edf8 0%, #d6e6f4 40%, #f2e5d7 72%, #f9efe5 100%);
+}
+
+.knowledge-detail-hero--teaching-peak {
+    background:
+        radial-gradient(130px 96px at 20% 18%, rgba(247, 251, 255, 0.92), rgba(247, 251, 255, 0) 72%),
+        radial-gradient(172px 124px at 84% 20%, rgba(247, 223, 193, 0.82), rgba(247, 223, 193, 0) 74%),
+        linear-gradient(148deg, #e3edf8 0%, #d4e5f3 38%, #f0e3d5 70%, #f8ebdf 100%);
+}
+
+.knowledge-detail-hero--teaching-observation {
+    background:
+        radial-gradient(126px 92px at 18% 16%, rgba(243, 250, 255, 0.92), rgba(243, 250, 255, 0) 72%),
+        radial-gradient(170px 122px at 84% 18%, rgba(236, 227, 214, 0.88), rgba(236, 227, 214, 0) 74%),
+        linear-gradient(144deg, #e2ecf7 0%, #d2e3f1 42%, #efe2d5 72%, #f7ece0 100%);
+}
+
+.knowledge-detail-hero--teaching-savasana {
+    background:
+        radial-gradient(132px 98px at 18% 20%, rgba(247, 251, 255, 0.92), rgba(247, 251, 255, 0) 72%),
+        radial-gradient(176px 126px at 86% 22%, rgba(247, 201, 150, 0.36), rgba(247, 201, 150, 0) 74%),
+        linear-gradient(150deg, #e5eef8 0%, #d8e8f5 40%, #f1e4d8 72%, #f8ede2 100%);
+}
+
 .knowledge-detail-headline {
     margin: 0 0 10px;
     color: var(--navy);

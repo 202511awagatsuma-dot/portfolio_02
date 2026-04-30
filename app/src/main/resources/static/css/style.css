@@ -3996,6 +3996,34 @@ input {
         linear-gradient(146deg, #f7eee5 0%, #efe8df 45%, #e2ecf6 100%);
 }
 
+.knowledge-detail-hero--anatomy-hip {
+    background:
+        radial-gradient(122px 92px at 20% 16%, rgba(248, 251, 255, 0.9), rgba(248, 251, 255, 0) 72%),
+        radial-gradient(170px 126px at 84% 20%, rgba(224, 236, 248, 0.9), rgba(224, 236, 248, 0) 76%),
+        linear-gradient(150deg, #e8f0f8 0%, #dbe8f4 42%, #f2e6da 100%);
+}
+
+.knowledge-detail-hero--anatomy-scapula {
+    background:
+        radial-gradient(126px 92px at 18% 18%, rgba(244, 250, 255, 0.9), rgba(244, 250, 255, 0) 72%),
+        radial-gradient(164px 122px at 84% 18%, rgba(219, 235, 248, 0.9), rgba(219, 235, 248, 0) 76%),
+        linear-gradient(145deg, #e6eff8 0%, #d4e5f3 46%, #f2e4d5 100%);
+}
+
+.knowledge-detail-hero--anatomy-knee {
+    background:
+        radial-gradient(124px 90px at 22% 18%, rgba(244, 250, 255, 0.9), rgba(244, 250, 255, 0) 72%),
+        radial-gradient(176px 126px at 82% 20%, rgba(214, 230, 246, 0.9), rgba(214, 230, 246, 0) 76%),
+        linear-gradient(148deg, #e7f0f8 0%, #d8e7f4 44%, #f3e7dc 100%);
+}
+
+.knowledge-detail-hero--anatomy-breath {
+    background:
+        radial-gradient(126px 92px at 20% 16%, rgba(245, 251, 255, 0.9), rgba(245, 251, 255, 0) 72%),
+        radial-gradient(170px 124px at 84% 18%, rgba(220, 236, 248, 0.9), rgba(220, 236, 248, 0) 76%),
+        linear-gradient(144deg, #e8f0f8 0%, #d6e6f3 44%, #f4e6d9 100%);
+}
+
 .knowledge-detail-headline {
     margin: 0 0 10px;
     color: var(--navy);

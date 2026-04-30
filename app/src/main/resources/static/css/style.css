@@ -400,14 +400,16 @@ input {
     padding: 16px;
 }
 
-#homeSelfCareCard .mood-row {
+#homeSelfCareCard .mood-row,
+#selfCareMoodCard .mood-row {
     display: flex;
     justify-content: space-between;
     gap: 10px;
     margin-bottom: 14px;
 }
 
-#homeSelfCareCard .mood-item {
+#homeSelfCareCard .mood-item,
+#selfCareMoodCard .mood-item {
     flex: 1;
     text-align: center;
     color: #8b96a3;
@@ -444,7 +446,8 @@ input {
     stroke-linejoin: round;
 }
 
-#homeSelfCareCard .selfcare-mood-button {
+#homeSelfCareCard .selfcare-mood-button,
+#selfCareMoodCard .selfcare-mood-button {
     border: 0;
     background: transparent;
     padding: 0;
@@ -452,27 +455,88 @@ input {
     cursor: pointer;
 }
 
-#homeSelfCareCard .mood-item.is-active {
+[data-selfcare-mood] {
+    position: relative;
+    cursor: pointer;
+}
+
+[data-selfcare-mood] .mood-label,
+[data-selfcare-mood] .selfcare-mood-label,
+[data-selfcare-mood] span,
+[data-selfcare-mood] p {
+    transition: color 0.2s ease;
+}
+
+#homeSelfCareCard .mood-item.is-active,
+#selfCareMoodCard .mood-item.is-active {
     color: var(--accent);
 }
 
-#homeSelfCareCard .mood-item.is-selected {
+#homeSelfCareCard .mood-item.is-selected,
+#selfCareMoodCard .mood-item.is-selected {
     color: var(--accent);
 }
 
-#homeSelfCareCard .selfcare-mood-button.is-selected .mood-label {
+#homeSelfCareCard .selfcare-mood-button.is-selected .mood-label,
+#selfCareMoodCard .selfcare-mood-button.is-selected .mood-label {
     color: #ec8b33;
+}
+
+[data-selfcare-mood].is-selected {
+    color: #ec8b33;
+}
+
+[data-selfcare-mood].is-selected .mood-icon,
+[data-selfcare-mood].is-selected .selfcare-mood-icon,
+[data-selfcare-mood].is-selected svg {
+    color: #ec8b33;
+    fill: currentColor;
+    stroke: currentColor;
+}
+
+[data-selfcare-mood].is-selected .mood-label,
+[data-selfcare-mood].is-selected .selfcare-mood-label {
+    color: #ec8b33;
+    font-weight: 600;
+}
+
+[data-selfcare-mood].is-selected span,
+[data-selfcare-mood].is-selected p {
+    color: #ec8b33;
+}
+
+[data-selfcare-mood].is-selected::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -8px;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: #ec8b33;
+    transform: translateX(-50%);
+}
+
+[data-selfcare-mood].is-selected svg,
+[data-selfcare-mood].is-selected svg path,
+[data-selfcare-mood].is-selected svg circle,
+[data-selfcare-mood].is-selected svg line {
+    color: #ec8b33;
+    stroke: #ec8b33;
+    fill: none;
 }
 
 .mood-item.is-active .mood-icon {
     transform: none;
 }
 
-#homeSelfCareCard .mood-item small {
+#homeSelfCareCard .mood-item small,
+#selfCareMoodCard .mood-item small {
     font-size: 0.68rem;
 }
 
-#homeSelfCareCard .mood-item::after {
+#homeSelfCareCard .mood-item::after,
+#selfCareMoodCard .mood-item::after {
     content: "";
     position: absolute;
     left: 50%;
@@ -485,14 +549,19 @@ input {
     transition: width 0.18s ease, background-color 0.18s ease;
 }
 
-#homeSelfCareCard .mood-item.is-active::after {
+#homeSelfCareCard .mood-item.is-active::after,
+#selfCareMoodCard .mood-item.is-active::after {
     width: 16px;
     background: var(--accent);
 }
 
-#homeSelfCareCard .mood-item.is-selected::after {
-    width: 16px;
-    background: var(--accent);
+#homeSelfCareCard .mood-item.is-selected::after,
+#selfCareMoodCard .mood-item.is-selected::after {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: #ec8b33;
+    bottom: -8px;
 }
 
 .selfcare-stats {

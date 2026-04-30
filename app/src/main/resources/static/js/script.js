@@ -21,6 +21,7 @@ const STIKA_SECTION_LABELS = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+    runInitializer(initSelfCareMoodSelectionUI);
     runInitializer(initDailyPhilosophyMessage);
     runInitializer(initPeakPoseField);
     runInitializer(initGrowthCalendar);
@@ -49,6 +50,63 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initHomeSelfCareQuickActions);
     runInitializer(initKnowledgeTabs);
 });
+
+function initSelfCareMoodSelectionUI() {
+    const getOrCreateDebugPanel = () => {
+        let debug = document.querySelector("[data-selfcare-debug]");
+        if (debug) {
+            return debug;
+        }
+
+        debug = document.createElement("div");
+        debug.setAttribute("data-selfcare-debug", "");
+        debug.style.position = "fixed";
+        debug.style.right = "12px";
+        debug.style.bottom = "80px";
+        debug.style.zIndex = "9999";
+        debug.style.background = "#20354a";
+        debug.style.color = "#fff";
+        debug.style.padding = "8px 12px";
+        debug.style.borderRadius = "8px";
+        debug.style.fontSize = "12px";
+        debug.style.lineHeight = "1.4";
+        debug.style.pointerEvents = "none";
+        document.body.appendChild(debug);
+        return debug;
+    };
+
+    const debugPanel = getOrCreateDebugPanel();
+    const moodButtons = document.querySelectorAll("[data-selfcare-mood]");
+    debugPanel.textContent = `debug: mood buttons = ${moodButtons.length}`;
+
+    if (moodButtons.length === 0) {
+        return;
+    }
+
+    moodButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", button.classList.contains("is-selected") ? "true" : "false");
+        button.addEventListener("click", () => {
+            const mood = button.dataset.selfcareMood || "(empty)";
+            debugPanel.textContent = `debug: mood clicked = ${mood}`;
+
+            const group = button.closest("[data-selfcare-mood-group]");
+            const scope = group || button.parentElement || document;
+            const groupButtons = scope.querySelectorAll("[data-selfcare-mood]");
+
+            groupButtons.forEach((item) => {
+                item.classList.remove("is-selected");
+                item.classList.remove("is-active");
+                item.setAttribute("aria-checked", "false");
+                item.setAttribute("aria-pressed", "false");
+            });
+
+            button.classList.add("is-selected");
+            button.classList.add("is-active");
+            button.setAttribute("aria-checked", "true");
+            button.setAttribute("aria-pressed", "true");
+        });
+    });
+}
 
 function initDailyPhilosophyMessage() {
     const titleElement = document.querySelector("[data-daily-philosophy-title]");
@@ -439,129 +497,148 @@ function initSelfCareToggles() {
 }
 
 function initSelfCareMoodLog() {
+    if (!document.body.classList.contains("self-care-page")) {
+        return;
+    }
+
     const card = document.getElementById("selfCareMoodCard");
-    const form = document.getElementById("selfCareMoodForm");
     const noteField = document.getElementById("selfCareNote");
     const recordButton = document.getElementById("selfCareRecordButton");
     const feedback = document.getElementById("selfCareMoodFeedback");
-    const registeredView = document.getElementById("selfCareMoodRegistered");
-    const registeredMoodLabel = document.getElementById("selfCareRegisteredMoodLabel");
-    const registeredMemo = document.getElementById("selfCareRegisteredMemo");
-    const editButton = document.getElementById("selfCareEditButton");
-    const deleteButton = document.getElementById("selfCareDeleteButton");
-    const deleteModal = document.getElementById("selfCareDeleteModal");
-    const deleteModalBackdrop = document.getElementById("selfCareDeleteModalBackdrop");
-    const deleteCancelButton = document.getElementById("selfCareDeleteCancelButton");
-    const deleteConfirmButton = document.getElementById("selfCareDeleteConfirmButton");
-    const completeModal = document.getElementById("selfCareCompleteModal");
-    const completeModalBackdrop = document.getElementById("selfCareCompleteModalBackdrop");
-    const completeCloseButton = document.getElementById("selfCareCompleteCloseButton");
-    const completeReportButton = document.getElementById("selfCareCompleteReportButton");
-    const moodInputs = document.querySelectorAll("input[name='todayMood']");
+    const hiddenMoodInput = document.getElementById("selfCareTodayMood");
+    const moodGroup = card?.querySelector("[data-selfcare-mood-group]");
+    const moodButtons = moodGroup ? Array.from(moodGroup.querySelectorAll("[data-selfcare-mood]")) : [];
+    const storageKey = "stikaSelfCareMoodRecords";
 
-    if (!card || !form || !noteField || !recordButton || !registeredView || !registeredMoodLabel || !registeredMemo
-        || !editButton || !deleteButton || !deleteModal || !deleteModalBackdrop || !deleteCancelButton
-        || !deleteConfirmButton || !completeModal || !completeModalBackdrop || !completeCloseButton
-        || !completeReportButton || moodInputs.length === 0) {
+    if (!card || !noteField || !recordButton || !feedback || !hiddenMoodInput || moodButtons.length !== 3) {
         return;
     }
 
     const moodLabels = {
-        good: "蠢ｫ隱ｿ",
-        normal: "縺ｵ縺､縺・,
-        care: "繧ｱ繧｢"
+        good: "快調",
+        normal: "ふつう",
+        care: "ケア"
     };
 
-    let currentLog = null;
-    let isEditMode = false;
-    let isSubmitting = false;
+    let selectedMood = "";
 
-    const getSelectedMood = () => document.querySelector("input[name='todayMood']:checked")?.value || "";
-
-    const setSelectedMood = (moodValue) => {
-        moodInputs.forEach((input) => {
-            input.checked = input.value === moodValue;
-        });
+    const todayKey = () => {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, "0");
+        const d = String(now.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
     };
 
-    const normalizeMemo = (memo) => (typeof memo === "string" ? memo.trim() : "");
+    const getRecords = () => {
+        const raw = localStorage.getItem(storageKey);
+        if (!raw) {
+            return {};
+        }
+        try {
+            const parsed = JSON.parse(raw);
+            return parsed && typeof parsed === "object" ? parsed : {};
+        } catch (_error) {
+            return {};
+        }
+    };
+
+    const saveRecords = (records) => {
+        localStorage.setItem(storageKey, JSON.stringify(records));
+    };
 
     const setFeedback = (message, isError = false) => {
-        if (!feedback) {
-            return;
-        }
-
         feedback.textContent = message || "";
         feedback.classList.toggle("is-error", Boolean(isError && message));
     };
 
-    const closeDeleteModal = () => {
-        deleteModal.hidden = true;
-        if (completeModal.hidden) {
-            document.body.classList.remove("modal-open");
-        }
+    const applySelection = (mood) => {
+        selectedMood = moodLabels[mood] ? mood : "";
+        hiddenMoodInput.value = selectedMood;
+        moodButtons.forEach((button) => {
+            const isSelected = button.dataset.selfcareMood === selectedMood;
+            button.classList.toggle("is-selected", isSelected);
+            button.classList.toggle("is-active", isSelected);
+            button.setAttribute("aria-checked", String(isSelected));
+            button.setAttribute("aria-pressed", String(isSelected));
+        });
     };
 
-    const openDeleteModal = () => {
-        deleteModal.hidden = false;
-        document.body.classList.add("modal-open");
-    };
+    moodButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const mood = button.dataset.selfcareMood || "";
+            applySelection(mood);
+            setFeedback("");
+        });
+    });
 
-    const closeCompleteModal = () => {
-        completeModal.hidden = true;
-        if (deleteModal.hidden) {
-            document.body.classList.remove("modal-open");
-        }
-    };
-
-    const openCompleteModal = () => {
-        completeModal.hidden = false;
-        document.body.classList.add("modal-open");
-    };
-
-    closeDeleteModal();
-    closeCompleteModal();
-
-    const renderState = () => {
-        const hasLog = Boolean(currentLog);
-        const showEditForm = !hasLog || isEditMode;
-
-        form.hidden = !showEditForm;
-        recordButton.hidden = !showEditForm;
-        registeredView.hidden = !hasLog || isEditMode;
-
-        if (showEditForm) {
-            recordButton.textContent = hasLog ? "菫晏ｭ倥☆繧・ : "險倬鹸縺吶ｋ";
-        }
-
-        if (hasLog) {
-            registeredMoodLabel.textContent = moodLabels[currentLog.mood] || "-";
-            registeredMemo.textContent = currentLog.memo || "・医Γ繝｢縺ｪ縺暦ｼ・;
-        } else {
-            setSelectedMood("good");
-            noteField.value = "";
-        }
-    };
-
-    const applyLogToForm = () => {
-        if (!currentLog) {
-            setSelectedMood("good");
-            noteField.value = "";
+    recordButton.addEventListener("click", () => {
+        if (!moodLabels[selectedMood]) {
+            setFeedback("今日の気分を選択してください", true);
             return;
         }
 
-        setSelectedMood(currentLog.mood || "good");
-        noteField.value = currentLog.memo || "";
+        const records = getRecords();
+        const dateKey = todayKey();
+        records[dateKey] = {
+            mood: selectedMood,
+            moodLabel: moodLabels[selectedMood],
+            memo: noteField.value || "",
+            updatedAt: new Date().toISOString()
+        };
+        saveRecords(records);
+        setFeedback("今日のセルフケアを記録しました");
+    });
+
+    const records = getRecords();
+    const todayRecord = records[todayKey()];
+    if (todayRecord && moodLabels[todayRecord.mood]) {
+        applySelection(todayRecord.mood);
+        noteField.value = typeof todayRecord.memo === "string" ? todayRecord.memo : "";
+    } else {
+        applySelection("");
+    }
+}
+
+function initHomeSelfCareQuickActions() {
+    const card = document.getElementById("homeSelfCareCard");
+    if (!card) {
+        return;
+    }
+
+    const moodButtons = card.querySelectorAll("[data-selfcare-mood]");
+    const toast = document.getElementById("homeSelfCareToast");
+    if (moodButtons.length === 0) {
+        return;
+    }
+
+    const moodLabels = { good: "快調", normal: "ふつう", care: "ケア" };
+    let currentLog = null;
+    let isSaving = false;
+
+    const applySelectedMood = (mood) => {
+        moodButtons.forEach((button) => {
+            const isSelected = button.dataset.selfcareMood === mood;
+            button.classList.toggle("is-active", isSelected);
+            button.classList.toggle("is-selected", isSelected);
+            button.setAttribute("aria-checked", String(isSelected));
+        });
+    };
+
+    const showToast = (message, isError = false) => {
+        if (!toast) {
+            return;
+        }
+        toast.textContent = message || "";
+        toast.classList.toggle("is-error", Boolean(isError && message));
     };
 
     const fetchMoodLog = async () => {
         const response = await fetch("/api/self-care/mood-logs/today");
         const payload = await response.json().catch(() => null);
-
         if (!response.ok) {
-            throw new Error(payload?.message || "莉頑律縺ｮ豌怜・繝ｭ繧ｰ縺ｮ蜿門ｾ励↓螟ｱ謨励＠縺ｾ縺励◆縲・);
+            throw new Error(payload?.message || "failed to fetch mood log");
         }
-
         return payload;
     };
 
@@ -571,152 +648,58 @@ function initSelfCareMoodLog() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ mood, memo })
         });
-
         const payload = await response.json().catch(() => null);
         if (!response.ok) {
-            const error = new Error(payload?.message || "豌怜・繝ｭ繧ｰ縺ｮ菫晏ｭ倥↓螟ｱ謨励＠縺ｾ縺励◆縲・);
-            error.status = response.status;
-            throw error;
+            throw new Error(payload?.message || "failed to save mood log");
         }
-
         return payload;
     };
 
-    const deleteMoodLog = async () => {
-        const response = await fetch("/api/self-care/mood-logs/today", { method: "DELETE" });
-        if (!response.ok && response.status !== 404) {
-            const payload = await response.json().catch(() => null);
-            throw new Error(payload?.message || "豌怜・繝ｭ繧ｰ縺ｮ蜑企勁縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲・);
-        }
+    const syncFromLog = (payload) => {
+        currentLog = payload?.exists ? payload : null;
+        applySelectedMood(currentLog?.mood || "good");
     };
 
-    recordButton.addEventListener("click", async () => {
-        if (isSubmitting) {
-            return;
-        }
+    window.addEventListener("stika:mood-log-updated", (event) => {
+        const mood = event?.detail?.exists ? event.detail.mood : "";
+        applySelectedMood(mood || "good");
+    });
 
-        const selectedMood = getSelectedMood();
-        if (!moodLabels[selectedMood]) {
-            setFeedback("豌怜・繧帝∈謚槭＠縺ｦ縺上□縺輔＞縲・, true);
-            return;
-        }
-
-        isSubmitting = true;
-        recordButton.disabled = true;
-        setFeedback("");
-
-        try {
-            const method = currentLog && isEditMode ? "PUT" : "POST";
-            const saved = await saveMoodLog(method, selectedMood, normalizeMemo(noteField.value) || null);
-            currentLog = saved?.exists ? saved : null;
-            isEditMode = false;
-            applyLogToForm();
-            renderState();
-            openCompleteModal();
-            setFeedback(method === "POST" ? "莉頑律縺ｮ豌怜・繧定ｨ倬鹸縺励∪縺励◆縲・ : "莉頑律縺ｮ豌怜・繧呈峩譁ｰ縺励∪縺励◆縲・);
-        } catch (error) {
-            if (error?.status === 409) {
-                setFeedback("莉頑律縺ｮ豌怜・縺ｯ縺吶〒縺ｫ逋ｻ骭ｲ縺輔ｌ縺ｦ縺・∪縺吶らｷｨ髮・°繧画峩譁ｰ縺励※縺上□縺輔＞縲・, true);
-            } else {
-                setFeedback(error?.message || "蜃ｦ逅・↓螟ｱ謨励＠縺ｾ縺励◆縲よ凾髢薙ｒ縺翫＞縺ｦ蜀榊ｺｦ縺願ｩｦ縺励￥縺縺輔＞縲・, true);
+    moodButtons.forEach((button) => {
+        button.addEventListener("click", async () => {
+            const mood = button.dataset.selfcareMood || "";
+            if (!mood || !moodLabels[mood] || isSaving) {
+                return;
             }
-        } finally {
-            isSubmitting = false;
-            recordButton.disabled = false;
-        }
-    });
 
-    editButton.addEventListener("click", () => {
-        if (!currentLog) {
-            return;
-        }
-
-        isEditMode = true;
-        applyLogToForm();
-        renderState();
-        setFeedback("");
-    });
-
-    deleteButton.addEventListener("click", () => {
-        if (!currentLog) {
-            return;
-        }
-        openDeleteModal();
-    });
-
-    deleteModalBackdrop.addEventListener("click", closeDeleteModal);
-    deleteCancelButton.addEventListener("click", closeDeleteModal);
-    completeModalBackdrop.addEventListener("click", closeCompleteModal);
-    completeCloseButton.addEventListener("click", closeCompleteModal);
-    completeReportButton.addEventListener("click", () => {
-        window.location.href = "/report.html";
-    });
-
-    deleteConfirmButton.addEventListener("click", async () => {
-        if (isSubmitting) {
-            return;
-        }
-
-        isSubmitting = true;
-        deleteConfirmButton.disabled = true;
-        setFeedback("");
-
-        try {
-            await deleteMoodLog();
-            currentLog = null;
-            isEditMode = false;
-            applyLogToForm();
-            renderState();
-            closeDeleteModal();
-            setFeedback("莉頑律縺ｮ豌怜・繝ｭ繧ｰ繧貞炎髯､縺励∪縺励◆縲・);
-        } catch (error) {
-            setFeedback(error?.message || "蜑企勁縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲よ凾髢薙ｒ縺翫＞縺ｦ蜀榊ｺｦ縺願ｩｦ縺励￥縺縺輔＞縲・, true);
-        } finally {
-            isSubmitting = false;
-            deleteConfirmButton.disabled = false;
-        }
-    });
-
-    document.addEventListener("keydown", (event) => {
-        if (event.key !== "Escape") {
-            return;
-        }
-        if (!deleteModal.hidden) {
-            closeDeleteModal();
-        }
-        if (!completeModal.hidden) {
-            closeCompleteModal();
-        }
+            isSaving = true;
+            applySelectedMood(mood);
+            showToast("");
+            try {
+                const method = currentLog ? "PUT" : "POST";
+                const saved = await saveMoodLog(method, mood, currentLog?.memo || null);
+                syncFromLog(saved);
+                window.dispatchEvent(new CustomEvent("stika:mood-log-updated", {
+                    detail: { mood: currentLog?.mood || mood, memo: currentLog?.memo || null, exists: true }
+                }));
+                showToast(`今日の状態を「${moodLabels[mood]}」にしました。`);
+            } catch (_error) {
+                showToast("状態の保存に失敗しました。", true);
+            } finally {
+                isSaving = false;
+            }
+        });
     });
 
     (async () => {
-        setFeedback("隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...");
-
         try {
             const payload = await fetchMoodLog();
-            currentLog = payload?.exists ? payload : null;
-            isEditMode = false;
-            applyLogToForm();
-            renderState();
-            setFeedback("");
-        } catch (error) {
-            setFeedback(error?.message || "莉頑律縺ｮ豌怜・繝ｭ繧ｰ繧定ｪｭ縺ｿ霎ｼ繧√∪縺帙ｓ縺ｧ縺励◆縲・, true);
-            currentLog = null;
-            isEditMode = false;
-            renderState();
+            syncFromLog(payload);
+            showToast("");
+        } catch (_error) {
+            applySelectedMood("good");
         }
     })();
-}
-
-function initHomeSelfCareQuickActions() {
-    const moodButtons = document.querySelectorAll("[data-selfcare-mood]");
-    console.log("selfcare mood buttons:", moodButtons.length);
-
-    moodButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            console.log("clicked mood:", button.dataset.selfcareMood);
-        });
-    });
 }
 
 function initKnowledgeTabs() {

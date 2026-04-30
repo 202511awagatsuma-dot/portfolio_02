@@ -709,116 +709,14 @@ function initSelfCareMoodLog() {
 }
 
 function initHomeSelfCareQuickActions() {
-    const homeCard = document.getElementById("homeSelfCareCard");
-    if (!homeCard) {
-        return;
-    }
-
-    const moodButtons = Array.from(homeCard.querySelectorAll("[data-selfcare-mood]"));
-    const toast = document.getElementById("homeSelfCareToast");
-
-    if (moodButtons.length === 0 || !toast) {
-        return;
-    }
-
-    const moodLabels = { good: "快調", normal: "ふつう", care: "ケア" };
-    const storageKey = "stikaSelfCareMoodRecords";
-    let selectedMood = "";
-    let toastTimer = null;
-
-    const formatToday = () => {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, "0");
-        const day = String(now.getDate()).padStart(2, "0");
-        return `${year}-${month}-${day}`;
-    };
-
-    const readMoodRecords = () => {
-        try {
-            const raw = window.localStorage.getItem(storageKey);
-            if (!raw) {
-                return {};
-            }
-            const parsed = JSON.parse(raw);
-            return parsed && typeof parsed === "object" ? parsed : {};
-        } catch (_error) {
-            return {};
-        }
-    };
-
-    const writeMoodRecordForToday = (mood) => {
-        const today = formatToday();
-        const records = readMoodRecords();
-        records[today] = {
-            mood,
-            moodLabel: moodLabels[mood],
-            updatedAt: new Date().toISOString()
-        };
-        window.localStorage.setItem(storageKey, JSON.stringify(records));
-    };
-
-    const setSelectedMood = (mood) => {
-        selectedMood = moodLabels[mood] ? mood : "";
-        moodButtons.forEach((button) => {
-            const isSelected = button.dataset.selfcareMood === selectedMood;
-            button.classList.toggle("is-selected", isSelected);
-            button.classList.toggle("is-active", isSelected);
-            button.setAttribute("aria-checked", String(isSelected));
-        });
-    };
-
-    const showToast = (message) => {
-        toast.textContent = message;
-        toast.classList.add("is-show");
-        if (toastTimer) {
-            window.clearTimeout(toastTimer);
-        }
-        toastTimer = window.setTimeout(() => {
-            toast.classList.remove("is-show");
-        }, 2800);
-    };
+    const moodButtons = document.querySelectorAll("[data-selfcare-mood]");
+    console.log("selfcare mood buttons:", moodButtons.length);
 
     moodButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            const mood = button.dataset.selfcareMood || "";
-            if (!moodLabels[mood]) {
-                return;
-            }
-            console.log("selected mood:", mood);
-            setSelectedMood(mood);
-            try {
-                writeMoodRecordForToday(mood);
-            } catch (_error) {
-                // Keep UI state even when storage write fails.
-            } finally {
-                showToast("今日の状態を登録しました");
-            }
-        });
-
-        button.addEventListener("keydown", (event) => {
-            if (event.key !== "Enter" && event.key !== " ") {
-                return;
-            }
-            event.preventDefault();
-            button.click();
+            console.log("clicked mood:", button.dataset.selfcareMood);
         });
     });
-
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-            toast.classList.remove("is-show");
-        }
-    });
-
-    const today = formatToday();
-    const records = readMoodRecords();
-    const todayRecord = records[today];
-    if (todayRecord && moodLabels[todayRecord.mood]) {
-        setSelectedMood(todayRecord.mood);
-    } else {
-        setSelectedMood("");
-    }
 }
 
 function initKnowledgeTabs() {

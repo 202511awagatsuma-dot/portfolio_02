@@ -714,23 +714,55 @@ function initHomeSelfCareQuickActions() {
         return;
     }
 
-    const moodButtons = Array.from(homeCard.querySelectorAll("[data-home-mood]"));
-    const careButtons = Array.from(homeCard.querySelectorAll("[data-home-care-type]"));
+    const moodButtons = Array.from(homeCard.querySelectorAll("[data-selfcare-mood]"));
     const toast = document.getElementById("homeSelfCareToast");
 
-    if (moodButtons.length === 0 || careButtons.length === 0 || !toast) {
+    if (moodButtons.length === 0 || !toast) {
         return;
     }
 
     const moodLabels = { good: "快調", normal: "ふつう", care: "ケア" };
-    const defaultMood = "normal";
+    const storageKey = "stikaSelfCareMoodRecords";
     let selectedMood = "";
     let toastTimer = null;
+
+    const formatToday = () => {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    };
+
+    const readMoodRecords = () => {
+        try {
+            const raw = window.localStorage.getItem(storageKey);
+            if (!raw) {
+                return {};
+            }
+            const parsed = JSON.parse(raw);
+            return parsed && typeof parsed === "object" ? parsed : {};
+        } catch (_error) {
+            return {};
+        }
+    };
+
+    const writeMoodRecordForToday = (mood) => {
+        const today = formatToday();
+        const records = readMoodRecords();
+        records[today] = {
+            mood,
+            moodLabel: moodLabels[mood],
+            updatedAt: new Date().toISOString()
+        };
+        window.localStorage.setItem(storageKey, JSON.stringify(records));
+    };
 
     const setSelectedMood = (mood) => {
         selectedMood = moodLabels[mood] ? mood : "";
         moodButtons.forEach((button) => {
-            const isSelected = button.dataset.homeMood === selectedMood;
+            const isSelected = button.dataset.selfcareMood === selectedMood;
+            button.classList.toggle("is-selected", isSelected);
             button.classList.toggle("is-active", isSelected);
             button.setAttribute("aria-checked", String(isSelected));
         });
@@ -747,76 +779,29 @@ function initHomeSelfCareQuickActions() {
         }, 2800);
     };
 
-    const fetchTodayMoodLog = async () => {
-        const response = await fetch("/api/self-care/mood-logs/today");
-        const payload = await response.json().catch(() => null);
-        if (!response.ok) {
-            return null;
-        }
-        return payload?.exists ? payload : null;
-    };
-
-    const saveMood = async (mood) => {
-        const payload = { mood, memo: null };
-        const updateResponse = await fetch("/api/self-care/mood-logs/today", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-        if (updateResponse.ok) {
-            return;
-        }
-        if (updateResponse.status !== 404) {
-            throw new Error("failed to update mood");
-        }
-        const createResponse = await fetch("/api/self-care/mood-logs/today", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-        if (!createResponse.ok) {
-            throw new Error("failed to create mood");
-        }
-    };
-
     moodButtons.forEach((button) => {
-        button.addEventListener("click", async () => {
-            const mood = button.dataset.homeMood || "";
+        button.addEventListener("click", () => {
+            const mood = button.dataset.selfcareMood || "";
             if (!moodLabels[mood]) {
                 return;
             }
+            console.log("selected mood:", mood);
             setSelectedMood(mood);
             try {
-                await saveMood(mood);
-                showToast("今日の状態を登録しました。レポートとセルフケアで確認できます");
+                writeMoodRecordForToday(mood);
             } catch (_error) {
-                showToast("状態の登録に失敗しました。時間をおいて再度お試しください");
+                // Keep UI state even when storage write fails.
+            } finally {
+                showToast("今日の状態を登録しました");
             }
         });
-    });
 
-    careButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            const careType = button.dataset.homeCareType;
-            if (!careType) {
+        button.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") {
                 return;
             }
-
-            const moodForCare = selectedMood || defaultMood;
-            const toastMessage = careType === "meditation"
-                ? "今日のおすすめ瞑想を表示します"
-                : "今日のおすすめブレスワークを表示します";
-
-            showToast(toastMessage);
-
-            const params = new URLSearchParams({
-                type: careType,
-                mood: moodForCare
-            });
-
-            window.setTimeout(() => {
-                window.location.href = `/self-care.html?${params.toString()}`;
-            }, 350);
+            event.preventDefault();
+            button.click();
         });
     });
 
@@ -826,10 +811,14 @@ function initHomeSelfCareQuickActions() {
         }
     });
 
-    (async () => {
-        const log = await fetchTodayMoodLog();
-        setSelectedMood(log?.mood || "");
-    })();
+    const today = formatToday();
+    const records = readMoodRecords();
+    const todayRecord = records[today];
+    if (todayRecord && moodLabels[todayRecord.mood]) {
+        setSelectedMood(todayRecord.mood);
+    } else {
+        setSelectedMood("");
+    }
 }
 
 function initKnowledgeTabs() {

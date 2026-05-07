@@ -21,8 +21,6 @@ const STIKA_SECTION_LABELS = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    runInitializer(initSelfCareMoodSelectionUI);
-    runInitializer(initDailyPhilosophyMessage);
     runInitializer(initPeakPoseField);
     runInitializer(initGrowthCalendar);
     runInitializer(initSequenceTabs);
@@ -45,96 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initSequenceLocalSave);
     runInitializer(initSequenceListPage);
     runInitializer(initSequenceDetailPage);
-    runInitializer(initSelfCareToggles);
-    runInitializer(initSelfCareMoodLog);
-    runInitializer(initHomeSelfCareQuickActions);
-    runInitializer(initKnowledgeTabs);
 });
-
-function initSelfCareMoodSelectionUI() {
-    const getOrCreateDebugPanel = () => {
-        let debug = document.querySelector("[data-selfcare-debug]");
-        if (debug) {
-            return debug;
-        }
-
-        debug = document.createElement("div");
-        debug.setAttribute("data-selfcare-debug", "");
-        debug.style.position = "fixed";
-        debug.style.right = "12px";
-        debug.style.bottom = "80px";
-        debug.style.zIndex = "9999";
-        debug.style.background = "#20354a";
-        debug.style.color = "#fff";
-        debug.style.padding = "8px 12px";
-        debug.style.borderRadius = "8px";
-        debug.style.fontSize = "12px";
-        debug.style.lineHeight = "1.4";
-        debug.style.pointerEvents = "none";
-        document.body.appendChild(debug);
-        return debug;
-    };
-
-    const debugPanel = getOrCreateDebugPanel();
-    const moodButtons = document.querySelectorAll("[data-selfcare-mood]");
-    debugPanel.textContent = `debug: mood buttons = ${moodButtons.length}`;
-
-    if (moodButtons.length === 0) {
-        return;
-    }
-
-    moodButtons.forEach((button) => {
-        button.setAttribute("aria-pressed", button.classList.contains("is-selected") ? "true" : "false");
-        button.addEventListener("click", () => {
-            const mood = button.dataset.selfcareMood || "(empty)";
-            debugPanel.textContent = `debug: mood clicked = ${mood}`;
-
-            const group = button.closest("[data-selfcare-mood-group]");
-            const scope = group || button.parentElement || document;
-            const groupButtons = scope.querySelectorAll("[data-selfcare-mood]");
-
-            groupButtons.forEach((item) => {
-                item.classList.remove("is-selected");
-                item.classList.remove("is-active");
-                item.setAttribute("aria-checked", "false");
-                item.setAttribute("aria-pressed", "false");
-            });
-
-            button.classList.add("is-selected");
-            button.classList.add("is-active");
-            button.setAttribute("aria-checked", "true");
-            button.setAttribute("aria-pressed", "true");
-        });
-    });
-}
-
-function initDailyPhilosophyMessage() {
-    const titleElement = document.querySelector("[data-daily-philosophy-title]");
-    const bodyElement = document.querySelector("[data-daily-philosophy-body]");
-
-    if (!titleElement || !bodyElement) {
-        return;
-    }
-
-    const dailyPhilosophyMessages = [
-        { title: "スティラ メッセージ", body: "呼吸が整うと、心と体のスペースが広がります。" },
-        { title: "アヒムサ", body: "自分にも他者にも、やさしい選択を積み重ねましょう。" },
-        { title: "サントーシャ", body: "今ある状態を受け入れることが、安定への第一歩です。" },
-        { title: "アビヤーサ", body: "小さな実践の継続が、確かな変化を生み出します。" },
-        { title: "ヴァイラーギャ", body: "手放す勇気が、新しい可能性をひらきます。" },
-        { title: "プラーナ", body: "丁寧な呼吸は、集中力と回復力を高めてくれます。" },
-        { title: "シャヴァーサナ", body: "静けさの中で、今日の学びを体に馴染ませましょう。" }
-    ];
-
-    const dayOfMonth = new Date().getDate();
-    const dailyMessage = dailyPhilosophyMessages[(dayOfMonth - 1) % dailyPhilosophyMessages.length];
-    if (!dailyMessage) {
-        return;
-    }
-
-    titleElement.textContent = dailyMessage.title;
-    bodyElement.textContent = dailyMessage.body;
-}
 
 function runInitializer(initializer) {
     if (typeof initializer !== "function") {
@@ -233,184 +142,63 @@ function initPeakPoseField() {
 }
 
 function initGrowthCalendar() {
-    console.log("initGrowthCalendar called");
-    const calendarScope = document.querySelector("[data-calendar-scope]");
-    const calendarRoot = calendarScope?.querySelector("[data-calendar-root]");
-    const calendarGrid = calendarScope?.querySelector("[data-calendar-grid]");
-    const monthLabel = calendarScope?.querySelector("[data-calendar-month-label]");
-    const navButtons = calendarScope ? Array.from(calendarScope.querySelectorAll("[data-calendar-nav]")) : [];
-    const allNavButtons = Array.from(document.querySelectorAll("[data-calendar-nav]"));
-    const reportMoodModal = document.getElementById("reportMoodModal");
-    const reportMoodModalBackdrop = document.getElementById("reportMoodModalBackdrop");
-    const reportMoodModalCloseButton = document.getElementById("reportMoodModalCloseButton");
-    const reportMoodModalOkButton = document.getElementById("reportMoodModalOkButton");
-    const reportMoodModalDate = document.getElementById("reportMoodModalDate");
-    const reportMoodModalMood = document.getElementById("reportMoodModalMood");
-    const reportMoodModalMemo = document.getElementById("reportMoodModalMemo");
+    const calendarRoot = document.getElementById("growthCalendar");
+    const calendarGrid = document.getElementById("calendarGrid");
+    const monthLabel = document.getElementById("calendarMonthLabel");
+    const navButtons = document.querySelectorAll("[data-calendar-nav]");
 
-    if (!calendarScope || !calendarGrid || !monthLabel) {
-        console.error("[stika] calendar init failed: required elements not found", {
-            hasScope: Boolean(calendarScope),
-            hasGrid: Boolean(calendarGrid),
-            hasMonthLabel: Boolean(monthLabel)
-        });
+    if (!calendarRoot || !calendarGrid || !monthLabel || navButtons.length === 0) {
         return;
     }
 
-    console.log("calendarGrid:", calendarGrid);
-    console.log("calendar debug init:", {
-        navButtonsInScope: navButtons.length,
-        allNavButtons: allNavButtons.length,
-        monthLabelText: monthLabel.textContent,
-        hasCalendarRoot: Boolean(calendarRoot),
-        scopeElement: calendarScope
-    });
-    if (navButtons.length !== 2) {
-        console.warn("[stika] unexpected nav button count in calendar scope", navButtons);
-    }
+    const recordedDates = [
+        "2026-04-03",
+        "2026-04-08",
+        "2026-04-12",
+        "2026-04-15",
+        "2026-04-19",
+        "2026-04-24",
+        "2026-04-28",
+        "2026-05-02",
+        "2026-05-06",
+        "2026-05-14"
+    ];
+
+    const recordSet = new Set(recordedDates);
     const today = createDateOnly(new Date());
     let currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    console.log("currentMonth:", currentMonth);
     let selectedDate = null;
-    let monthMoodLogDates = new Set();
-    let monthMoodLogMap = new Map();
-    const moodLabels = {
-        good: "調子よい",
-        normal: "ふつう",
-        care: "ケア"
-    };
-
-    const closeMoodLogModal = () => {
-        if (!reportMoodModal) {
-            return;
-        }
-        reportMoodModal.hidden = true;
-        reportMoodModal.classList.remove("is-open");
-        reportMoodModal.setAttribute("aria-hidden", "true");
-        document.body.classList.remove("modal-open");
-    };
-
-    const openMoodLogModal = (isoDate, logItem) => {
-        if (!reportMoodModal || !reportMoodModalDate || !reportMoodModalMood || !reportMoodModalMemo) {
-            return;
-        }
-        const [year, month, day] = isoDate.split("-").map((value) => Number.parseInt(value, 10));
-        const displayDate = Number.isFinite(year) && Number.isFinite(month) && Number.isFinite(day)
-            ? new Date(year, month - 1, day)
-            : new Date(isoDate);
-        reportMoodModalDate.textContent = new Intl.DateTimeFormat("ja-JP", {
-            year: "numeric",
-            month: "long",
-            day: "numeric"
-        }).format(displayDate);
-        reportMoodModalMood.textContent = moodLabels[logItem?.mood] || "未記録";
-        reportMoodModalMemo.textContent = logItem?.memo || "メモはありません";
-        reportMoodModal.hidden = false;
-        reportMoodModal.classList.add("is-open");
-        reportMoodModal.setAttribute("aria-hidden", "false");
-        document.body.classList.add("modal-open");
-    };
-
-    const fetchMoodLogByDate = async () => null;
-
-    const bindCloseHandler = (element) => {
-        element?.addEventListener("click", (event) => {
-            event.preventDefault();
-            closeMoodLogModal();
-        });
-    };
-
-    bindCloseHandler(reportMoodModalBackdrop);
-    bindCloseHandler(reportMoodModalCloseButton);
-    bindCloseHandler(reportMoodModalOkButton);
-    reportMoodModal?.addEventListener("click", (event) => {
-        if (event.target === reportMoodModal) {
-            closeMoodLogModal();
-        }
-    });
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && reportMoodModal && !reportMoodModal.hidden) {
-            closeMoodLogModal();
-        }
-    });
 
     navButtons.forEach((button) => {
-        console.log("bind calendar nav button:", button.tagName, button.dataset.calendarNav, button);
         button.addEventListener("click", () => {
-            console.log("calendar nav clicked:", button.dataset.calendarNav);
-            console.log("before currentMonth:", currentMonth);
             const direction = button.dataset.calendarNav === "next" ? 1 : -1;
-            console.log("calendar nav clicked, direction:", direction);
             currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + direction, 1);
-            console.log("after currentMonth:", currentMonth);
-            closeMoodLogModal();
-            safeRenderCalendar();
+            renderCalendar();
         });
     });
-    calendarScope.addEventListener("click", (event) => {
-        const navTarget = event.target instanceof Element ? event.target.closest("[data-calendar-nav]") : null;
-        if (!navTarget) {
-            return;
-        }
-        console.log("calendar nav scope click detected:", navTarget.dataset.calendarNav, navTarget.tagName);
-    });
-
-    function updateMonthMoodLogsAndRender() {
-        monthMoodLogDates = new Set();
-        monthMoodLogMap = new Map();
-        safeRenderCalendar();
-    }
-
-    function safeRenderCalendar() {
-        try {
-            renderCalendar();
-        } catch (error) {
-            console.error("[stika] renderCalendar failed. fallback rendering is applied.", error);
-            renderFallbackCalendar();
-        }
-    }
 
     function renderCalendar() {
-        console.log("renderCalendar called:", currentMonth);
         monthLabel.textContent = formatMonthLabel(currentMonth);
         calendarGrid.innerHTML = "";
 
-        const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
-        const lastDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
-        console.log("firstDay:", firstDay);
-        console.log("lastDate:", lastDate);
-        const totalCells = Math.ceil((firstDay + lastDate) / 7) * 7;
-        let appendedCellCount = 0;
-        const isViewingCurrentMonth =
-            currentMonth.getFullYear() === today.getFullYear() &&
-            currentMonth.getMonth() === today.getMonth();
+        const firstDayIndex = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
+        const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
+        const totalCells = Math.ceil((firstDayIndex + daysInMonth) / 7) * 7;
 
         for (let cellIndex = 0; cellIndex < totalCells; cellIndex += 1) {
-            const dayNumber = cellIndex - firstDay + 1;
-            const isCurrentMonth = dayNumber >= 1 && dayNumber <= lastDate;
-
-            if (!isCurrentMonth) {
-                const emptyCell = document.createElement("div");
-                emptyCell.className = "calendar-day calendar-day--empty";
-                emptyCell.setAttribute("role", "gridcell");
-                emptyCell.setAttribute("aria-hidden", "true");
-                calendarGrid.appendChild(emptyCell);
-                appendedCellCount += 1;
-                continue;
-            }
-
-            const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), dayNumber);
+            const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), cellIndex - firstDayIndex + 1);
             const isoDate = formatIsoDate(date);
-            const isToday = isViewingCurrentMonth && isSameDate(date, today);
+            const isCurrentMonth = date.getMonth() === currentMonth.getMonth();
+            const isToday = isSameDate(date, today);
             const isSelected = selectedDate === isoDate;
-            const hasMoodLog = monthMoodLogDates.has(isoDate);
+            const hasRecord = recordSet.has(isoDate);
 
             const button = document.createElement("button");
             button.type = "button";
             button.className = "calendar-day";
             button.dataset.date = isoDate;
             button.setAttribute("role", "gridcell");
-            button.setAttribute("aria-label", `${isoDate}${hasMoodLog ? " 記録あり" : ""}${isToday ? " 今日" : ""}`);
+            button.setAttribute("aria-label", `${isoDate}${hasRecord ? " 記録あり" : ""}${isToday ? " 今日" : ""}`);
             button.setAttribute("aria-selected", String(isSelected));
 
             if (!isCurrentMonth) {
@@ -422,62 +210,28 @@ function initGrowthCalendar() {
             if (isSelected) {
                 button.classList.add("calendar-day--selected");
             }
-            if (hasMoodLog) {
-                button.classList.add("has-mood-log");
+            if (hasRecord) {
                 button.classList.add("calendar-day--has-record");
             }
 
-            button.innerHTML = `<span class="calendar-day__number">${date.getDate()}</span><span class="calendar-day__marker" aria-hidden="true"></span>`;
-            button.addEventListener("click", async () => {
+            button.innerHTML = `<span class="calendar-day__number">${date.getDate()}</span>`;
+            button.addEventListener("click", () => {
                 selectedDate = isoDate;
-                safeRenderCalendar();
-                const moodLog = monthMoodLogMap.get(isoDate) || await fetchMoodLogByDate(isoDate);
-                openMoodLogModal(isoDate, moodLog);
+                renderCalendar();
             });
 
             calendarGrid.appendChild(button);
-            appendedCellCount += 1;
-        }
-
-        console.log("calendar cells appended:", appendedCellCount);
-        console.log("calendar render applied:", {
-            monthLabel: monthLabel.textContent,
-            gridChildren: calendarGrid.children.length
-        });
-    }
-
-    function renderFallbackCalendar() {
-        monthLabel.textContent = formatMonthLabel(currentMonth);
-        calendarGrid.innerHTML = "";
-        const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
-        const lastDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
-        const totalCells = Math.ceil((firstDay + lastDate) / 7) * 7;
-
-        for (let cellIndex = 0; cellIndex < totalCells; cellIndex += 1) {
-            const dayNumber = cellIndex - firstDay + 1;
-            if (dayNumber < 1 || dayNumber > lastDate) {
-                const emptyCell = document.createElement("div");
-                emptyCell.className = "calendar-day calendar-day--empty";
-                emptyCell.setAttribute("role", "gridcell");
-                emptyCell.setAttribute("aria-hidden", "true");
-                calendarGrid.appendChild(emptyCell);
-                continue;
-            }
-
-            const button = document.createElement("button");
-            button.type = "button";
-            button.className = "calendar-day";
-            button.setAttribute("role", "gridcell");
-            button.innerHTML = `<span class="calendar-day__number">${dayNumber}</span><span class="calendar-day__marker" aria-hidden="true"></span>`;
-            calendarGrid.appendChild(button);
         }
     }
 
-    updateMonthMoodLogsAndRender();
+    renderCalendar();
 }
 
 function formatMonthLabel(date) {
-    return `${date.getFullYear()}年${date.getMonth() + 1}月`;
+    return new Intl.DateTimeFormat("ja-JP", {
+        year: "numeric",
+        month: "long"
+    }).format(date);
 }
 
 function formatIsoDate(date) {
@@ -497,270 +251,6 @@ function isSameDate(a, b) {
         a.getMonth() === b.getMonth() &&
         a.getDate() === b.getDate()
     );
-}
-
-function initSelfCareToggles() {
-    const toggles = document.querySelectorAll("[data-self-care-toggle]");
-
-    if (toggles.length === 0) {
-        return;
-    }
-
-    toggles.forEach((toggle) => {
-        const label = toggle.querySelector(".self-care-toggle__label");
-
-        const syncState = () => {
-            const isOn = toggle.classList.contains("is-on");
-            toggle.setAttribute("aria-checked", String(isOn));
-
-            if (label) {
-                label.textContent = isOn ? "ON" : "OFF";
-            }
-        };
-
-        toggle.addEventListener("click", () => {
-            toggle.classList.toggle("is-on");
-            syncState();
-        });
-
-        syncState();
-    });
-}
-
-function initSelfCareMoodLog() {
-    if (!document.body.classList.contains("self-care-page")) {
-        return;
-    }
-
-    const card = document.getElementById("selfCareMoodCard");
-    const noteField = document.getElementById("selfCareNote");
-    const recordButton = document.getElementById("selfCareRecordButton");
-    const feedback = document.getElementById("selfCareMoodFeedback");
-    const hiddenMoodInput = document.getElementById("selfCareTodayMood");
-    const moodGroup = card?.querySelector("[data-selfcare-mood-group]");
-    const moodButtons = moodGroup ? Array.from(moodGroup.querySelectorAll("[data-selfcare-mood]")) : [];
-    const storageKey = "stikaSelfCareMoodRecords";
-
-    if (!card || !noteField || !recordButton || !feedback || !hiddenMoodInput || moodButtons.length !== 3) {
-        return;
-    }
-
-    const moodLabels = {
-        good: "快調",
-        normal: "ふつう",
-        care: "ケア"
-    };
-
-    let selectedMood = "";
-
-    const todayKey = () => {
-        const now = new Date();
-        const y = now.getFullYear();
-        const m = String(now.getMonth() + 1).padStart(2, "0");
-        const d = String(now.getDate()).padStart(2, "0");
-        return `${y}-${m}-${d}`;
-    };
-
-    const getRecords = () => {
-        const raw = localStorage.getItem(storageKey);
-        if (!raw) {
-            return {};
-        }
-        try {
-            const parsed = JSON.parse(raw);
-            return parsed && typeof parsed === "object" ? parsed : {};
-        } catch (_error) {
-            return {};
-        }
-    };
-
-    const saveRecords = (records) => {
-        localStorage.setItem(storageKey, JSON.stringify(records));
-    };
-
-    const setFeedback = (message, isError = false) => {
-        feedback.textContent = message || "";
-        feedback.classList.toggle("is-error", Boolean(isError && message));
-    };
-
-    const applySelection = (mood) => {
-        selectedMood = moodLabels[mood] ? mood : "";
-        hiddenMoodInput.value = selectedMood;
-        moodButtons.forEach((button) => {
-            const isSelected = button.dataset.selfcareMood === selectedMood;
-            button.classList.toggle("is-selected", isSelected);
-            button.classList.toggle("is-active", isSelected);
-            button.setAttribute("aria-checked", String(isSelected));
-            button.setAttribute("aria-pressed", String(isSelected));
-        });
-    };
-
-    moodButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            const mood = button.dataset.selfcareMood || "";
-            applySelection(mood);
-            setFeedback("");
-        });
-    });
-
-    recordButton.addEventListener("click", () => {
-        if (!moodLabels[selectedMood]) {
-            setFeedback("今日の気分を選択してください", true);
-            return;
-        }
-
-        const records = getRecords();
-        const dateKey = todayKey();
-        records[dateKey] = {
-            mood: selectedMood,
-            moodLabel: moodLabels[selectedMood],
-            memo: noteField.value || "",
-            updatedAt: new Date().toISOString()
-        };
-        saveRecords(records);
-        setFeedback("今日のセルフケアを記録しました");
-    });
-
-    const records = getRecords();
-    const todayRecord = records[todayKey()];
-    if (todayRecord && moodLabels[todayRecord.mood]) {
-        applySelection(todayRecord.mood);
-        noteField.value = typeof todayRecord.memo === "string" ? todayRecord.memo : "";
-    } else {
-        applySelection("");
-    }
-}
-
-function initHomeSelfCareQuickActions() {
-    const card = document.getElementById("homeSelfCareCard");
-    if (!card) {
-        return;
-    }
-
-    const moodButtons = card.querySelectorAll("[data-selfcare-mood]");
-    const toast = document.getElementById("homeSelfCareToast");
-    if (moodButtons.length === 0) {
-        return;
-    }
-
-    const moodLabels = { good: "快調", normal: "ふつう", care: "ケア" };
-    let currentLog = null;
-    let isSaving = false;
-
-    const applySelectedMood = (mood) => {
-        moodButtons.forEach((button) => {
-            const isSelected = button.dataset.selfcareMood === mood;
-            button.classList.toggle("is-active", isSelected);
-            button.classList.toggle("is-selected", isSelected);
-            button.setAttribute("aria-checked", String(isSelected));
-        });
-    };
-
-    const showToast = (message, isError = false) => {
-        if (!toast) {
-            return;
-        }
-        toast.textContent = message || "";
-        toast.classList.toggle("is-error", Boolean(isError && message));
-    };
-
-    const fetchMoodLog = async () => {
-        const response = await fetch("/api/self-care/mood-logs/today");
-        const payload = await response.json().catch(() => null);
-        if (!response.ok) {
-            throw new Error(payload?.message || "failed to fetch mood log");
-        }
-        return payload;
-    };
-
-    const saveMoodLog = async (method, mood, memo) => {
-        const response = await fetch("/api/self-care/mood-logs/today", {
-            method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ mood, memo })
-        });
-        const payload = await response.json().catch(() => null);
-        if (!response.ok) {
-            throw new Error(payload?.message || "failed to save mood log");
-        }
-        return payload;
-    };
-
-    const syncFromLog = (payload) => {
-        currentLog = payload?.exists ? payload : null;
-        applySelectedMood(currentLog?.mood || "good");
-    };
-
-    window.addEventListener("stika:mood-log-updated", (event) => {
-        const mood = event?.detail?.exists ? event.detail.mood : "";
-        applySelectedMood(mood || "good");
-    });
-
-    moodButtons.forEach((button) => {
-        button.addEventListener("click", async () => {
-            const mood = button.dataset.selfcareMood || "";
-            if (!mood || !moodLabels[mood] || isSaving) {
-                return;
-            }
-
-            isSaving = true;
-            applySelectedMood(mood);
-            showToast("");
-            try {
-                const method = currentLog ? "PUT" : "POST";
-                const saved = await saveMoodLog(method, mood, currentLog?.memo || null);
-                syncFromLog(saved);
-                window.dispatchEvent(new CustomEvent("stika:mood-log-updated", {
-                    detail: { mood: currentLog?.mood || mood, memo: currentLog?.memo || null, exists: true }
-                }));
-                showToast(`今日の状態を「${moodLabels[mood]}」にしました。`);
-            } catch (_error) {
-                showToast("状態の保存に失敗しました。", true);
-            } finally {
-                isSaving = false;
-            }
-        });
-    });
-
-    (async () => {
-        try {
-            const payload = await fetchMoodLog();
-            syncFromLog(payload);
-            showToast("");
-        } catch (_error) {
-            applySelectedMood("good");
-        }
-    })();
-}
-
-function initKnowledgeTabs() {
-    const pageRoot = document.getElementById("knowledgePage");
-    const tabs = Array.from(document.querySelectorAll("[data-knowledge-tab]"));
-    const panels = Array.from(document.querySelectorAll("[data-knowledge-panel]"));
-
-    if (!pageRoot || tabs.length === 0 || panels.length === 0) {
-        return;
-    }
-
-    const activateTab = (tabKey) => {
-        tabs.forEach((tab) => {
-            const isActive = tab.dataset.knowledgeTab === tabKey;
-            tab.classList.toggle("is-active", isActive);
-            tab.setAttribute("aria-selected", String(isActive));
-        });
-
-        panels.forEach((panel) => {
-            panel.hidden = panel.dataset.knowledgePanel !== tabKey;
-        });
-    };
-
-    tabs.forEach((tab) => {
-        tab.addEventListener("click", () => {
-            activateTab(tab.dataset.knowledgeTab || "");
-        });
-    });
-
-    activateTab("philosophy");
 }
 
 function initSequenceTabs() {
@@ -828,9 +318,9 @@ function initBreathingModal() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const name = button.dataset.name || "縺薙・蜻ｼ蜷ｸ豕・;
+            const name = button.dataset.name || "この呼吸法";
 
-            if (!window.confirm(`${name}繧貞炎髯､縺励∪縺吶°・歔)) {
+            if (!window.confirm(`${name}を削除しますか？`)) {
                 event.preventDefault();
             }
         });
@@ -898,9 +388,9 @@ function initSectionDurationPicker() {
     modal.setAttribute("aria-hidden", "true");
     modal.innerHTML = `
         <div class="sequence-comp-modal__dialog warming-up-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="sectionDurationModalTitle">
-            <button class="sequence-comp-modal__close" type="button" aria-label="繝｢繝ｼ繝繝ｫ繧帝哩縺倥ｋ">ﾃ・/button>
+            <button class="sequence-comp-modal__close" type="button" aria-label="モーダルを閉じる">×</button>
             <div class="sequence-comp-modal__header">
-                <h3 class="sequence-comp-modal__title" id="sectionDurationModalTitle">譎る俣繧帝∈謚・/h3>
+                <h3 class="sequence-comp-modal__title" id="sectionDurationModalTitle">時間を選択</h3>
             </div>
             <div class="warming-up-modal__content">
                 <div class="warming-up-modal__master-list" id="sectionDurationOptionList"></div>
@@ -919,7 +409,7 @@ function initSectionDurationPicker() {
         return match ? Number.parseInt(match[0], 10) : null;
     };
 
-    const getDurationLabel = (minutes) => (Number.isFinite(minutes) ? `${minutes}蛻・ : "譎る俣繧帝∈謚・);
+    const getDurationLabel = (minutes) => (Number.isFinite(minutes) ? `${minutes}分` : "時間を選択");
 
     const closeModal = () => {
         modal.hidden = true;
@@ -959,7 +449,7 @@ function initSectionDurationPicker() {
             const button = document.createElement("button");
             button.type = "button";
             button.className = "warming-up-modal__master-button sequence-duration-option";
-            button.textContent = `${minutes}蛻・;
+            button.textContent = `${minutes}分`;
 
             const isSelected = selectedMinutes === minutes;
             button.classList.toggle("is-selected", isSelected);
@@ -1011,7 +501,7 @@ function initSectionDurationPicker() {
             timeElement.dataset.durationMinutes = String(initialMinutes);
             timeElement.textContent = getDurationLabel(initialMinutes);
         } else {
-            timeElement.textContent = "譎る俣繧帝∈謚・;
+            timeElement.textContent = "時間を選択";
         }
 
         timeElement.classList.add("sequence-comp-section__time--selectable");
@@ -1019,7 +509,7 @@ function initSectionDurationPicker() {
         timeElement.setAttribute("tabindex", "0");
         timeElement.setAttribute("aria-haspopup", "dialog");
         timeElement.setAttribute("aria-controls", "sectionDurationModal");
-        timeElement.setAttribute("aria-label", "譎る俣繧帝∈謚・);
+        timeElement.setAttribute("aria-label", "時間を選択");
         timeElement.dataset.durationPickerBound = "true";
     };
 
@@ -1082,8 +572,8 @@ function initWarmingUpModal() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const name = button.dataset.name || "縺薙・ Warming UP";
-            if (!window.confirm(`${name}繧貞炎髯､縺励∪縺吶°・歔)) {
+            const name = button.dataset.name || "この Warming UP";
+            if (!window.confirm(`${name}を削除しますか？`)) {
                 event.preventDefault();
             }
         });
@@ -1216,7 +706,7 @@ function updateAsanaSortOrderFields(list) {
 
         const handle = item.querySelector(".asana-drag-handle");
         if (handle) {
-            handle.textContent = `${labelOrder} 竕｡`;
+            handle.textContent = `${labelOrder} ≡`;
         }
 
         let sortOrderInput = item.querySelector("input[data-asana-sort-order]");
@@ -1286,8 +776,8 @@ function initSunSalutationModal() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const name = button.dataset.name || "縺薙・螟ｪ髯ｽ遉ｼ諡・;
-            if (!window.confirm(`${name}繧貞炎髯､縺励∪縺吶°・歔)) {
+            const name = button.dataset.name || "この太陽礼拝";
+            if (!window.confirm(`${name}を削除しますか？`)) {
                 event.preventDefault();
             }
         });
@@ -1359,8 +849,8 @@ function initPeakPoseModal() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const name = button.dataset.name || "縺薙・繝斐・繧ｯ繝昴・繧ｺ";
-            if (!window.confirm(`${name}繧貞炎髯､縺励∪縺吶°・歔)) {
+            const name = button.dataset.name || "このピークポーズ";
+            if (!window.confirm(`${name}を削除しますか？`)) {
                 event.preventDefault();
             }
         });
@@ -1432,8 +922,8 @@ function initBackbendModal() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const name = button.dataset.name || "縺薙・蠕悟ｱ・;
-            if (!window.confirm(`${name}繧貞炎髯､縺励∪縺吶°・歔)) {
+            const name = button.dataset.name || "この後屈";
+            if (!window.confirm(`${name}を削除しますか？`)) {
                 event.preventDefault();
             }
         });
@@ -1505,8 +995,8 @@ function initSeatedModal() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const name = button.dataset.name || "縺薙・蠎ｧ菴・;
-            if (!window.confirm(`${name}繧貞炎髯､縺励∪縺吶°・歔)) {
+            const name = button.dataset.name || "この座位";
+            if (!window.confirm(`${name}を削除しますか？`)) {
                 event.preventDefault();
             }
         });
@@ -1578,8 +1068,8 @@ function initRelaxationModal() {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            const name = button.dataset.name || "縺薙・繝ｪ繝ｩ繧ｯ繧ｼ繝ｼ繧ｷ繝ｧ繝ｳ";
-            if (!window.confirm(`${name}繧貞炎髯､縺励∪縺吶°・歔)) {
+            const name = button.dataset.name || "このリラクゼーション";
+            if (!window.confirm(`${name}を削除しますか？`)) {
                 event.preventDefault();
             }
         });
@@ -1759,7 +1249,7 @@ function initDynamicSectionManager() {
 
             removeButton.disabled = !canDelete;
             removeButton.setAttribute("aria-disabled", String(!canDelete));
-            removeButton.title = canDelete ? "" : "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ縺ｯ1縺､莉･荳雁ｿ・ｦ√〒縺・;
+            removeButton.title = canDelete ? "" : "セクションは1つ以上必要です";
 
             if (moveUpButton) {
                 const disableUp = index === 0;
@@ -1937,7 +1427,7 @@ function initDynamicSectionsOnConfirmPage() {
         const durationLabel = card.querySelector(".sequence-confirm-card__time");
         const minutes = Number.parseInt(sectionDurations[card.dataset.sectionId], 10);
         if (durationLabel && Number.isFinite(minutes)) {
-            durationLabel.textContent = `${minutes}蛻・;
+            durationLabel.textContent = `${minutes}分`;
         }
 
         if (removedSectionIds.has(card.dataset.sectionId)) {
@@ -1957,7 +1447,7 @@ function initDynamicSectionsOnConfirmPage() {
         const durationLabel = card.querySelector(".sequence-confirm-card__time");
         const minutes = Number.parseInt(sectionDurations[section.id], 10);
         if (durationLabel && Number.isFinite(minutes)) {
-            durationLabel.textContent = `${minutes}蛻・;
+            durationLabel.textContent = `${minutes}分`;
         }
         list.appendChild(card);
     });
@@ -2004,15 +1494,15 @@ function createSectionAddModal(candidates, handlers) {
     modal.setAttribute("aria-hidden", "true");
     modal.innerHTML = `
         <div class="sequence-comp-modal__dialog warming-up-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="sequenceSectionAddModalTitle">
-            <button class="sequence-comp-modal__close" type="button" aria-label="繝｢繝ｼ繝繝ｫ繧帝哩縺倥ｋ">ﾃ・/button>
+            <button class="sequence-comp-modal__close" type="button" aria-label="モーダルを閉じる">×</button>
             <div class="sequence-comp-modal__header">
-                <h3 class="sequence-comp-modal__title" id="sequenceSectionAddModalTitle">霑ｽ蜉縺吶ｋ繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ繧帝∈謚・/h3>
+                <h3 class="sequence-comp-modal__title" id="sequenceSectionAddModalTitle">追加するセクションを選択</h3>
             </div>
             <div class="warming-up-modal__content">
                 <div class="warming-up-modal__master-list" data-section-add-options role="listbox" aria-multiselectable="false" aria-labelledby="sequenceSectionAddModalTitle"></div>
                 <div class="sequence-comp-modal__actions">
-                    <button class="sequence-comp-cancel" type="button" data-section-add-cancel>繧ｭ繝｣繝ｳ繧ｻ繝ｫ</button>
-                    <button class="sequence-comp-add sequence-comp-add--inline" type="button" data-section-add-submit disabled>霑ｽ蜉縺吶ｋ</button>
+                    <button class="sequence-comp-cancel" type="button" data-section-add-cancel>キャンセル</button>
+                    <button class="sequence-comp-add sequence-comp-add--inline" type="button" data-section-add-submit disabled>追加する</button>
                 </div>
             </div>
         </div>
@@ -2138,7 +1628,7 @@ function insertDynamicSection({ sectionsRoot, insertButton, category, sectionSta
     if (!dynamicSection.querySelector(".sequence-comp-section__time")) {
         const fallbackTime = document.createElement("div");
         fallbackTime.className = "sequence-comp-section__time";
-        fallbackTime.textContent = "5蛻・;
+        fallbackTime.textContent = "5分";
         dynamicSection.insertAdjacentElement("afterbegin", fallbackTime);
     }
 
@@ -2190,7 +1680,7 @@ function resetDynamicSection(section, category, sectionState) {
     const sectionTitle = section.querySelector(".sequence-comp-section__title");
     const timeElement = section.querySelector(".sequence-comp-section__time");
     const addedList = section.querySelector(".sequence-comp-added-list");
-    const selectedLabel = STIKA_SECTION_LABELS[category] || normalizeText(sectionTitle?.textContent) || "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ";
+    const selectedLabel = STIKA_SECTION_LABELS[category] || normalizeText(sectionTitle?.textContent) || "セクション";
     const initialDuration = Number.isFinite(sectionState?.durationMinutes) ? sectionState.durationMinutes : 5;
 
     if (sectionTitle) {
@@ -2207,7 +1697,7 @@ function resetDynamicSection(section, category, sectionState) {
     }
 
     if (timeElement) {
-        timeElement.textContent = `${initialDuration}蛻・;
+        timeElement.textContent = `${initialDuration}分`;
         timeElement.dataset.durationMinutes = String(initialDuration);
         window.__stikaBindDurationPickerToTimeElement?.(timeElement);
     }
@@ -2454,15 +1944,15 @@ function appendDynamicSectionItem(section, itemData, syncOrder) {
     const handle = document.createElement("button");
     handle.className = "asana-drag-handle";
     handle.type = "button";
-    handle.setAttribute("aria-label", `${itemData?.name || "縺薙・繧｢繝ｼ繧ｵ繝・} 繧偵ラ繝ｩ繝・げ縺励※荳ｦ縺ｳ譖ｿ縺・);
-    handle.textContent = `${String(list.children.length + 1).padStart(2, "0")} 竕｡`;
+    handle.setAttribute("aria-label", `${itemData?.name || "このアーサナ"} をドラッグして並び替え`);
+    handle.textContent = `${String(list.children.length + 1).padStart(2, "0")} ≡`;
 
     const body = document.createElement("div");
     body.className = "sequence-comp-added-item__body";
 
     const name = document.createElement("span");
     name.className = "sequence-comp-added-item__name";
-    name.textContent = itemData?.name || "蜷咲ｧｰ譛ｪ險ｭ螳・;
+    name.textContent = itemData?.name || "名称未設定";
     body.appendChild(name);
 
     if (itemData?.memo) {
@@ -2486,7 +1976,7 @@ function appendDynamicSectionItem(section, itemData, syncOrder) {
     deleteButton.className = "sequence-comp-delete";
     deleteButton.type = "button";
     deleteButton.dataset.dynamicDelete = "true";
-    deleteButton.setAttribute("aria-label", `${name.textContent} 繧貞炎髯､`);
+    deleteButton.setAttribute("aria-label", `${name.textContent} を削除`);
     deleteButton.innerHTML = `
         <svg class="sequence-comp-delete__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M9 3.75h6a1 1 0 0 1 1 1V6h3a.75.75 0 0 1 0 1.5h-1.1l-.77 11.02A2.5 2.5 0 0 1 14.64 21h-5.28a2.5 2.5 0 0 1-2.49-2.48L6.1 7.5H5a.75.75 0 0 1 0-1.5h3V4.75a1 1 0 0 1 1-1Zm5.5 2.25V5.25H9.5V6h5Zm-5.88 1.5.74 10.91a1 1 0 0 0 1 .94h5.28a1 1 0 0 0 1-.94l.74-10.91H8.62Zm2.13 2.25c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Zm4.5 0c.41 0 .75.34.75.75v5.5a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75Z"></path>
@@ -2550,7 +2040,7 @@ function saveDynamicSectionsState(sequenceId, sectionsRoot) {
         .filter((section) => section.dataset.dynamicSection === "true")
         .map((section) => {
             const category = section.dataset.category || "";
-            const title = normalizeText(section.querySelector(".sequence-comp-section__title")?.textContent) || (STIKA_SECTION_LABELS[category] || "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ");
+            const title = normalizeText(section.querySelector(".sequence-comp-section__title")?.textContent) || (STIKA_SECTION_LABELS[category] || "セクション");
             const durationMinutes = Number.parseInt(section.querySelector(".sequence-comp-section__time")?.dataset.durationMinutes || "5", 10) || 5;
             const orderIndex = sections.indexOf(section);
             const items = Array.from(section.querySelectorAll(".sequence-comp-added-list .sequence-comp-added-item")).map((item) => ({
@@ -2814,8 +2304,8 @@ function ensureSectionControlButtons(section) {
         moveUpButton.type = "button";
         moveUpButton.className = "sequence-comp-section__move";
         moveUpButton.dataset.sectionMove = "up";
-        moveUpButton.setAttribute("aria-label", "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ繧剃ｸ翫∈遘ｻ蜍・);
-        moveUpButton.textContent = "竊・;
+        moveUpButton.setAttribute("aria-label", "セクションを上へ移動");
+        moveUpButton.textContent = "↑";
         actionRoot.appendChild(moveUpButton);
     }
 
@@ -2825,8 +2315,8 @@ function ensureSectionControlButtons(section) {
         moveDownButton.type = "button";
         moveDownButton.className = "sequence-comp-section__move";
         moveDownButton.dataset.sectionMove = "down";
-        moveDownButton.setAttribute("aria-label", "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ繧剃ｸ九∈遘ｻ蜍・);
-        moveDownButton.textContent = "竊・;
+        moveDownButton.setAttribute("aria-label", "セクションを下へ移動");
+        moveDownButton.textContent = "↓";
         actionRoot.appendChild(moveDownButton);
     }
 
@@ -2836,10 +2326,10 @@ function ensureSectionControlButtons(section) {
         removeButton.type = "button";
         removeButton.className = "sequence-comp-section__remove";
         removeButton.dataset.sectionRemove = "true";
-        removeButton.setAttribute("aria-label", "縺薙・繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ繧貞炎髯､");
+        removeButton.setAttribute("aria-label", "このセクションを削除");
         removeButton.innerHTML = `
-            <span class="sequence-comp-section__remove-icon" aria-hidden="true">ﾃ・/span>
-            <span>蜑企勁</span>
+            <span class="sequence-comp-section__remove-icon" aria-hidden="true">×</span>
+            <span>削除</span>
         `;
         actionRoot.appendChild(removeButton);
     }
@@ -2865,14 +2355,14 @@ function createSectionDeleteModal(handlers) {
     modal.setAttribute("aria-hidden", "true");
     modal.innerHTML = `
         <div class="sequence-comp-modal__dialog warming-up-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="sequenceSectionDeleteModalTitle">
-            <button class="sequence-comp-modal__close" type="button" aria-label="繝｢繝ｼ繝繝ｫ繧帝哩縺倥ｋ">ﾃ・/button>
+            <button class="sequence-comp-modal__close" type="button" aria-label="モーダルを閉じる">×</button>
             <div class="sequence-comp-modal__header">
-                <h3 class="sequence-comp-modal__title" id="sequenceSectionDeleteModalTitle">縺薙・繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ繧貞炎髯､縺励∪縺吶°・・/h3>
+                <h3 class="sequence-comp-modal__title" id="sequenceSectionDeleteModalTitle">このセクションを削除しますか？</h3>
             </div>
             <div class="warming-up-modal__content">
                 <div class="sequence-comp-modal__actions">
-                    <button class="sequence-comp-cancel sequence-comp-modal__cancel" type="button" data-section-delete-cancel>繧ｭ繝｣繝ｳ繧ｻ繝ｫ</button>
-                    <button class="sequence-comp-modal__delete" type="button" data-section-delete-confirm>蜑企勁縺吶ｋ</button>
+                    <button class="sequence-comp-cancel sequence-comp-modal__cancel" type="button" data-section-delete-cancel>キャンセル</button>
+                    <button class="sequence-comp-modal__delete" type="button" data-section-delete-confirm>削除する</button>
                 </div>
             </div>
         </div>
@@ -2940,11 +2430,11 @@ function createConfirmCardFromDynamicSection(section) {
 
     const time = document.createElement("span");
     time.className = "sequence-confirm-card__time";
-    time.textContent = `${Number.parseInt(section?.durationMinutes || 5, 10) || 5}蛻・;
+    time.textContent = `${Number.parseInt(section?.durationMinutes || 5, 10) || 5}分`;
 
     const title = document.createElement("h2");
     title.className = "sequence-confirm-card__title";
-    title.textContent = normalizeText(section?.title) || STIKA_SECTION_LABELS[section?.category] || "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ";
+    title.textContent = normalizeText(section?.title) || STIKA_SECTION_LABELS[section?.category] || "セクション";
 
     header.appendChild(time);
     header.appendChild(title);
@@ -3213,9 +2703,9 @@ function initSequenceListPage() {
         if (action === "delete") {
             const sequences = getSavedSequences();
             const target = sequences.find((item) => item.id === sequenceId);
-            const title = target?.title || "縺薙・繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ";
+            const title = target?.title || "このシークエンス";
 
-            if (!window.confirm(`${title}繧貞炎髯､縺励∪縺吶°・歔)) {
+            if (!window.confirm(`${title}を削除しますか？`)) {
                 return;
             }
 
@@ -3309,9 +2799,9 @@ function initSequenceDetailPage() {
 
     if (deleteButton) {
         deleteButton.addEventListener("click", () => {
-            const title = sequence.title || "縺薙・繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ";
+            const title = sequence.title || "このシークエンス";
 
-            if (!window.confirm(`${title}繧貞炎髯､縺励∪縺吶°・歔)) {
+            if (!window.confirm(`${title}を削除しますか？`)) {
                 return;
             }
 
@@ -3346,9 +2836,9 @@ function syncConfirmDraftMeta(draft) {
 
     const fallbackDuration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "-";
     const title = draft?.title || buildFallbackSequenceTitle();
-    const target = draft?.target || "譛ｪ險ｭ螳・;
+    const target = draft?.target || "未設定";
     const memo = draft?.memo || "";
-    const duration = draft?.duration ? `${draft.duration}蛻・ : fallbackDuration;
+    const duration = draft?.duration ? `${draft.duration}分` : fallbackDuration;
 
     titleElement.textContent = title;
     targetElement.textContent = target;
@@ -3358,9 +2848,9 @@ function syncConfirmDraftMeta(draft) {
 }
 
 function buildSequenceFromConfirmPage(draft) {
-    const duration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "譛ｪ險ｭ螳・;
+    const duration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "未設定";
     const sections = Array.from(document.querySelectorAll(".sequence-confirm-card")).map((card, index) => {
-        const title = normalizeText(card.querySelector(".sequence-confirm-card__title")?.textContent) || "譛ｪ險ｭ螳・;
+        const title = normalizeText(card.querySelector(".sequence-confirm-card__title")?.textContent) || "未設定";
         const durationLabel = normalizeText(card.querySelector(".sequence-confirm-card__time")?.textContent) || "";
         const items = Array.from(card.querySelectorAll(".sequence-confirm-card__items li"))
             .map((item) => normalizeText(item.textContent))
@@ -3380,7 +2870,7 @@ function buildSequenceFromConfirmPage(draft) {
         id: createSequenceStorageId(),
         title: draft?.title || buildFallbackSequenceTitle(),
         duration,
-        target: draft?.target || "譛ｪ險ｭ螳・,
+        target: draft?.target || "未設定",
         createdAt: new Date().toISOString(),
         sections,
         memo: draft?.memo || ""
@@ -3389,13 +2879,13 @@ function buildSequenceFromConfirmPage(draft) {
 
 function buildFallbackSequenceTitle() {
     const peakPose = normalizeText(document.querySelector(".sequence-comp-summary__peak")?.textContent);
-    const duration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ";
+    const duration = normalizeText(document.querySelector(".sequence-comp-summary__time")?.textContent) || "シークエンス";
 
     if (peakPose && peakPose !== "\u30d4\u30fc\u30af\u30dd\u30fc\u30ba\u672a\u8a2d\u5b9a") {
-        return `${peakPose}縺ｮ繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ`;
+        return `${peakPose}のシークエンス`;
     }
 
-    return `${duration}縺ｮ繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ`;
+    return `${duration}のシークエンス`;
 }
 
 function createSequenceStorageId() {
@@ -3411,7 +2901,7 @@ function createSequenceListCard(sequence) {
     link.className = "sequence-list-card__link";
     link.href = `${STIKA_SEQUENCE_DETAIL_PATH}?id=${encodeURIComponent(sequence.id)}`;
     link.dataset.sequenceLink = "true";
-    link.setAttribute("aria-label", `${sequence.title || "繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ"}縺ｮ蜀・ｮｹ繧堤｢ｺ隱阪☆繧義);
+    link.setAttribute("aria-label", `${sequence.title || "シークエンス"}の内容を確認する`);
 
     const content = document.createElement("div");
     content.className = "sequence-list-card__content";
@@ -3421,7 +2911,7 @@ function createSequenceListCard(sequence) {
 
     const title = document.createElement("h2");
     title.className = "sequence-list-card__title";
-    title.textContent = sequence.title || "繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ";
+    title.textContent = sequence.title || "シークエンス";
 
     const date = document.createElement("p");
     date.className = "sequence-list-card__date";
@@ -3433,11 +2923,11 @@ function createSequenceListCard(sequence) {
     const body = document.createElement("dl");
     body.className = "sequence-list-card__meta";
 
-    body.appendChild(createMetaRow("謇隕∵凾髢・, sequence.duration || "-"));
-    body.appendChild(createMetaRow("蟇ｾ雎｡", sequence.target || "譛ｪ險ｭ螳・));
+    body.appendChild(createMetaRow("所要時間", sequence.duration || "-"));
+    body.appendChild(createMetaRow("対象", sequence.target || "未設定"));
 
     if (sequence.memo) {
-        body.appendChild(createMetaRow("繝｡繝｢", sequence.memo));
+        body.appendChild(createMetaRow("メモ", sequence.memo));
     }
 
     const footer = document.createElement("div");
@@ -3448,14 +2938,14 @@ function createSequenceListCard(sequence) {
     editButton.className = "secondary-button sequence-list-card__button";
     editButton.dataset.action = "edit";
     editButton.dataset.sequenceId = sequence.id;
-    editButton.textContent = "邱ｨ髮・;
+    editButton.textContent = "編集";
 
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
     deleteButton.className = "sequence-list-card__delete";
     deleteButton.dataset.action = "delete";
     deleteButton.dataset.sequenceId = sequence.id;
-    deleteButton.textContent = "蜑企勁";
+    deleteButton.textContent = "削除";
 
     footer.appendChild(editButton);
     footer.appendChild(deleteButton);
@@ -3498,10 +2988,10 @@ function renderSequenceDetail(sequence) {
         return;
     }
 
-    titleElement.textContent = sequence.title || "繧ｷ繝ｼ繧ｯ繧ｨ繝ｳ繧ｹ";
+    titleElement.textContent = sequence.title || "シークエンス";
     dateElement.textContent = formatDateTimeLabel(sequence.createdAt);
     durationElement.textContent = sequence.duration || "-";
-    targetElement.textContent = sequence.target || "譛ｪ險ｭ螳・;
+    targetElement.textContent = sequence.target || "未設定";
     memoElement.textContent = sequence.memo || "";
     memoRow.hidden = !normalizeText(sequence.memo);
 
@@ -3510,17 +3000,17 @@ function renderSequenceDetail(sequence) {
         .flatMap((section) => Array.isArray(section?.items) ? section.items : [])
         .filter(Boolean);
 
-    sectionCountElement.textContent = `${sections.length}莉ｶ`;
+    sectionCountElement.textContent = `${sections.length}件`;
     asanaSummaryElement.textContent = asanaNames.length > 0
-        ? `繧｢繝ｼ繧ｵ繝贋ｸ隕ｧ: ${asanaNames.join(" / ")}`
-        : "逋ｻ骭ｲ縺輔ｌ縺ｦ縺・ｋ繧｢繝ｼ繧ｵ繝翫・縺ゅｊ縺ｾ縺帙ｓ縲・;
+        ? `アーサナ一覧: ${asanaNames.join(" / ")}`
+        : "登録されているアーサナはありません。";
 
     sectionsRoot.innerHTML = "";
 
     if (sections.length === 0) {
         const empty = document.createElement("p");
         empty.className = "sequence-confirm-empty";
-        empty.textContent = "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ諠・ｱ縺瑚ｦ九▽縺九ｊ縺ｾ縺帙ｓ縲・;
+        empty.textContent = "セクション情報が見つかりません。";
         sectionsRoot.appendChild(empty);
         return;
     }
@@ -3544,7 +3034,7 @@ function createSequenceDetailSection(section) {
 
     const title = document.createElement("h2");
     title.className = "sequence-confirm-card__title";
-    title.textContent = normalizeText(section?.title) || "繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ";
+    title.textContent = normalizeText(section?.title) || "セクション";
 
     header.appendChild(time);
     header.appendChild(title);
@@ -3555,7 +3045,7 @@ function createSequenceDetailSection(section) {
     if (items.length === 0) {
         const empty = document.createElement("p");
         empty.className = "sequence-detail-card__empty";
-        empty.textContent = "逋ｻ骭ｲ縺輔ｌ縺ｦ縺・ｋ鬆・岼縺ｯ縺ゅｊ縺ｾ縺帙ｓ縲・;
+        empty.textContent = "登録されている項目はありません。";
         article.appendChild(empty);
         return article;
     }
@@ -3731,4 +3221,3 @@ function getTimestamp(value) {
     const timestamp = Date.parse(value || "");
     return Number.isFinite(timestamp) ? timestamp : 0;
 }
-

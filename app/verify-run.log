@@ -6086,16 +6086,11 @@ WHERE name_ja = ?
 ]
 2026-05-07T12:33:30.614+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL update
 2026-05-07T12:33:30.614+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL stat2026-05-07T12:41:32.500+09:00  WARN 13948 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=3m32s624ms560µs500ns).
-artedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL query
-2026-05-07T12:33:30.616+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL statement [SELECT COUNT(*)
-FROM seated_master
-WHERE name_ja = ?
-]
-2026-05-07T12:33:30.617+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL update
-2026-05-07T12:33:30.618+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL statement [INSERT INTO seated_master (name_ja, display_order, is_active, created_at, updated_at)
-VALUES (?, ?, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-]
-2026-05-07T12:33:30.618+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL query
+2026-05-07T13:40:27.212+09:00  WARN 13948 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=36m24s246ms578µs300ns).
+2026-05-07T14:03:11.793+09:00  WARN 13948 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=2m44s98ms963µs500ns).
+2026-05-07T14:31:08.229+09:00  WARN 13948 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=19m26s287ms793µs800ns).
+2026-05-07T14:40:30.315+09:00  WARN 13948 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=2m51s943ms188µs).
+prepared SQL query
 2026-05-07T12:33:30.618+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL statement [SELECT COUNT(*)
 FROM seated_master
 WHERE name_ja = ?
@@ -6364,16 +6359,11 @@ WHERE name_ja = ?
 2026-05-07T12:33:30.653+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL update
 2026-05-07T12:33:30.653+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL statement [INSERT INTO peak_pose_master (name_ja, display_order, is_active, created_at, updated_at)
 VALUES (?, ?,2026-05-07T12:41:31.296+09:00  WARN 23288 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=3m32s134ms253µs800ns).
-3+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL statement [SELECT COUNT(*)
-FROM peak_pose_master
-WHERE name_ja = ?
-]
-2026-05-07T12:33:30.655+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL update
-2026-05-07T12:33:30.655+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL statement [INSERT INTO peak_pose_master (name_ja, display_order, is_active, created_at, updated_at)
-VALUES (?, ?, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-]
-2026-05-07T12:33:30.655+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL query
-2026-05-07T12:33:30.655+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL statement [SELECT COUNT(*)
+2026-05-07T13:40:37.485+09:00  WARN 23288 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=36m35s694ms911µs600ns).
+2026-05-07T14:03:08.931+09:00  WARN 23288 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=2m30s998ms216µs100ns).
+2026-05-07T14:31:12.244+09:00  WARN 23288 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=19m33s94ms372µs400ns).
+2026-05-07T14:40:30.267+09:00  WARN 23288 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=2m47s912ms132µs700ns).
+JdbcTemplate               : Executing prepared SQL statement [SELECT COUNT(*)
 FROM peak_pose_master
 WHERE name_ja = ?
 ]
@@ -6393,3 +6383,7 @@ VALUES (?, ?, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
 2026-05-07T12:33:30.658+09:00  INFO 22984 --- [demo] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
 2026-05-07T12:33:30.658+09:00 DEBUG 22984 --- [demo] [  restartedMain] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
 2026-05-07T12:41:34.112+09:00  WARN 22984 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=3m33s987ms480µs800ns).
+2026-05-07T13:40:31.156+09:00  WARN 22984 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=36m26s575ms575µs).
+2026-05-07T14:03:17.790+09:00  WARN 22984 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=2m46s206ms80µs200ns).
+2026-05-07T14:31:06.134+09:00  WARN 22984 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=19m48s177ms747µs200ns).
+2026-05-07T14:40:45.545+09:00  WARN 22984 --- [demo] [l-3:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=3m9s287ms67µs200ns).

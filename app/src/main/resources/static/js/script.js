@@ -250,14 +250,8 @@ function initGrowthCalendar() {
         return;
     }
 
-    const isReportPage = document.body.classList.contains("stika-body") && window.location.pathname.endsWith("/report.html");
-    const isHomePage = document.body.classList.contains("stika-body") && window.location.pathname === "/";
     const today = createDateOnly(new Date());
-    const fixedReportMonth = new Date(2026, 3, 1);
-    const fixedHomeInitialMonth = new Date(2026, 3, 1);
-    let currentMonth = isReportPage
-        ? fixedReportMonth
-        : (isHomePage ? fixedHomeInitialMonth : new Date(today.getFullYear(), today.getMonth(), 1));
+    let currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     let selectedDate = null;
     let monthMoodLogDates = new Set();
     let monthMoodLogMap = new Map();
@@ -331,9 +325,6 @@ function initGrowthCalendar() {
 
     navButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            if (isReportPage) {
-                return;
-            }
             const direction = button.dataset.calendarNav === "next" ? 1 : -1;
             currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + direction, 1);
             closeMoodLogModal();
@@ -436,14 +427,6 @@ function initGrowthCalendar() {
         }
     }
 
-    if (isReportPage) {
-        monthLabel.textContent = "2026年4月";
-        navButtons.forEach((button) => {
-            button.disabled = true;
-            button.setAttribute("aria-disabled", "true");
-            button.tabIndex = -1;
-        });
-    }
     updateMonthMoodLogsAndRender();
 }
 

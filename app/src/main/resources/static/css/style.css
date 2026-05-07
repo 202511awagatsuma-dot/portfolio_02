@@ -837,7 +837,7 @@ input {
 
 /* Keep TOP report calendar compact without affecting report page calendar styles. */
 .report-card.calendar-card {
-    padding: 11px 16px 10px;
+    padding: 10px 16px 7px;
 }
 
 .report-card.calendar-card .calendar-card__header {
@@ -845,7 +845,7 @@ input {
 }
 
 .report-card.calendar-card .calendar {
-    gap: 6px;
+    gap: 5px;
 }
 
 .report-card.calendar-card .calendar__weekdays {
@@ -853,13 +853,15 @@ input {
 }
 
 .report-card.calendar-card .calendar__grid {
-    gap: 1px;
+    gap: 0;
+    row-gap: 1px;
     padding-top: 0;
 }
 
 .report-card.calendar-card .calendar-day {
-    min-height: 42px;
-    padding: 3px 3px;
+    min-height: 38px;
+    padding: 2px 3px;
+    line-height: 1.05;
 }
 
 .bottom-nav {

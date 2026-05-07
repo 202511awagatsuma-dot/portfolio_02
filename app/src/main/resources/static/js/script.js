@@ -244,7 +244,11 @@ function initGrowthCalendar() {
 
     const recordSet = new Set(recordedDates);
     const today = createDateOnly(new Date());
-    let currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const initialYear = Number.parseInt(calendarRoot.dataset.initialYear || "", 10);
+    const initialMonth = Number.parseInt(calendarRoot.dataset.initialMonth || "", 10);
+    let currentMonth = Number.isInteger(initialYear) && Number.isInteger(initialMonth)
+        ? new Date(initialYear, initialMonth, 1)
+        : new Date(today.getFullYear(), today.getMonth(), 1);
     let selectedDate = null;
 
     navButtons.forEach((button) => {

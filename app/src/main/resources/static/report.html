@@ -29,11 +29,11 @@
                     <div class="calendar-card__header">
                         <div class="calendar-nav" aria-label="月送り">
                             <button type="button" class="calendar-nav__button" data-calendar-nav="prev" aria-label="前月">◀</button>
-                            <strong class="calendar-nav__label" data-calendar-month-label aria-live="polite">2026年4月</strong>
+                            <strong class="calendar-nav__label" id="calendarMonthLabel" data-calendar-month-label aria-live="polite">2026年5月</strong>
                             <button type="button" class="calendar-nav__button" data-calendar-nav="next" aria-label="次月">▶</button>
                         </div>
                     </div>
-                    <section class="calendar" data-calendar-root>
+                    <section class="calendar" id="growthCalendar" data-calendar-root data-initial-year="2026" data-initial-month="4">
                         <div class="calendar__weekdays" aria-hidden="true">
                             <span>日</span>
                             <span>月</span>
@@ -43,7 +43,7 @@
                             <span>金</span>
                             <span>土</span>
                         </div>
-                        <div class="calendar__grid" data-calendar-grid role="grid"></div>
+                        <div class="calendar__grid" id="calendarGrid" data-calendar-grid role="grid"></div>
                     </section>
                 </div>
             </section>

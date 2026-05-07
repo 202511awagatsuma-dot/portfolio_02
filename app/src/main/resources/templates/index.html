@@ -15,7 +15,7 @@
                 <a class="topbar__brand" th:href="@{/}" aria-label="ホーム">
                     <img class="brand-mark" th:src="@{/assets/icon/img_home.svg}" src="/assets/icon/img_home.svg" alt="ホーム">
                 </a>
-                <p class="topbar__date" th:text="${today}">2026.04.13(月)</p>
+                <p class="topbar__date" th:text="${today}">2026.04.13(日)</p>
                 <div class="topbar__actions">
                     <span class="icon-badge icon-badge--notice" aria-label="お知らせ"></span>
                     <span class="icon-badge icon-badge--menu" aria-label="メニュー">
@@ -27,19 +27,18 @@
             </header>
 
             <section class="card message-card">
-                <p class="section-eyebrow">今日のひとこと哲学</p>
-                <p class="message-card__title" data-daily-philosophy-title>スティラ スッカ</p>
+                <p class="section-eyebrow">今日のひとことと哲学</p>
+                <p class="message-card__title" data-daily-philosophy-title>スティラ メッセージ</p>
                 <p class="message-card__text" data-daily-philosophy-body th:text="${todayMessage}">
-                    今日は少しだけでも体を動かして、自分の変化をやさしく記録してみましょう。
-                </p>
+                    今日は呼吸を整えて、やさしく体をひらきましょう。                </p>
             </section>
 
-            <p class="hero-card__caption">今日はどんなシークエンスを始めますか？</p>
+            <p class="hero-card__caption">今日はどんなシークエンスを作りますか？</p>
             <section class="hero-card">
                 <a class="hero-card__link sequence-create-btn" th:href="@{/sequence/setup}">
-                    <span class="hero-card__caption">今日はどんなシークエンスを始めますか？</span>
+                    <span class="hero-card__caption">今日はどんなシークエンスを作りますか？</span>
                     <strong>シークエンス作成</strong>
-                    <p>その日の気分や体調に合わせて、やさしくレッスンの流れを整えられます。</p>
+                    <p>その日の目的や体調に合わせて、やさしくレッスンの流れを組み立てられます。</p>
                 </a>
             </section>
 
@@ -88,8 +87,8 @@
                     <h2>セルフケア</h2>
                 </div>
                 <div class="card selfcare-card" id="homeSelfCareCard">
-                    <div class="mood-row" role="radiogroup" aria-label="今日の状態" data-selfcare-mood-group>
-                        <button class="mood-item selfcare-mood-button" type="button" data-home-mood="good" data-mood="good" data-selfcare-mood="good" data-home-mood-label="快調" role="radio" aria-checked="false">
+                    <div class="mood-row" role="radiogroup" aria-label="今日の気分" data-selfcare-mood-group>
+                        <button class="mood-item selfcare-mood-button" type="button" data-home-mood="good" data-mood="good" data-selfcare-mood="good" data-home-mood-label="調子よい" role="radio" aria-checked="false">
                             <span class="mood-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
                                     <circle cx="12" cy="12" r="1.6"></circle>
@@ -100,7 +99,7 @@
                                     <ellipse cx="7.1" cy="9.9" rx="2.15" ry="3.05" transform="rotate(-54 7.1 9.9)"></ellipse>
                                 </svg>
                             </span>
-                            <small class="mood-label">快調</small>
+                            <small class="mood-label">調子よい</small>
                         </button>
                         <button class="mood-item selfcare-mood-button" type="button" data-home-mood="normal" data-mood="normal" data-selfcare-mood="normal" data-home-mood-label="ふつう" role="radio" aria-checked="false">
                             <span class="mood-icon" aria-hidden="true">
@@ -130,14 +129,14 @@
                         <article class="play-card">
                             <div class="play-card__content">
                                 <p>瞑想</p>
-                                <strong>3分</strong>
+                                <strong>3回</strong>
                             </div>
                             <button class="play-card__button" type="button" data-home-care-type="meditation" aria-label="瞑想を開始">▶</button>
                         </article>
                         <article class="play-card">
                             <div class="play-card__content">
                                 <p>ブレスワーク</p>
-                                <strong>3分</strong>
+                                <strong>3回</strong>
                             </div>
                             <button class="play-card__button" type="button" data-home-care-type="breathwork" aria-label="ブレスワークを開始">▶</button>
                         </article>
@@ -150,27 +149,66 @@
                 <div class="section-heading">
                     <h2>レポート</h2>
                 </div>
-                <div class="card report-card calendar-card">
-                    <div class="calendar-card__header">
-                        <div class="calendar-nav" aria-label="月送り">
-                            <button type="button" class="calendar-nav__button" data-calendar-nav="prev" aria-label="前月">◀</button>
-                            <strong class="calendar-nav__label" id="calendarMonthLabel" aria-live="polite">2026年4月</strong>
-                            <button type="button" class="calendar-nav__button" data-calendar-nav="next" aria-label="次月">▶</button>
+                <section class="report-section home-report-section" aria-label="monthly calendar">
+                    <div class="card report-card calendar-card" data-calendar-scope>
+                        <div class="calendar-card__header">
+                            <div class="calendar-nav" aria-label="month navigation">
+                                <button type="button" class="calendar-nav__button" data-calendar-nav="prev" aria-label="previous month">◀</button>
+                                <strong class="calendar-nav__label" data-calendar-month-label aria-live="polite">2026年4月</strong>
+                                <button type="button" class="calendar-nav__button" data-calendar-nav="next" aria-label="next month">▶</button>
+                            </div>
                         </div>
+                        <section class="calendar" data-calendar-root>
+                            <div class="calendar__weekdays" aria-hidden="true">
+                                <span>日</span>
+                                <span>月</span>
+                                <span>火</span>
+                                <span>水</span>
+                                <span>木</span>
+                                <span>金</span>
+                                <span>土</span>
+                            </div>
+                            <div class="calendar__grid" data-calendar-grid role="grid">
+                                <div class="calendar-day calendar-day--empty" role="gridcell" aria-hidden="true"></div>
+                                <div class="calendar-day calendar-day--empty" role="gridcell" aria-hidden="true"></div>
+                                <div class="calendar-day calendar-day--empty" role="gridcell" aria-hidden="true"></div>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">1</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">2</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">3</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">4</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">5</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">6</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">7</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">8</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">9</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">10</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">11</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">12</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">13</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">14</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">15</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">16</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">17</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">18</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">19</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">20</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">21</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">22</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">23</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">24</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">25</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">26</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">27</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">28</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">29</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">30</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
+                                <div class="calendar-day calendar-day--empty" role="gridcell" aria-hidden="true"></div>
+                                <div class="calendar-day calendar-day--empty" role="gridcell" aria-hidden="true"></div>
+                                <div class="calendar-day calendar-day--empty" role="gridcell" aria-hidden="true"></div>
+                            </div>
+                        </section>
                     </div>
-                    <section class="calendar" id="growthCalendar" aria-labelledby="calendarMonthLabel">
-                        <div class="calendar__weekdays" aria-hidden="true">
-                            <span>日</span>
-                            <span>月</span>
-                            <span>火</span>
-                            <span>水</span>
-                            <span>木</span>
-                            <span>金</span>
-                            <span>土</span>
-                        </div>
-                        <div class="calendar__grid" id="calendarGrid" role="grid"></div>
-                    </section>
-                </div>
+                </section>
             </section>
         </main>
         <nav class="bottom-nav" aria-label="メインナビゲーション">
@@ -197,3 +235,4 @@
 </body>
 
 </html>
+

@@ -10,14 +10,14 @@ const STIKA_SECTION_DURATIONS_STORAGE_PREFIX = "stika_section_durations_";
 const STIKA_SECTION_DURATION_OPTIONS = [3, 5, 8, 10, 12, 15, 20, 25, 30];
 const STIKA_ALLOWED_SECTION_CATEGORIES = ["breathing", "warming-up", "sun-salutation", "standing", "peak", "backbend", "seated", "relaxation"];
 const STIKA_SECTION_LABELS = {
-    breathing: "蜻ｼ蜷ｸ豕・,
+    breathing: "呼吸法",
     "warming-up": "Warming UP",
-    "sun-salutation": "螟ｪ髯ｽ遉ｼ諡・,
-    standing: "遶倶ｽ・,
-    peak: "繝斐・繧ｯ繝昴・繧ｺ",
-    backbend: "蠕悟ｱ・,
-    seated: "蠎ｧ菴・,
-    relaxation: "繝ｪ繝ｩ繧ｯ繧ｼ繝ｼ繧ｷ繝ｧ繝ｳ"
+    "sun-salutation": "太陽礼拝",
+    standing: "立位",
+    peak: "ピークポーズ",
+    backbend: "後屈",
+    seated: "座位",
+    relaxation: "リラクゼーション"
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -117,41 +117,17 @@ function initDailyPhilosophyMessage() {
     }
 
     const dailyPhilosophyMessages = [
-        { title: "繧ｹ繝・ぅ繝ｩ 繧ｹ繝・き", body: "螳牙ｮ壹→蠢・慍繧医＆繧偵∽ｻ頑律縺ｮ蟆上＆縺ｪ驕ｸ謚槭°繧芽ご縺ｦ縺ｾ縺励ｇ縺・・ },
-        { title: "繧｢繝偵Φ繧ｵ繝ｼ", body: "閾ｪ蛻・↓蜷代￠繧玖ｨ闡峨ｂ縲√ｄ縺輔＠縺輔°繧牙ｧ九ａ縺ｦ縺ｿ縺ｾ縺励ｇ縺・・ },
-        { title: "繧ｵ繝ｳ繝医・繧ｷ繝｣", body: "雜ｳ繧翫↑縺・ｂ縺ｮ繧医ｊ縲∽ｻ翫≠繧区ｺ縺｡雜ｳ繧翫◆諢溯ｦ壹↓逶ｮ繧貞髄縺代※縺ｿ縺ｾ縺励ｇ縺・・ },
-        { title: "繧｢繝薙Ζ繝ｼ繧ｵ", body: "荳蠎ｦ縺ｫ螟ｧ縺阪￥騾ｲ縺ｾ縺ｪ縺上※繧ゅ∫ｶ壹￠繧句ｧｿ蜍｢縺悟悄蜿ｰ縺ｫ縺ｪ繧翫∪縺吶・ },
-        { title: "繝ｴ繧｡繧､繝ｩ繝ｼ繧ｮ繝｣", body: "邨先棡縺ｸ縺ｮ縺薙□繧上ｊ繧貞ｰ代＠繧・ｋ繧√∽ｻ翫〒縺阪ｋ縺薙→縺ｫ謌ｻ繧翫∪縺励ｇ縺・・ },
-        { title: "繧ｵ繝・ぅ繝､", body: "莉頑律縺ｮ閾ｪ蛻・・迥ｶ諷九ｒ縲∬憶縺・が縺・〒蛻､譁ｭ縺帙★豁｣逶ｴ縺ｫ隕九▽繧√※縺ｿ縺ｾ縺励ｇ縺・・ },
-        { title: "繧ｷ繝｣繧ｦ繝√Ε", body: "霄ｫ縺ｮ蝗槭ｊ繧・他蜷ｸ繧呈紛縺医ｋ縺薙→縺後∝ｿ・・菴咏區縺ｫ繧ゅ▽縺ｪ縺後ｊ縺ｾ縺吶・ },
-        { title: "繧ｿ繝代せ", body: "蟆上＆縺ｪ螳溯ｷｵ繧帝㍾縺ｭ繧狗・縺後∵悴譚･縺ｮ閾ｪ菫｡繧定ご縺ｦ縺ｾ縺吶・ },
-        { title: "繧ｹ繝ｴ繧｡繝・ぅ繝､繝ｼ繝､", body: "莉頑律縺ｮ豌励▼縺阪ｒ縺ｲ縺ｨ縺､谿九☆縺薙→縺後∬・蛻・ｒ遏･繧狗ｷｴ鄙偵↓縺ｪ繧翫∪縺吶・ },
-        { title: "繧､繝ｼ繧ｷ繝･繝ｴ繧｡繝ｩ繝ｻ繝励Λ繝九ム繝ｼ繝・, body: "縺吶∋縺ｦ繧呈干縺郁ｾｼ縺ｾ縺壹∵ｵ√ｌ縺ｫ蟋斐・繧区凾髢薙ｂ螟ｧ蛻・↓縺励∪縺励ｇ縺・・ },
-        { title: "繝励Λ繝ｼ繝・, body: "蜻ｼ蜷ｸ縺ｮ豬√ｌ繧呈─縺倥ｋ縺縺代〒縲∽ｻ翫％縺薙↓謌ｻ繧九″縺｣縺九￠縺ｫ縺ｪ繧翫∪縺吶・ },
-        { title: "繧｢繝ｼ繧ｵ繝・, body: "蠖｢繧貞ｮ梧・縺輔○繧九ｈ繧翫∽ｽ薙・螢ｰ繧定◇縺上％縺ｨ繧貞､ｧ蛻・↓縺励∪縺励ｇ縺・・ },
-        { title: "繝励Λ繝・ぅ繝､繝ｼ繝上・繝ｩ", body: "螟悶・蛻ｺ豼縺九ｉ蟆代＠髮｢繧後∬・蛻・・蜀・・縺ｫ髱吶°縺ｪ蝣ｴ謇繧偵▽縺上ｊ縺ｾ縺励ｇ縺・・ },
-        { title: "繝繝ｼ繝ｩ繝翫・", body: "縺ｲ縺ｨ縺､縺ｮ縺薙→縺ｫ諢剰ｭ倥ｒ蜷代￠繧区凾髢薙′縲∝ｿ・・謨｣繧峨・繧翫ｒ謨ｴ縺医∪縺吶・ },
-        { title: "繝・ぅ繝､繝ｼ繝・, body: "鬆大ｼｵ縺｣縺ｦ髱吶°縺ｫ縺ｪ繧九・縺ｧ縺ｯ縺ｪ縺上・撕縺代＆縺瑚ｨｪ繧後ｋ菴咏區繧貞ｾ・■縺ｾ縺励ｇ縺・・ },
-        { title: "繧ｵ繝槭・繝・ぅ", body: "蟆上＆縺ｪ髮・ｸｭ縺ｮ蜈医↓縲∬・蛻・→荳也阜縺後ｄ繧上ｉ縺九￥縺､縺ｪ縺後ｋ迸ｬ髢薙′縺ゅｊ縺ｾ縺吶・ },
-        { title: "繝､繝・, body: "隱ｰ縺九→縺ｮ髢｢繧上ｊ譁ｹ縺ｯ縲∬・蛻・・霄ｫ縺ｨ縺ｮ髢｢繧上ｊ譁ｹ縺ｫ繧よ丐縺怜・縺輔ｌ縺ｾ縺吶・ },
-        { title: "繝九Ζ繝・, body: "譌･縲・・謨ｴ縺医ｋ鄙呈・縺後∝ｿ・慍繧医￥騾ｲ繧縺溘ａ縺ｮ謾ｯ縺医↓縺ｪ繧翫∪縺吶・ },
-        { title: "繧｢繧ｹ繝・ぅ繝､", body: "豈斐∋繧区ｰ玲戟縺｡繧呈焔謾ｾ縺励∬・蛻・・豁ｩ蟷・ｒ菫｡縺倥※縺ｿ縺ｾ縺励ｇ縺・・ },
-        { title: "繝悶Λ繝輔・繝√Ε繝ｪ繝､", body: "繧ｨ繝阪Ν繧ｮ繝ｼ繧偵←縺薙∈蜷代￠繧九°縲∽ｻ頑律縺ｮ閾ｪ蛻・↓蝠上＞縺九￠縺ｦ縺ｿ縺ｾ縺励ｇ縺・・ },
-        { title: "繧｢繝代Μ繧ｰ繝ｩ繝・, body: "謚ｱ縺医☆縺弱※縺・ｋ繧ゅ・繧偵・縺ｨ縺､謇区叛縺吶→縲∝ｿ・ｦ√↑繧ゅ・縺瑚ｦ九∴繧・☆縺上↑繧翫∪縺吶・ },
-        { title: "繧ｯ繝ｬ繝ｼ繧ｷ繝｣", body: "蠢・・謠ｺ繧後↓豌励▼縺代◆縺ｪ繧峨√◎繧後□縺代〒荳豁ｩ繧・＆縺励￥縺ｪ繧後※縺・∪縺吶・ },
-        { title: "繝ｴ繧｣繝ｴ繧ｧ繝ｼ繧ｫ", body: "蜿榊ｿ懊☆繧句燕縺ｫ荳蜻ｼ蜷ｸ鄂ｮ縺上％縺ｨ縺ｧ縲・∈縺ｳ逶ｴ縺吩ｽ吝慍縺檎函縺ｾ繧後∪縺吶・ },
-        { title: "繧ｰ繝・, body: "豢ｻ蜍輔・撕縺代＆縲・㍾縺輔ゆｻ頑律縺ｮ閾ｪ蛻・↓縺ゅｋ雉ｪ繧定ｦｳ蟇溘＠縺ｦ縺ｿ縺ｾ縺励ｇ縺・・ },
-        { title: "繧ｵ繝・ヨ繝ｴ繧｡", body: "貔・ｓ縺諢溯ｦ壹・縲∫┌逅・↓菴懊ｋ繧医ｊ荳∝ｯｧ縺ｪ驕ｸ謚槭・荳ｭ縺ｧ閧ｲ縺｡縺ｾ縺吶・ },
-        { title: "繝ｩ繧ｸ繝｣繧ｹ", body: "蜍輔″邯壹￠繧区律縺薙◎縲∝他蜷ｸ縺ｮ繝ｪ繧ｺ繝繧偵・縺ｨ縺､縺ｮ霆ｸ縺ｫ縺励∪縺励ｇ縺・・ },
-        { title: "繧ｿ繝槭せ", body: "驥阪◆縺輔ｒ雋ｬ繧√★縲∽ｼ代・縺薙→繧ょｿ・ｦ√↑螳溯ｷｵ縺ｨ縺励※蜿励￠蜿悶▲縺ｦ縺ｿ縺ｾ縺励ｇ縺・・ },
-        { title: "繧ｫ繝ｫ繝・, body: "莉頑律縺ｮ蟆上＆縺ｪ陦悟虚縺後∵・譌･縺ｮ閾ｪ蛻・ｒ謾ｯ縺医ｋ遞ｮ縺ｫ縺ｪ繧翫∪縺吶・ },
-        { title: "繝繝ｫ繝・, body: "閾ｪ蛻・ｉ縺励＞蠖ｹ蜑ｲ縺ｯ縲∵律縲・・驕募柱諢溘ｄ蝟懊・縺ｮ荳ｭ縺ｫ髱吶°縺ｫ迴ｾ繧後∪縺吶・ },
-        { title: "繝槭う繝医Μ繝ｼ", body: "閾ｪ蛻・↓繧ょ捉繧翫↓繧ゅ√≠縺溘◆縺九＞縺ｾ縺ｪ縺悶＠繧貞髄縺代ｋ荳譌･縺ｫ縺励∪縺励ｇ縺・・ },
-        { title: "繧ｦ繝壹け繧ｷ繝｣繝ｼ", body: "謠ｺ繧後ｒ縺ｪ縺上☆縺ｮ縺ｧ縺ｯ縺ｪ縺上∵昭繧後・荳ｭ縺ｧ繧らｩ上ｄ縺九↓隕句ｮ医▲縺ｦ縺ｿ縺ｾ縺励ｇ縺・・ }
+        { title: "スティラ メッセージ", body: "呼吸が整うと、心と体のスペースが広がります。" },
+        { title: "アヒムサ", body: "自分にも他者にも、やさしい選択を積み重ねましょう。" },
+        { title: "サントーシャ", body: "今ある状態を受け入れることが、安定への第一歩です。" },
+        { title: "アビヤーサ", body: "小さな実践の継続が、確かな変化を生み出します。" },
+        { title: "ヴァイラーギャ", body: "手放す勇気が、新しい可能性をひらきます。" },
+        { title: "プラーナ", body: "丁寧な呼吸は、集中力と回復力を高めてくれます。" },
+        { title: "シャヴァーサナ", body: "静けさの中で、今日の学びを体に馴染ませましょう。" }
     ];
 
     const dayOfMonth = new Date().getDate();
-    const dailyMessage = dailyPhilosophyMessages[dayOfMonth - 1];
+    const dailyMessage = dailyPhilosophyMessages[(dayOfMonth - 1) % dailyPhilosophyMessages.length];
     if (!dailyMessage) {
         return;
     }
@@ -257,10 +233,11 @@ function initPeakPoseField() {
 }
 
 function initGrowthCalendar() {
-    const calendarRoot = document.getElementById("growthCalendar");
-    const calendarGrid = document.getElementById("calendarGrid");
-    const monthLabel = document.getElementById("calendarMonthLabel");
-    const navButtons = document.querySelectorAll("[data-calendar-nav]");
+    const calendarScope = document.querySelector("[data-calendar-scope]");
+    const calendarRoot = calendarScope?.querySelector("[data-calendar-root]");
+    const calendarGrid = calendarScope?.querySelector("[data-calendar-grid]");
+    const monthLabel = calendarScope?.querySelector("[data-calendar-month-label]");
+    const navButtons = calendarScope ? Array.from(calendarScope.querySelectorAll("[data-calendar-nav]")) : [];
     const reportMoodModal = document.getElementById("reportMoodModal");
     const reportMoodModalBackdrop = document.getElementById("reportMoodModalBackdrop");
     const reportMoodModalCloseButton = document.getElementById("reportMoodModalCloseButton");
@@ -269,20 +246,26 @@ function initGrowthCalendar() {
     const reportMoodModalMood = document.getElementById("reportMoodModalMood");
     const reportMoodModalMemo = document.getElementById("reportMoodModalMemo");
 
-    if (!calendarRoot || !calendarGrid || !monthLabel || navButtons.length === 0) {
+    if (!calendarScope || !calendarRoot || !calendarGrid || !monthLabel || navButtons.length === 0) {
         return;
     }
 
+    const isReportPage = document.body.classList.contains("stika-body") && window.location.pathname.endsWith("/report.html");
+    const isHomePage = document.body.classList.contains("stika-body") && window.location.pathname === "/";
     const today = createDateOnly(new Date());
-    let currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const fixedReportMonth = new Date(2026, 3, 1);
+    const fixedHomeInitialMonth = new Date(2026, 3, 1);
+    let currentMonth = isReportPage
+        ? fixedReportMonth
+        : (isHomePage ? fixedHomeInitialMonth : new Date(today.getFullYear(), today.getMonth(), 1));
     let selectedDate = null;
     let monthMoodLogDates = new Set();
     let monthMoodLogMap = new Map();
     let fetchSerial = 0;
     const moodLabels = {
-        good: "蠢ｫ隱ｿ",
-        normal: "縺ｵ縺､縺・,
-        care: "繧ｱ繧｢"
+        good: "調子よい",
+        normal: "ふつう",
+        care: "ケア"
     };
 
     const closeMoodLogModal = () => {
@@ -308,8 +291,8 @@ function initGrowthCalendar() {
             month: "long",
             day: "numeric"
         }).format(displayDate);
-        reportMoodModalMood.textContent = moodLabels[logItem?.mood] || "譛ｪ逋ｻ骭ｲ";
-        reportMoodModalMemo.textContent = logItem?.memo || "繝｡繝｢縺ｯ縺ゅｊ縺ｾ縺帙ｓ";
+        reportMoodModalMood.textContent = moodLabels[logItem?.mood] || "未記録";
+        reportMoodModalMemo.textContent = logItem?.memo || "メモはありません";
         reportMoodModal.hidden = false;
         reportMoodModal.classList.add("is-open");
         reportMoodModal.setAttribute("aria-hidden", "false");
@@ -348,6 +331,9 @@ function initGrowthCalendar() {
 
     navButtons.forEach((button) => {
         button.addEventListener("click", () => {
+            if (isReportPage) {
+                return;
+            }
             const direction = button.dataset.calendarNav === "next" ? 1 : -1;
             currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + direction, 1);
             closeMoodLogModal();
@@ -398,9 +384,20 @@ function initGrowthCalendar() {
         const totalCells = Math.ceil((firstDayIndex + daysInMonth) / 7) * 7;
 
         for (let cellIndex = 0; cellIndex < totalCells; cellIndex += 1) {
-            const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), cellIndex - firstDayIndex + 1);
+            const dayNumber = cellIndex - firstDayIndex + 1;
+            const isCurrentMonth = dayNumber >= 1 && dayNumber <= daysInMonth;
+
+            if (!isCurrentMonth) {
+                const emptyCell = document.createElement("div");
+                emptyCell.className = "calendar-day calendar-day--empty";
+                emptyCell.setAttribute("role", "gridcell");
+                emptyCell.setAttribute("aria-hidden", "true");
+                calendarGrid.appendChild(emptyCell);
+                continue;
+            }
+
+            const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), dayNumber);
             const isoDate = formatIsoDate(date);
-            const isCurrentMonth = date.getMonth() === currentMonth.getMonth();
             const isToday = isSameDate(date, today);
             const isSelected = selectedDate === isoDate;
             const hasMoodLog = monthMoodLogDates.has(isoDate);
@@ -410,7 +407,7 @@ function initGrowthCalendar() {
             button.className = "calendar-day";
             button.dataset.date = isoDate;
             button.setAttribute("role", "gridcell");
-            button.setAttribute("aria-label", `${isoDate}${hasMoodLog ? " 險倬鹸縺ゅｊ" : ""}${isToday ? " 莉頑律" : ""}`);
+            button.setAttribute("aria-label", `${isoDate}${hasMoodLog ? " 記録あり" : ""}${isToday ? " 今日" : ""}`);
             button.setAttribute("aria-selected", String(isSelected));
 
             if (!isCurrentMonth) {
@@ -427,7 +424,7 @@ function initGrowthCalendar() {
                 button.classList.add("calendar-day--has-record");
             }
 
-            button.innerHTML = `<span class="calendar-day__number">${date.getDate()}</span>`;
+            button.innerHTML = `<span class="calendar-day__number">${date.getDate()}</span><span class="calendar-day__marker" aria-hidden="true"></span>`;
             button.addEventListener("click", async () => {
                 selectedDate = isoDate;
                 renderCalendar();
@@ -439,6 +436,14 @@ function initGrowthCalendar() {
         }
     }
 
+    if (isReportPage) {
+        monthLabel.textContent = "2026年4月";
+        navButtons.forEach((button) => {
+            button.disabled = true;
+            button.setAttribute("aria-disabled", "true");
+            button.tabIndex = -1;
+        });
+    }
     updateMonthMoodLogsAndRender();
 }
 

@@ -313,6 +313,10 @@ input {
     margin-bottom: 20px;
 }
 
+.home-screen .home-report-section {
+    margin-bottom: 0;
+}
+
 .section-heading {
     display: flex;
     align-items: baseline;
@@ -743,6 +747,11 @@ input {
     transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
 }
 
+.calendar-day--empty {
+    cursor: default;
+    background: transparent;
+}
+
 .calendar-day:hover,
 .calendar-day:focus-visible {
     background: rgba(255, 255, 255, 0.42);
@@ -775,11 +784,24 @@ input {
     transition: color 0.18s ease, font-weight 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
 }
 
+.calendar-day__marker {
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    margin-top: 3px;
+    background: transparent;
+}
+
 .calendar-day--has-record .calendar-day__number,
 .calendar-day.has-mood-log .calendar-day__number {
     font-weight: 700;
     color: rgba(39, 55, 69, 0.96);
     background: rgba(239, 139, 99, 0.08);
+}
+
+.calendar-day--has-record .calendar-day__marker,
+.calendar-day.has-mood-log .calendar-day__marker {
+    background: #ef8b63;
 }
 
 .calendar-day--today .calendar-day__number {
@@ -2896,7 +2918,7 @@ input {
 }
 
 .report-screen {
-    padding: 12px 14px 30px;
+    padding: 12px 14px 120px;
 }
 
 .report-topbar {
@@ -2927,11 +2949,15 @@ input {
     margin-bottom: 18px;
 }
 
+.report-section:first-of-type {
+    margin-bottom: 24px;
+}
+
 .report-month-card {
     background: #fbf8f3;
     border: 1px solid rgba(95, 115, 136, 0.12);
-    border-radius: 4px;
-    padding: 8px 12px 10px;
+    border-radius: 16px;
+    padding: 12px;
 }
 
 .report-month-calendar-card .calendar-card__header {
@@ -2943,7 +2969,7 @@ input {
 }
 
 .report-month-calendar-card .calendar__grid {
-    gap: 1px;
+    gap: 2px;
     padding-top: 0;
 }
 
@@ -2958,6 +2984,11 @@ input {
 
 .report-month-calendar-card .calendar-nav__button[data-calendar-nav="next"] {
     color: rgba(32, 51, 84, 0.84);
+}
+
+.report-month-calendar-card .calendar-nav__button[disabled] {
+    opacity: 0.35;
+    cursor: default;
 }
 
 .report-month-calendar-card .calendar-nav__label {

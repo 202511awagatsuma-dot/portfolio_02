@@ -154,7 +154,7 @@
                         <div class="calendar-card__header">
                             <div class="calendar-nav" aria-label="month navigation">
                                 <button type="button" class="calendar-nav__button" data-calendar-nav="prev" aria-label="previous month">◀</button>
-                                <strong class="calendar-nav__label" data-calendar-month-label aria-live="polite">2026年4月</strong>
+                                <strong class="calendar-nav__label" data-calendar-month-label aria-live="polite" th:text="${currentMonthLabel}">2026年5月</strong>
                                 <button type="button" class="calendar-nav__button" data-calendar-nav="next" aria-label="next month">▶</button>
                             </div>
                         </div>
@@ -169,42 +169,13 @@
                                 <span>土</span>
                             </div>
                             <div class="calendar__grid" data-calendar-grid role="grid">
-                                <div class="calendar-day calendar-day--empty" role="gridcell" aria-hidden="true"></div>
-                                <div class="calendar-day calendar-day--empty" role="gridcell" aria-hidden="true"></div>
-                                <div class="calendar-day calendar-day--empty" role="gridcell" aria-hidden="true"></div>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">1</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">2</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">3</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">4</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">5</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">6</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">7</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">8</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">9</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">10</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">11</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">12</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">13</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">14</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">15</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">16</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">17</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">18</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">19</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">20</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">21</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">22</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">23</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">24</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">25</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">26</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">27</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">28</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">29</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <button type="button" class="calendar-day" role="gridcell"><span class="calendar-day__number">30</span><span class="calendar-day__marker" aria-hidden="true"></span></button>
-                                <div class="calendar-day calendar-day--empty" role="gridcell" aria-hidden="true"></div>
-                                <div class="calendar-day calendar-day--empty" role="gridcell" aria-hidden="true"></div>
-                                <div class="calendar-day calendar-day--empty" role="gridcell" aria-hidden="true"></div>
+                                <th:block th:each="day : ${initialCalendarCells}">
+                                    <div th:if="${day == null}" class="calendar-day calendar-day--empty" role="gridcell" aria-hidden="true"></div>
+                                    <button th:if="${day != null}" type="button" class="calendar-day" role="gridcell" th:aria-label="|${day}日|">
+                                        <span class="calendar-day__number" th:text="${day}">1</span>
+                                        <span class="calendar-day__marker" aria-hidden="true"></span>
+                                    </button>
+                                </th:block>
                             </div>
                         </section>
                     </div>
@@ -231,7 +202,7 @@
         </nav>
     </div>
 
-    <script th:src="@{/js/script.js}" charset="UTF-8"></script>
+    <script th:src="@{/js/script.js(v=${scriptVersion})}" src="/js/script.js?v=20260507" charset="UTF-8"></script>
 </body>
 
 </html>

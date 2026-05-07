@@ -233,6 +233,7 @@ function initPeakPoseField() {
 }
 
 function initGrowthCalendar() {
+    console.log("initGrowthCalendar called");
     const calendarScope = document.querySelector("[data-calendar-scope]");
     const calendarRoot = calendarScope?.querySelector("[data-calendar-root]");
     const calendarGrid = calendarScope?.querySelector("[data-calendar-grid]");
@@ -246,12 +247,19 @@ function initGrowthCalendar() {
     const reportMoodModalMood = document.getElementById("reportMoodModalMood");
     const reportMoodModalMemo = document.getElementById("reportMoodModalMemo");
 
-    if (!calendarScope || !calendarRoot || !calendarGrid || !monthLabel || navButtons.length === 0) {
+    if (!calendarScope || !calendarGrid || !monthLabel) {
+        console.error("[stika] calendar init failed: required elements not found", {
+            hasScope: Boolean(calendarScope),
+            hasGrid: Boolean(calendarGrid),
+            hasMonthLabel: Boolean(monthLabel)
+        });
         return;
     }
 
+    console.log("calendarGrid:", calendarGrid);
     const today = createDateOnly(new Date());
     let currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    console.log("currentMonth:", currentMonth);
     let selectedDate = null;
     let monthMoodLogDates = new Set();
     let monthMoodLogMap = new Map();
@@ -335,6 +343,9 @@ function initGrowthCalendar() {
     async function updateMonthMoodLogsAndRender() {
         const currentFetchId = fetchSerial + 1;
         fetchSerial = currentFetchId;
+        monthMoodLogDates = new Set();
+        monthMoodLogMap = new Map();
+        safeRenderCalendar();
 
         try {
             const year = currentMonth.getFullYear();
@@ -363,20 +374,35 @@ function initGrowthCalendar() {
             return;
         }
 
-        renderCalendar();
+        safeRenderCalendar();
+    }
+
+    function safeRenderCalendar() {
+        try {
+            renderCalendar();
+        } catch (error) {
+            console.error("[stika] renderCalendar failed. fallback rendering is applied.", error);
+            renderFallbackCalendar();
+        }
     }
 
     function renderCalendar() {
         monthLabel.textContent = formatMonthLabel(currentMonth);
         calendarGrid.innerHTML = "";
 
-        const firstDayIndex = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
-        const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
-        const totalCells = Math.ceil((firstDayIndex + daysInMonth) / 7) * 7;
+        const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
+        const lastDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
+        console.log("firstDay:", firstDay);
+        console.log("lastDate:", lastDate);
+        const totalCells = Math.ceil((firstDay + lastDate) / 7) * 7;
+        let appendedCellCount = 0;
+        const isViewingCurrentMonth =
+            currentMonth.getFullYear() === today.getFullYear() &&
+            currentMonth.getMonth() === today.getMonth();
 
         for (let cellIndex = 0; cellIndex < totalCells; cellIndex += 1) {
-            const dayNumber = cellIndex - firstDayIndex + 1;
-            const isCurrentMonth = dayNumber >= 1 && dayNumber <= daysInMonth;
+            const dayNumber = cellIndex - firstDay + 1;
+            const isCurrentMonth = dayNumber >= 1 && dayNumber <= lastDate;
 
             if (!isCurrentMonth) {
                 const emptyCell = document.createElement("div");
@@ -384,12 +410,13 @@ function initGrowthCalendar() {
                 emptyCell.setAttribute("role", "gridcell");
                 emptyCell.setAttribute("aria-hidden", "true");
                 calendarGrid.appendChild(emptyCell);
+                appendedCellCount += 1;
                 continue;
             }
 
             const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), dayNumber);
             const isoDate = formatIsoDate(date);
-            const isToday = isSameDate(date, today);
+            const isToday = isViewingCurrentMonth && isSameDate(date, today);
             const isSelected = selectedDate === isoDate;
             const hasMoodLog = monthMoodLogDates.has(isoDate);
 
@@ -418,11 +445,41 @@ function initGrowthCalendar() {
             button.innerHTML = `<span class="calendar-day__number">${date.getDate()}</span><span class="calendar-day__marker" aria-hidden="true"></span>`;
             button.addEventListener("click", async () => {
                 selectedDate = isoDate;
-                renderCalendar();
+                safeRenderCalendar();
                 const moodLog = monthMoodLogMap.get(isoDate) || await fetchMoodLogByDate(isoDate);
                 openMoodLogModal(isoDate, moodLog);
             });
 
+            calendarGrid.appendChild(button);
+            appendedCellCount += 1;
+        }
+
+        console.log("calendar cells appended:", appendedCellCount);
+    }
+
+    function renderFallbackCalendar() {
+        monthLabel.textContent = formatMonthLabel(currentMonth);
+        calendarGrid.innerHTML = "";
+        const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
+        const lastDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
+        const totalCells = Math.ceil((firstDay + lastDate) / 7) * 7;
+
+        for (let cellIndex = 0; cellIndex < totalCells; cellIndex += 1) {
+            const dayNumber = cellIndex - firstDay + 1;
+            if (dayNumber < 1 || dayNumber > lastDate) {
+                const emptyCell = document.createElement("div");
+                emptyCell.className = "calendar-day calendar-day--empty";
+                emptyCell.setAttribute("role", "gridcell");
+                emptyCell.setAttribute("aria-hidden", "true");
+                calendarGrid.appendChild(emptyCell);
+                continue;
+            }
+
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "calendar-day";
+            button.setAttribute("role", "gridcell");
+            button.innerHTML = `<span class="calendar-day__number">${dayNumber}</span><span class="calendar-day__marker" aria-hidden="true"></span>`;
             calendarGrid.appendChild(button);
         }
     }
@@ -431,10 +488,7 @@ function initGrowthCalendar() {
 }
 
 function formatMonthLabel(date) {
-    return new Intl.DateTimeFormat("ja-JP", {
-        year: "numeric",
-        month: "long"
-    }).format(date);
+    return `${date.getFullYear()}年${date.getMonth() + 1}月`;
 }
 
 function formatIsoDate(date) {

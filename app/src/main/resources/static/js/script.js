@@ -239,6 +239,7 @@ function initGrowthCalendar() {
     const calendarGrid = calendarScope?.querySelector("[data-calendar-grid]");
     const monthLabel = calendarScope?.querySelector("[data-calendar-month-label]");
     const navButtons = calendarScope ? Array.from(calendarScope.querySelectorAll("[data-calendar-nav]")) : [];
+    const allNavButtons = Array.from(document.querySelectorAll("[data-calendar-nav]"));
     const reportMoodModal = document.getElementById("reportMoodModal");
     const reportMoodModalBackdrop = document.getElementById("reportMoodModalBackdrop");
     const reportMoodModalCloseButton = document.getElementById("reportMoodModalCloseButton");
@@ -257,13 +258,22 @@ function initGrowthCalendar() {
     }
 
     console.log("calendarGrid:", calendarGrid);
+    console.log("calendar debug init:", {
+        navButtonsInScope: navButtons.length,
+        allNavButtons: allNavButtons.length,
+        monthLabelText: monthLabel.textContent,
+        hasCalendarRoot: Boolean(calendarRoot),
+        scopeElement: calendarScope
+    });
+    if (navButtons.length !== 2) {
+        console.warn("[stika] unexpected nav button count in calendar scope", navButtons);
+    }
     const today = createDateOnly(new Date());
     let currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     console.log("currentMonth:", currentMonth);
     let selectedDate = null;
     let monthMoodLogDates = new Set();
     let monthMoodLogMap = new Map();
-    let fetchSerial = 0;
     const moodLabels = {
         good: "調子よい",
         normal: "ふつう",
@@ -301,14 +311,7 @@ function initGrowthCalendar() {
         document.body.classList.add("modal-open");
     };
 
-    const fetchMoodLogByDate = async (isoDate) => {
-        const response = await fetch(`/api/self-care/mood-logs/by-date?date=${encodeURIComponent(isoDate)}`);
-        const payload = await response.json().catch(() => null);
-        if (!response.ok || !payload?.exists) {
-            return null;
-        }
-        return payload;
-    };
+    const fetchMoodLogByDate = async () => null;
 
     const bindCloseHandler = (element) => {
         element?.addEventListener("click", (event) => {
@@ -332,48 +335,29 @@ function initGrowthCalendar() {
     });
 
     navButtons.forEach((button) => {
+        console.log("bind calendar nav button:", button.tagName, button.dataset.calendarNav, button);
         button.addEventListener("click", () => {
+            console.log("calendar nav clicked:", button.dataset.calendarNav);
+            console.log("before currentMonth:", currentMonth);
             const direction = button.dataset.calendarNav === "next" ? 1 : -1;
+            console.log("calendar nav clicked, direction:", direction);
             currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + direction, 1);
+            console.log("after currentMonth:", currentMonth);
             closeMoodLogModal();
-            updateMonthMoodLogsAndRender();
+            safeRenderCalendar();
         });
     });
-
-    async function updateMonthMoodLogsAndRender() {
-        const currentFetchId = fetchSerial + 1;
-        fetchSerial = currentFetchId;
-        monthMoodLogDates = new Set();
-        monthMoodLogMap = new Map();
-        safeRenderCalendar();
-
-        try {
-            const year = currentMonth.getFullYear();
-            const month = currentMonth.getMonth() + 1;
-            const response = await fetch(`/api/self-care/mood-logs/month?year=${year}&month=${month}`);
-            const payload = await response.json().catch(() => null);
-
-            if (!response.ok) {
-                throw new Error(payload?.message || "Failed to fetch month mood logs.");
-            }
-
-            const dates = Array.isArray(payload?.dates) ? payload.dates : [];
-            const logs = Array.isArray(payload?.logs) ? payload.logs : [];
-            monthMoodLogDates = new Set(dates);
-            monthMoodLogMap = new Map(
-                logs
-                    .filter((entry) => typeof entry?.date === "string")
-                    .map((entry) => [entry.date, entry]));
-        } catch (error) {
-            console.warn("[stika] failed to fetch month mood logs", error);
-            monthMoodLogDates = new Set();
-            monthMoodLogMap = new Map();
-        }
-
-        if (currentFetchId !== fetchSerial) {
+    calendarScope.addEventListener("click", (event) => {
+        const navTarget = event.target instanceof Element ? event.target.closest("[data-calendar-nav]") : null;
+        if (!navTarget) {
             return;
         }
+        console.log("calendar nav scope click detected:", navTarget.dataset.calendarNav, navTarget.tagName);
+    });
 
+    function updateMonthMoodLogsAndRender() {
+        monthMoodLogDates = new Set();
+        monthMoodLogMap = new Map();
         safeRenderCalendar();
     }
 
@@ -387,6 +371,7 @@ function initGrowthCalendar() {
     }
 
     function renderCalendar() {
+        console.log("renderCalendar called:", currentMonth);
         monthLabel.textContent = formatMonthLabel(currentMonth);
         calendarGrid.innerHTML = "";
 
@@ -455,6 +440,10 @@ function initGrowthCalendar() {
         }
 
         console.log("calendar cells appended:", appendedCellCount);
+        console.log("calendar render applied:", {
+            monthLabel: monthLabel.textContent,
+            gridChildren: calendarGrid.children.length
+        });
     }
 
     function renderFallbackCalendar() {

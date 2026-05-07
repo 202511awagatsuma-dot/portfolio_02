@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initSeatedModal);
     runInitializer(initRelaxationModal);
     runInitializer(initStandingAsanaPicker);
+    runInitializer(initSequenceSectionStructure);
+    runInitializer(initSequenceBuilderDelegation);
     runInitializer(initDynamicSectionManager);
     runInitializer(initDynamicSectionsOnConfirmPage);
     runInitializer(initSequenceConfirmNavigation);
@@ -44,6 +46,82 @@ document.addEventListener("DOMContentLoaded", () => {
     runInitializer(initSequenceListPage);
     runInitializer(initSequenceDetailPage);
 });
+
+function initSequenceSectionStructure() {
+    const sectionsRoot = document.querySelector(".sequence-comp-screen .sequence-comp-sections");
+    if (!sectionsRoot) {
+        return;
+    }
+
+    sectionsRoot.querySelectorAll(".sequence-comp-section").forEach((section) => {
+        decorateSequenceSection(section);
+    });
+}
+
+function decorateSequenceSection(section) {
+    if (!section) {
+        return;
+    }
+
+    section.dataset.sequenceSection = "true";
+    let asanaList = section.querySelector(".sequence-comp-added-list");
+    if (!asanaList) {
+        asanaList = document.createElement("div");
+        asanaList.className = "sequence-comp-added-list asana-sortable-list";
+        asanaList.hidden = true;
+        const title = section.querySelector(".sequence-comp-section__title");
+        if (title) {
+            title.insertAdjacentElement("afterend", asanaList);
+        } else {
+            section.querySelector(".sequence-comp-section__content")?.prepend(asanaList);
+        }
+    }
+    asanaList.dataset.asanaList = "true";
+
+    const addButton = section.querySelector(".sequence-comp-slot, [data-standing-slot]");
+    if (addButton) {
+        addButton.dataset.action = "add-asana";
+    }
+}
+
+function openAsanaModal(section) {
+    if (!section) {
+        return;
+    }
+
+    window.__stikaActiveAsanaSection = section;
+    const modal = section.querySelector(".sequence-comp-modal");
+    if (!modal) {
+        return;
+    }
+
+    modal.hidden = false;
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+}
+
+function initSequenceBuilderDelegation() {
+    const sequenceBuilder = document.querySelector(".sequence-comp-screen .sequence-comp-sections");
+    if (!sequenceBuilder || sequenceBuilder.dataset.asanaDelegated === "true") {
+        return;
+    }
+
+    sequenceBuilder.dataset.asanaDelegated = "true";
+    sequenceBuilder.addEventListener("click", (event) => {
+        const addButton = event.target.closest("[data-action='add-asana']");
+        if (!addButton) {
+            return;
+        }
+
+        const section = addButton.closest("[data-sequence-section]");
+        if (!section) {
+            return;
+        }
+
+        event.preventDefault();
+        openAsanaModal(section);
+    });
+}
 
 function runInitializer(initializer) {
     if (typeof initializer !== "function") {
@@ -1329,7 +1407,7 @@ function initDynamicSectionManager() {
                 return;
             }
 
-            const insertedSection = insertDynamicSection({
+            const insertedSection = createSequenceSection({
                 sectionsRoot,
                 insertButton: activeInsertButton,
                 category: selectedCategory,
@@ -1609,7 +1687,7 @@ function getSectionCandidatesFromTabs(screen) {
         }));
 }
 
-function insertDynamicSection({ sectionsRoot, insertButton, category, sectionState, templateCache }) {
+function createSequenceSection({ sectionsRoot, insertButton, category, sectionState, templateCache }) {
     const anchorSection = insertButton?.closest(".sequence-comp-section");
     const templateSection =
         sectionsRoot.querySelector(`.sequence-comp-section[data-category='${category}']:not([data-dynamic-section='true'])`) ||
@@ -1640,6 +1718,7 @@ function insertDynamicSection({ sectionsRoot, insertButton, category, sectionSta
 
     uniquifySectionIds(dynamicSection, sectionId);
     resetDynamicSection(dynamicSection, category, sectionState);
+    decorateSequenceSection(dynamicSection);
     setupDynamicSectionInteractions(dynamicSection);
 
     const allSections = Array.from(sectionsRoot.querySelectorAll(".sequence-comp-section"));
@@ -1666,7 +1745,7 @@ function restoreDynamicSections(sequenceId, sectionsRoot, templateCache) {
     }
 
     savedSections.forEach((sectionState) => {
-        insertDynamicSection({
+        createSequenceSection({
             sectionsRoot,
             insertButton: firstButton,
             category: sectionState.category,
@@ -2011,6 +2090,7 @@ function ensureDynamicSectionList(section) {
         }
     }
 
+    list.dataset.asanaList = "true";
     list.hidden = false;
     return list;
 }

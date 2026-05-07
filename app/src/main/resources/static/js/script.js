@@ -220,35 +220,46 @@ function initPeakPoseField() {
 }
 
 function initGrowthCalendar() {
-    const calendarRoot = document.getElementById("growthCalendar");
-    const calendarGrid = document.getElementById("calendarGrid");
-    const monthLabel = document.getElementById("calendarMonthLabel");
-    const navButtons = document.querySelectorAll("[data-calendar-nav]");
+    const today = createDateOnly(new Date());
+    const recordedDates = resolveRecordedDatesForCalendar(today);
+    const calendarScopes = document.querySelectorAll("[data-calendar-scope]");
+    if (calendarScopes.length === 0) {
+        return;
+    }
+
+    calendarScopes.forEach((scope) => {
+        const calendarRoot = scope.querySelector("[data-calendar-root]");
+        const calendarGrid = scope.querySelector("[data-calendar-grid]");
+        const monthLabel = scope.querySelector("[data-calendar-month-label]");
+        const navButtons = scope.querySelectorAll("[data-calendar-nav]");
+
+        if (!calendarRoot || !calendarGrid || !monthLabel || navButtons.length === 0) {
+            return;
+        }
+
+        renderReportCalendar(scope, {
+            recordedDates,
+            initialYear: Number.parseInt(calendarRoot.dataset.initialYear || "", 10),
+            initialMonth: Number.parseInt(calendarRoot.dataset.initialMonth || "", 10)
+        });
+    });
+}
+
+function renderReportCalendar(scope, options = {}) {
+    const calendarRoot = scope?.querySelector("[data-calendar-root]");
+    const calendarGrid = scope?.querySelector("[data-calendar-grid]");
+    const monthLabel = scope?.querySelector("[data-calendar-month-label]");
+    const navButtons = scope?.querySelectorAll("[data-calendar-nav]") || [];
 
     if (!calendarRoot || !calendarGrid || !monthLabel || navButtons.length === 0) {
         return;
     }
 
-    const recordedDates = [
-        "2026-04-03",
-        "2026-04-08",
-        "2026-04-12",
-        "2026-04-15",
-        "2026-04-19",
-        "2026-04-24",
-        "2026-04-28",
-        "2026-05-02",
-        "2026-05-06",
-        "2026-05-14"
-    ];
-
-    const recordSet = new Set(recordedDates);
+    const recordSet = new Set(Array.isArray(options.recordedDates) ? options.recordedDates : []);
     const today = createDateOnly(new Date());
-    const initialYear = Number.parseInt(calendarRoot.dataset.initialYear || "", 10);
-    const initialMonth = Number.parseInt(calendarRoot.dataset.initialMonth || "", 10);
-    let currentMonth = Number.isInteger(initialYear) && Number.isInteger(initialMonth)
-        ? new Date(initialYear, initialMonth, 1)
-        : new Date(today.getFullYear(), today.getMonth(), 1);
+    const initialYear = Number.isInteger(options.initialYear) ? options.initialYear : today.getFullYear();
+    const initialMonth = Number.isInteger(options.initialMonth) ? options.initialMonth : today.getMonth();
+    let currentMonth = new Date(initialYear, initialMonth, 1);
     let selectedDate = null;
 
     navButtons.forEach((button) => {
@@ -273,7 +284,7 @@ function initGrowthCalendar() {
             const isCurrentMonth = date.getMonth() === currentMonth.getMonth();
             const isToday = isSameDate(date, today);
             const isSelected = selectedDate === isoDate;
-            const hasRecord = recordSet.has(isoDate);
+            const hasRecord = recordSet.has(isoDate) && !isFutureDateString(isoDate, today);
 
             const button = document.createElement("button");
             button.type = "button";
@@ -296,7 +307,10 @@ function initGrowthCalendar() {
                 button.classList.add("calendar-day--has-record");
             }
 
-            button.innerHTML = `<span class="calendar-day__number">${date.getDate()}</span>`;
+            button.innerHTML = `
+                <span class="calendar-day__number">${date.getDate()}</span>
+                <span class="calendar-day__marker" aria-hidden="true"></span>
+            `;
             button.addEventListener("click", () => {
                 selectedDate = isoDate;
                 renderCalendar();
@@ -307,6 +321,78 @@ function initGrowthCalendar() {
     }
 
     renderCalendar();
+}
+
+function resolveRecordedDatesForCalendar(today) {
+    const todayDate = today instanceof Date ? createDateOnly(today) : createDateOnly(new Date());
+    const sequenceDates = collectSequenceRecordDates(todayDate);
+    if (sequenceDates.size > 0) {
+        return Array.from(sequenceDates).sort();
+    }
+
+    // 暫定サンプル: 実データが無い場合のみ表示し、未来日は除外する。
+    const fallbackSampleDates = [
+        "2026-04-03",
+        "2026-04-08",
+        "2026-04-12",
+        "2026-04-15",
+        "2026-04-19",
+        "2026-04-24",
+        "2026-04-28",
+        "2026-05-02",
+        "2026-05-06"
+    ];
+    return fallbackSampleDates.filter((dateValue) => !isFutureDateString(dateValue, todayDate));
+}
+
+function collectSequenceRecordDates(today) {
+    const todayDate = today instanceof Date ? createDateOnly(today) : createDateOnly(new Date());
+    const rawValue = readWebStorage(window.localStorage, STIKA_SEQUENCE_STORAGE_KEY);
+    if (!rawValue) {
+        return new Set();
+    }
+
+    let parsed;
+    try {
+        parsed = JSON.parse(rawValue);
+    } catch (error) {
+        return new Set();
+    }
+    if (!Array.isArray(parsed)) {
+        return new Set();
+    }
+
+    const dates = new Set();
+    parsed.forEach((item) => {
+        const createdAt = normalizeText(item?.createdAt);
+        const isoDate = extractIsoDateFromDateTime(createdAt);
+        if (!isoDate || isFutureDateString(isoDate, todayDate)) {
+            return;
+        }
+        dates.add(isoDate);
+    });
+    return dates;
+}
+
+function extractIsoDateFromDateTime(value) {
+    if (!value || typeof value !== "string") {
+        return "";
+    }
+    const match = value.match(/^(\d{4}-\d{2}-\d{2})/);
+    return match ? match[1] : "";
+}
+
+function isFutureDateString(isoDate, today) {
+    if (!isoDate) {
+        return false;
+    }
+    const date = new Date(`${isoDate}T00:00:00`);
+    if (Number.isNaN(date.getTime())) {
+        return false;
+    }
+    const target = createDateOnly(date);
+    const todayDate = today instanceof Date ? createDateOnly(today) : createDateOnly(new Date());
+    return target.getTime() > todayDate.getTime();
 }
 
 function formatMonthLabel(date) {

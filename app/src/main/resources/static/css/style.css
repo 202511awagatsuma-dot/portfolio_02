@@ -835,34 +835,6 @@ input {
     background: transparent;
 }
 
-/* Keep TOP report calendar compact without affecting report page calendar styles. */
-.report-card.calendar-card {
-    padding: 10px 16px 7px;
-}
-
-.report-card.calendar-card .calendar-card__header {
-    margin-bottom: 8px;
-}
-
-.report-card.calendar-card .calendar {
-    gap: 5px;
-}
-
-.report-card.calendar-card .calendar__weekdays {
-    gap: 2px;
-}
-
-.report-card.calendar-card .calendar__grid {
-    gap: 0;
-    row-gap: 1px;
-    padding-top: 0;
-}
-
-.report-card.calendar-card .calendar-day {
-    min-height: 38px;
-    padding: 2px 3px;
-    line-height: 1.05;
-}
 
 .bottom-nav {
     position: fixed;
@@ -3862,23 +3834,6 @@ input {
 
     .calendar__weekdays span {
         font-size: 0.7rem;
-    }
-
-    .report-card.calendar-card {
-        padding: 12px 14px 10px;
-    }
-
-    .report-card.calendar-card .calendar-card__header {
-        margin-bottom: 8px;
-    }
-
-    .report-card.calendar-card .calendar {
-        gap: 6px;
-    }
-
-    .report-card.calendar-card .calendar-day {
-        min-height: 44px;
-        padding: 3px 2px;
     }
 
     .sequence-comp-header {
